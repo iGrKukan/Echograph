@@ -1,0 +1,23 @@
+{
+  "_comment": "v1 export schema for AnalysisExport. omit-when-default: speaker (nil), highlighted (false). Mirror in Echograph/Core/Models/AnalysisExport.swift.",
+  "version": 1,
+  "id": "<UUID-string, uppercased>",
+  "title": "<Recording.title>",
+  "createdAt": "<ISO 8601 with Z>",
+  "duration": 0.0,
+  "language": "<2-letter code or empty string>",
+  "speakerCount": 1,
+  "tags": ["<tag>", "..."],
+  "transcript": {
+    "fullText": "<concatenated segment.text joined by space>",
+    "segments": [
+      {
+        "startTime": 0.0,
+        "endTime": 0.0,
+        "text": "<segment text>",
+        "speaker": "<label string, omit field if no speaker>",
+        "highlighted": true
+      }
+    ]
+  }
+}
