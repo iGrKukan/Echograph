@@ -1,56 +1,72 @@
 import Foundation
-import CoreTransferable
-import UniformTypeIdentifiers
 
-/// Wraps a `Recording` for export via Share Sheet to the Voicekeep CLI
-/// analyzer (see `cli/README.md` and the v1 schema in
-/// `cli/test/expected_schema.json`).
-struct AnalysisExport {
-    let recording: Recording
-}
+/// Writes a `Recording` as JSON into the app's iCloud Drive inbox so the
+/// Mac-side `cli/voicekeep_analyze.sh` watcher can pick it up. The result
+/// `<recording.id>.analysis.md` lands in the same container's `processed/`
+/// folder and is observed by `AnalysisStore`.
+enum AnalysisExport {
+    static let containerIdentifier = "iCloud.by.timberbid.echograph"
 
-extension AnalysisExport: Transferable {
-    static var transferRepresentation: some TransferRepresentation {
-        FileRepresentation(exportedContentType: .json) { export in
-            let url = try export.writeTemporaryFile()
-            return SentTransferredFile(url)
+    enum ExportError: LocalizedError {
+        case iCloudUnavailable
+        case noTranscript
+        case writeFailed(String)
+
+        var errorDescription: String? {
+            switch self {
+            case .iCloudUnavailable:
+                return String(localized: "iCloud Drive is not available. Sign into iCloud and enable Voicekeep in Settings → Apple ID → iCloud Drive.")
+            case .noTranscript:
+                return String(localized: "Recording has no transcript yet. Transcribe it first.")
+            case .writeFailed(let detail):
+                return String(localized: "Could not save the export: \(detail)")
+            }
         }
-        .suggestedFileName { export in export.suggestedFileName }
     }
 
-    var suggestedFileName: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd-HHmmss"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        let stamp = formatter.string(from: recording.createdAt)
-        let safe = sanitize(recording.title)
-        return "\(stamp)-\(safe).voicekeep.json"
-    }
+    /// Returns the URL of the JSON file in `<container>/Documents/inbox/`.
+    @discardableResult
+    static func send(_ recording: Recording) async throws -> URL {
+        guard recording.transcript != nil else {
+            throw ExportError.noTranscript
+        }
+        let inbox = try inboxURL()
+        try FileManager.default.createDirectory(at: inbox, withIntermediateDirectories: true)
 
-    fileprivate func writeTemporaryFile() throws -> URL {
         let payload = Payload(recording: recording)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(payload)
+        let data: Data
+        do {
+            data = try encoder.encode(payload)
+        } catch {
+            throw ExportError.writeFailed(String(describing: error))
+        }
 
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent(suggestedFileName)
-        try? FileManager.default.removeItem(at: url)
-        try data.write(to: url, options: [.atomic])
+        let url = inbox.appendingPathComponent("\(recording.id.uuidString).voicekeep.json")
+        do {
+            try data.write(to: url, options: [.atomic])
+        } catch {
+            throw ExportError.writeFailed(String(describing: error))
+        }
         return url
     }
 
-    private func sanitize(_ s: String) -> String {
-        let allowed = CharacterSet.alphanumerics
-            .union(.init(charactersIn: " -_"))
-        let cleaned = s.unicodeScalars
-            .map { allowed.contains($0) ? Character($0) : "_" }
-            .map(String.init)
-            .joined()
-            .trimmingCharacters(in: .whitespaces)
-        return cleaned.isEmpty ? "Recording" : cleaned
+    static func inboxURL() throws -> URL {
+        try documentsURL().appendingPathComponent("inbox", isDirectory: true)
+    }
+
+    static func processedURL() throws -> URL {
+        try documentsURL().appendingPathComponent("processed", isDirectory: true)
+    }
+
+    static func documentsURL() throws -> URL {
+        guard let root = FileManager.default
+            .url(forUbiquityContainerIdentifier: containerIdentifier) else {
+            throw ExportError.iCloudUnavailable
+        }
+        return root.appendingPathComponent("Documents", isDirectory: true)
     }
 }
 
