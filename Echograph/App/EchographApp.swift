@@ -7,6 +7,7 @@ struct EchographApp: App {
     @State private var watchSync: WatchConnectivityCoordinator
     @State private var purchases: PurchaseManager
     @State private var summary: SummaryService
+    @State private var analysisService: AnalysisService
 
     @AppStorage("Echograph.didShowConsentDisclaimer") private var didShowConsentDisclaimer = false
     @State private var showingConsent = false
@@ -20,6 +21,7 @@ struct EchographApp: App {
         _watchSync = State(initialValue: WatchConnectivityCoordinator(store: store))
         _purchases = State(initialValue: PurchaseManager())
         _summary = State(initialValue: SummaryService(store: store))
+        _analysisService = State(initialValue: AnalysisService())
     }
 
     var body: some Scene {
@@ -30,6 +32,7 @@ struct EchographApp: App {
                 .environment(watchSync)
                 .environment(purchases)
                 .environment(summary)
+                .environment(analysisService)
                 .sheet(isPresented: $showingConsent) {
                     ConsentDisclaimerView {
                         didShowConsentDisclaimer = true
