@@ -61,14 +61,36 @@ struct RecordingDetailView: View {
                         }
                         .disabled(recording.transcript == nil)
 
+                        // On-device Apple Intelligence analysis — App Store-friendly,
+                        // available to Pro+ on iPhone 15 Pro+ / iOS 26.
+                        Button {
+                            if !purchases.hasProPlus {
+                                showingPaywall = true
+                            } else if !summary.isAvailable {
+                                // surfaces the "Apple Intelligence required" message
+                                // through the existing summary error path on retry
+                            } else {
+                                Task { await summary.analyze(recording) }
+                            }
+                        } label: {
+                            if summary.isRunning(for: recording.id) {
+                                Label("Analyzing…", systemImage: "sparkles")
+                            } else {
+                                Label(purchases.hasProPlus ? "Deep Analysis (AI)…" : "Deep Analysis · Pro+",
+                                      systemImage: purchases.hasProPlus ? "sparkles" : "lock.fill")
+                            }
+                        }
+                        .disabled(recording.transcript == nil || summary.isRunning(for: recording.id))
+
+                        // Mac CLI fallback for power users (Claude / OpenAI / etc.).
                         if adminMode {
                             Button {
                                 Task { await sendForAnalysis(recording) }
                             } label: {
                                 if isAnalyzing {
-                                    Label("Analysing…", systemImage: "sparkles")
+                                    Label("Analysing on Mac…", systemImage: "macbook")
                                 } else {
-                                    Label("Analyze with AI…", systemImage: "sparkles")
+                                    Label("Analyze on Mac AI…", systemImage: "macbook")
                                 }
                             }
                             .disabled(recording.transcript == nil || isAnalyzing)
@@ -229,7 +251,9 @@ struct RecordingDetailView: View {
         if let transcript = recording.transcript {
             VStack(spacing: 16) {
                 summarySection(for: recording)
-                if adminMode {
+                // Show analysis to everyone — it's on-device AI via Apple
+                // Intelligence (or, for admins, their Mac pipeline).
+                if recording.analysis != nil {
                     AnalysisSection(analysis: recording.analysis)
                         .padding(.horizontal)
                 }

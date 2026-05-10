@@ -109,6 +109,65 @@ final class SummaryService {
         throw SummaryError.unavailable
     }
 
+    /// Produce a multi-section markdown analysis of the transcript using
+    /// Apple Foundation Models on-device. This is a deeper, structured
+    /// alternative to `summarize()` — closer to a "report" than a summary.
+    /// Persists the markdown into Recording.analysis on the store.
+    func analyze(_ recording: Recording) async {
+        guard let transcript = recording.transcript else { return }
+        state = .running(recordingID: recording.id)
+        do {
+            let markdown = try await generateAnalysis(text: transcript.fullText)
+            var updated = recording
+            updated.analysis = markdown
+            store.update(updated)
+            state = .idle
+        } catch {
+            let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            state = .failed(recordingID: recording.id, message: msg)
+        }
+    }
+
+    private func generateAnalysis(text: String) async throws -> String {
+        #if canImport(FoundationModels)
+        if #available(iOS 26.0, *) {
+            let session = LanguageModelSession {
+                """
+                You are a thorough conversation analyst. Given a transcript,
+                produce a structured markdown report with these sections:
+
+                ## Overview
+                Two or three sentences capturing what the recording is about.
+
+                ## Key topics
+                Bulleted list, one topic per line.
+
+                ## Decisions
+                Bulleted list of any decisions reached. Use "—" if none.
+
+                ## Action items
+                GitHub-flavored task list:
+                - [ ] description
+                Use "—" if none.
+
+                ## Open questions
+                Bulleted list. Use "—" if none.
+
+                ## Notable quotes
+                Up to three direct quotes in italics (no speaker attribution
+                unless it's clearly in the transcript). Use "—" if none.
+
+                Output ONLY GitHub-flavored markdown. Do not add disclaimers
+                about not having the transcript — work with whatever is given.
+                """
+            }
+            let response = try await session.respond(to: "Transcript:\n\n\(text)")
+            return response.content
+        }
+        #endif
+        throw SummaryError.unavailable
+    }
+
     /// Answer an arbitrary user question about the given transcript using
     /// Apple Foundation Models, on-device. Returns the model's reply.
     func ask(_ question: String, about transcript: Transcript) async throws -> String {
