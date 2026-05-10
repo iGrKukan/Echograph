@@ -3,7 +3,7 @@
 # Triggered by launchd WatchPaths; safe to run manually too.
 set -euo pipefail
 
-ROOT="${VOICEKEEP_ROOT:-$HOME/Library/Mobile Documents/com~apple~CloudDocs/Voicekeep}"
+ROOT="${VOICEKEEP_ROOT:-$HOME/Library/Mobile Documents/iCloud~by~timberbid~echograph/Documents}"
 INBOX="$ROOT/inbox"
 PROCESSED="$ROOT/processed"
 FAILED="$ROOT/failed"

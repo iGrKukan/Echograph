@@ -3,7 +3,7 @@
 # Idempotent: re-running upgrades the plist and reloads the agent.
 set -euo pipefail
 
-ROOT="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Voicekeep"
+ROOT="$HOME/Library/Mobile Documents/iCloud~by~timberbid~echograph/Documents"
 INBOX="$ROOT/inbox"
 PROCESSED="$ROOT/processed"
 FAILED="$ROOT/failed"
