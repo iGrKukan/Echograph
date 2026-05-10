@@ -73,11 +73,6 @@ targets:
         NSCalendarsFullAccessUsageDescription: "Voicekeep creates calendar events from recordings only when you tap Add to Calendar."
         NSCalendarsUsageDescription: "Voicekeep creates calendar events from recordings only when you tap Add to Calendar."
         NSSupportsLiveActivities: true
-        NSUbiquitousContainers:
-          iCloud.by.timberbid.echograph:
-            NSUbiquitousContainerIsDocumentScopePublic: true
-            NSUbiquitousContainerName: Voicekeep
-            NSUbiquitousContainerSupportedFolderLevels: Any
         UIBackgroundModes:
           - audio
         UIRequiredDeviceCapabilities:
@@ -105,7 +100,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
-        CODE_SIGN_ENTITLEMENTS: Echograph/Echograph.entitlements
         TARGETED_DEVICE_FAMILY: "1,2"
         SUPPORTS_MACCATALYST: NO
         MARKETING_VERSION: "1.0.0"

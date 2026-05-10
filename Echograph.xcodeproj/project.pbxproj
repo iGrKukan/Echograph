@@ -28,6 +28,7 @@
 		6C85179C7D572AB70E032F3E /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DE29A22C645F1DD6DDB07BEB /* WhisperKit */; };
 		6D66D160AF112A9C07A343B1 /* SummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC7BA91B2DB0A2FE0E0DF6 /* SummaryService.swift */; };
 		72C587DC18B9FEF9E140509E /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9EE1179DF0CD2F2AA6F76D /* RecordingLiveActivity.swift */; };
+		743CC6680A14469FF0C6777B /* AnalysisSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8C33C634F92E5887F44BB0 /* AnalysisSection.swift */; };
 		761C530E7D4CAEACBE27D748 /* TranscriptionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B2DAA7BA942AA869D34B93 /* TranscriptionEngine.swift */; };
 		7772DFA78E93E6AC4E52B9EA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745FE283A8351497AAA1D031 /* HomeView.swift */; };
 		77E91BC7E76E1E33D9D7F845 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F22BCA0198800020523B33D /* AudioPlayer.swift */; };
@@ -80,6 +81,7 @@
 		33FC7BA91B2DB0A2FE0E0DF6 /* SummaryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryService.swift; sourceTree = "<group>"; };
 		36D8BEAE59854CF62AEFA63E /* MicrophonePermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophonePermission.swift; sourceTree = "<group>"; };
 		3C9BBB858362582138DA3857 /* TranscriptionLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionLanguage.swift; sourceTree = "<group>"; };
+		3E8C33C634F92E5887F44BB0 /* AnalysisSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisSection.swift; sourceTree = "<group>"; };
 		3F32C56F4159E44D5B789130 /* EchographLiveActivity.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = EchographLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4805347F40A579B3875C8ADE /* AppleSpeechTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechTranscriber.swift; sourceTree = "<group>"; };
 		487A3FCD0A66875B472F378B /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -102,7 +104,6 @@
 		A816E1F8F96812598B0337C7 /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		A9603663942E70848CE6A515 /* WatchRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRecorder.swift; sourceTree = "<group>"; };
 		AA584D06B57D91907E958B43 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
-		B246DC3B373D6371AE3F3206 /* Echograph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Echograph.entitlements; sourceTree = "<group>"; };
 		B32C05924C6400A61EEC0F45 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		B5F18E0D40D302A4CF8CF998 /* AnalysisExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisExport.swift; sourceTree = "<group>"; };
 		BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSheet.swift; sourceTree = "<group>"; };
@@ -174,6 +175,7 @@
 		56D515CCF3EFA26E9E3978F6 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3E8C33C634F92E5887F44BB0 /* AnalysisSection.swift */,
 				BF38E814877DAF23DB7CD294 /* AskSheet.swift */,
 				07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */,
 				BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */,
@@ -242,7 +244,6 @@
 		A40AECFB09ED8D5E124D3350 /* Echograph */ = {
 			isa = PBXGroup;
 			children = (
-				B246DC3B373D6371AE3F3206 /* Echograph.entitlements */,
 				8EA5F4194DEAC0FE59AEDFB2 /* App */,
 				44DA998E0A452D288E68BD82 /* AppIntents */,
 				CAF8466C9BAF5607D5E01BFF /* Audio */,
@@ -543,6 +544,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA9159523106F36C79DB479 /* AnalysisExport.swift in Sources */,
+				743CC6680A14469FF0C6777B /* AnalysisSection.swift in Sources */,
 				1EB89FAC133365F63AAF9170 /* AppleSpeechTranscriber.swift in Sources */,
 				07E2C8352B77EB43B210F75C /* AskSheet.swift in Sources */,
 				3F39AA88DD62C1D96C28C561 /* AudioFileImporter.swift in Sources */,
@@ -732,7 +734,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Echograph/Echograph.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Echograph/Info.plist;
@@ -772,7 +773,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Echograph/Echograph.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Echograph/Info.plist;
