@@ -11,8 +11,10 @@ project.xcworkspace/xcuserdata/
 # Swift Package Manager
 .build/
 Packages/
-Package.resolved
 .swiftpm/
+# Package.resolved IS committed — it's a lockfile that pins exact dep
+# versions, like package-lock.json. Without it different Macs can pull
+# different transitive versions and produce subtly different builds.
 
 # macOS
 .DS_Store
