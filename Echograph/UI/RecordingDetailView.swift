@@ -11,6 +11,7 @@ struct RecordingDetailView: View {
     @Environment(TranscriptionService.self) private var transcription
     @Environment(PurchaseManager.self) private var purchases
     @Environment(SummaryService.self) private var summary
+    @Environment(AnalysisStore.self) private var analysisStore
 
     @State private var player = AudioPlayer()
     @State private var showingDeleteConfirm = false
@@ -25,6 +26,8 @@ struct RecordingDetailView: View {
     @State private var showingTranslation = false
     @State private var translationSource: String = ""
     @State private var calendarError: String?
+    @State private var isAnalyzing = false
+    @State private var analysisError: String?
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
 
@@ -57,16 +60,12 @@ struct RecordingDetailView: View {
                         }
                         .disabled(recording.transcript == nil)
 
-                        ShareLink(
-                            item: AnalysisExport(recording: recording),
-                            preview: SharePreview(
-                                "AI Analysis",
-                                image: Image(systemName: "sparkles")
-                            )
-                        ) {
+                        Button {
+                            Task { await sendForAnalysis(recording) }
+                        } label: {
                             Label("Analyze with AI…", systemImage: "sparkles")
                         }
-                        .disabled(recording.transcript == nil)
+                        .disabled(recording.transcript == nil || isAnalyzing)
 
                         Button {
                             translationSource = recording.transcript?.fullText ?? ""
@@ -138,6 +137,14 @@ struct RecordingDetailView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(calendarError ?? "")
+        }
+        .alert("Analysis error", isPresented: Binding(
+            get: { analysisError != nil },
+            set: { if !$0 { analysisError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(analysisError ?? "")
         }
         .onAppear {
             if let recording {
@@ -215,6 +222,8 @@ struct RecordingDetailView: View {
         if let transcript = recording.transcript {
             VStack(spacing: 16) {
                 summarySection(for: recording)
+                AnalysisSection(recordingId: recording.id)
+                    .padding(.horizontal)
                 TranscriptView(
                     transcript: transcript,
                     currentTime: player.currentTime,
@@ -569,6 +578,16 @@ struct RecordingDetailView: View {
             )
         } catch {
             calendarError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
+    }
+
+    private func sendForAnalysis(_ recording: Recording) async {
+        isAnalyzing = true
+        defer { isAnalyzing = false }
+        do {
+            try await AnalysisExport.send(recording)
+        } catch {
+            analysisError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
     }
 
