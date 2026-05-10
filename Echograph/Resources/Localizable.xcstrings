@@ -5,11 +5,11 @@
     "Echograph" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep" } }
       }
     },
     "Recording" : {
@@ -464,11 +464,11 @@
     },
     "Echograph Pro" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep Pro" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep Pro" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep Pro" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep Pro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Voicekeep Pro" } }
       }
     },
     "Speaker Diarization" : {

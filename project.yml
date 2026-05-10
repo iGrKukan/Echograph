@@ -16,7 +16,7 @@ options:
 
 settings:
   base:
-    DEVELOPMENT_TEAM: ZVYKY9TF2X
+    DEVELOPMENT_TEAM: U5BAN54DL2
     SWIFT_VERSION: "6.0"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     GENERATE_INFOPLIST_FILE: NO
@@ -56,17 +56,17 @@ targets:
     info:
       path: Echograph/Info.plist
       properties:
-        CFBundleDisplayName: Echograph
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleDisplayName: Voicekeep
+        CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         UILaunchScreen:
           UIColorName: ""
-        NSMicrophoneUsageDescription: "Echograph records your voice locally — audio never leaves your device."
-        NSSpeechRecognitionUsageDescription: "Echograph transcribes recordings on-device using Apple Speech. Audio never leaves your device."
-        NSRemindersFullAccessUsageDescription: "Echograph creates reminders from transcript segments only when you tap Add to Reminders."
-        NSRemindersUsageDescription: "Echograph creates reminders from transcript segments only when you tap Add to Reminders."
-        NSCalendarsFullAccessUsageDescription: "Echograph creates calendar events from recordings only when you tap Add to Calendar."
-        NSCalendarsUsageDescription: "Echograph creates calendar events from recordings only when you tap Add to Calendar."
+        NSMicrophoneUsageDescription: "Voicekeep records your voice locally — audio never leaves your device."
+        NSSpeechRecognitionUsageDescription: "Voicekeep transcribes recordings on-device using Apple Speech. Audio never leaves your device."
+        NSRemindersFullAccessUsageDescription: "Voicekeep creates reminders from transcript segments only when you tap Add to Reminders."
+        NSRemindersUsageDescription: "Voicekeep creates reminders from transcript segments only when you tap Add to Reminders."
+        NSCalendarsFullAccessUsageDescription: "Voicekeep creates calendar events from recordings only when you tap Add to Calendar."
+        NSCalendarsUsageDescription: "Voicekeep creates calendar events from recordings only when you tap Add to Calendar."
         NSSupportsLiveActivities: true
         UIBackgroundModes:
           - audio
@@ -86,7 +86,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
         TARGETED_DEVICE_FAMILY: "1,2"
         SUPPORTS_MACCATALYST: NO
-        MARKETING_VERSION: "0.1.0"
+        MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
@@ -103,7 +103,7 @@ targets:
       path: EchographLiveActivity/Info.plist
       properties:
         CFBundleDisplayName: Echograph Live Activity
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
@@ -112,7 +112,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.LiveActivity
         TARGETED_DEVICE_FAMILY: "1,2"
         SKIP_INSTALL: YES
-        MARKETING_VERSION: "0.1.0"
+        MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
 
   EchographWatch:
@@ -126,7 +126,7 @@ targets:
       path: EchographWatch/Info.plist
       properties:
         CFBundleDisplayName: Echograph
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         WKApplication: true
         WKCompanionAppBundleIdentifier: by.timberbid.echograph
@@ -141,7 +141,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
         SDKROOT: watchos
-        MARKETING_VERSION: "0.1.0"
+        MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         SUPPORTED_PLATFORMS: "watchos watchsimulator"
         SUPPORTS_MACCATALYST: NO

@@ -26,3 +26,18 @@ Models/
 
 # Local config
 *.local.xcconfig
+
+# Secrets — never commit
+fastlane/secrets/
+fastlane/report.xml
+fastlane/.env*
+*.p8
+
+# Python venv & cache
+fastlane/.venv/
+fastlane/__pycache__/
+**/__pycache__/
+
+# Build artifacts
+build/
+private_keys/
