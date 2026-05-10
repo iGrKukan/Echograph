@@ -1,30 +1,31 @@
 # Voicekeep CLI Analyzer
 
-Personal tool. Watches the Voicekeep iOS app's iCloud container for
-transcripts and writes a Markdown analysis next to each one using
-`claude -p`. The result is automatically read back by the iOS app and
-displayed in `RecordingDetailView` (Phase B) — no manual file picking.
+Personal tool. A small HTTP server on the Mac receives transcripts from the
+Voicekeep iOS app over Tailscale, runs `claude -p`, and returns Markdown.
+The result is persisted in the recording and shown via `MarkdownUI`.
 
 ## Pipeline
 
 ```
-iPhone                       iCloud (app container)             Mac
-──────                       ──────────────────────             ───
-RecordingDetailView          inbox/<id>.voicekeep.json  ◄─  cli/watch_inbox.sh
-  → AI-анализ button                  │                          │ (launchd)
-                                      │                          ▼
-RecordingDetailView         processed/<id>.analysis.md  ──── claude -p
-  → AnalysisSection (MarkdownUI) ◄────┘
+iPhone (Voicekeep app)                Mac (in Tailscale tailnet)
+──────────────────────                ──────────────────────────
+RecordingDetailView                   cli/server.py
+  → AI-анализ tap                     │ (launchd KeepAlive=true, port 19847)
+  POST /analyze ───────────────────►  /analyze handler
+       Bearer <token>                 │
+       {recording JSON v1}            voicekeep_analyze.sh
+                                      │
+  ◄──────────── 200 OK ──────────── claude -p --model sonnet
+       <four-section markdown>
+  recording.analysis = body
+  AnalysisSection (MarkdownUI) renders
 ```
-
-In Files app on iPhone the container appears as **iCloud Drive → Voicekeep**.
-On macOS the path is `~/Library/Mobile Documents/iCloud~by~timberbid~echograph/Documents/`.
 
 ## Prerequisites
 
-- macOS with iCloud Drive signed in to the same Apple ID as the iPhone.
-- `claude` CLI in `$PATH`.
-- `jq` in `$PATH` (`brew install jq`).
+- macOS with `claude`, `jq`, `python3` (3.10+) in `$PATH`.
+- Tailscale on **both** Mac and iPhone (same tailnet) — recommended.
+  Without Tailscale you can use `<mac-hostname>.local` over LAN.
 
 ## One-time install (per Mac)
 
@@ -33,56 +34,67 @@ cd ~/Echograph
 ./cli/setup.sh
 ```
 
-This:
-- creates `~/Library/Mobile Documents/iCloud~by~timberbid~echograph/Documents/{inbox,processed,failed}`,
-- renders and installs `~/Library/LaunchAgents/com.voicekeep.analyzer.plist`,
-- bootstraps the launch agent (re-runs the bootstrap on upgrades).
+The script:
+- generates a bearer token at `~/.voicekeep-token` (only if missing),
+- renders `~/Library/LaunchAgents/com.voicekeep.analyzer.plist`,
+- bootstraps the launch agent (KeepAlive + RunAtLoad),
+- prints the **URL** and **token** to paste into the iOS app.
+
+Server listens on `0.0.0.0:19847` (port configurable via `VOICEKEEP_PORT`).
 
 ## One-time setup on iPhone
 
-After the app is installed and signed into iCloud, the Voicekeep folder
-is created automatically in iCloud Drive. No manual step is required.
+1. Install **Tailscale** from the App Store and log into the same tailnet.
+2. Open Voicekeep → **Settings (Done) → AI Analyzer**.
+3. Paste the **Tailscale URL** (e.g. `http://100.115.132.84:19847`).
+4. Paste the **Bearer token** (from `~/.voicekeep-token`).
+5. Tap **Test connection** → should turn green ("Connected").
 
 ## Daily use
 
-1. In Voicekeep, open a recording you want analysed.
-2. Tap **AI-анализ…** (or **Analyze with AI…**) in the toolbar menu.
-3. The JSON is written directly to the app's iCloud container (no Share Sheet).
-4. Within ~30 s the analysis Markdown lands in the same container's
-   `processed/` and the **AI Analysis** section appears in the recording
-   detail view (rendered via `MarkdownUI`).
+1. In Voicekeep, open a recording with a finished transcript.
+2. Tap **AI-анализ…** in the toolbar menu.
+3. The button shows "Analysing…" for ~25–30 s.
+4. The **AI Analysis** section appears in the recording with the rendered
+   four-section Markdown (Резюме / Договорённости / Решения / Темы).
 
-## Folders
+The analysis is persisted in the recording's metadata (in `recordings.json`)
+so it survives app restarts.
 
-| Folder | Contents |
-|---|---|
-| `inbox/` | New `*.voicekeep.json` waiting to be analysed. Empty in steady state. |
-| `processed/` | Successful runs: source `.voicekeep.json` + result `.analysis.md`. |
-| `failed/` | Failed runs: source + a sibling `*.error.txt` with the cause. Move back to `inbox/` to retry. |
+## Endpoints
+
+| Verb | Path | Auth | Description |
+|---|---|---|---|
+| GET  | `/health`  | none | Liveness probe; replies `ok`. |
+| POST | `/analyze` | `Authorization: Bearer <token>` | Body = v1 JSON; returns Markdown. |
 
 ## Logs
 
-- Watcher run-by-run log: `~/Library/Logs/voicekeep-analyzer.log`
-- Raw launchd stdout/stderr: `~/Library/Logs/voicekeep-analyzer.launchd.log`
+- launchd stdout/stderr: `~/Library/Logs/voicekeep-analyzer.launchd.log`
+- Includes per-request lines (`POST /analyze`, status codes, durations).
 
-## Force re-analysis of one file
+## Test from the command line
 
 ```bash
-PROC="$HOME/Library/Mobile Documents/iCloud~by~timberbid~echograph/Documents/processed"
-rm "$PROC/<name>.analysis.md"
-mv "$PROC/<name>.voicekeep.json" "${PROC%/processed}/inbox/"
+TOKEN="$(cat ~/.voicekeep-token)"
+curl -X POST http://127.0.0.1:19847/analyze \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  --data @cli/test/sample.voicekeep.json
 ```
+
+Should return ~2-3 KB of Markdown after ~25 s.
 
 ## Uninstall
 
 ```bash
 launchctl bootout "gui/$(id -u)/com.voicekeep.analyzer"
 rm "$HOME/Library/LaunchAgents/com.voicekeep.analyzer.plist"
-# iCloud folders kept by default — delete manually if you want them gone.
+# Token kept by default; delete with: rm ~/.voicekeep-token
 ```
 
 ## Cost note
 
-Roughly $0.04 per 30-minute Russian recording at Sonnet pricing
-(~12k input + ~2k output tokens). Bash and prompt tweaks are free —
-edit `cli/prompts/analyze.md`, drop a JSON in inbox/ to validate.
+~$0.04 per 30-minute Russian recording at Sonnet pricing
+(~12k input + ~2k output tokens). Edit `cli/prompts/analyze.md` to tune;
+no rebuild needed — the next request reads it from disk.
