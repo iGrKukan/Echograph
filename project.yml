@@ -153,4 +153,4 @@ schemes:
       targets:
         Echograph: all
     run:
-      storeKitConfiguration: Echograph/Resources/Echograph.storekit
+      storeKitConfiguration: StoreKitTesting/Echograph.storekit
