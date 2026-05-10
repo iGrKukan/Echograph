@@ -1,0 +1,7 @@
+# Local working files
+*.local.*
+*.swp
+.DS_Store
+
+# Logs (if user redirects launchd output here)
+*.log
