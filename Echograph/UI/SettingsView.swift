@@ -3,14 +3,23 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AnalysisService.self) private var analysisService
     @Environment(\.dismiss) private var dismiss
 
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
+    @AppStorage("Voicekeep.analyzerURL") private var analyzerURL: String = ""
+    @AppStorage("Voicekeep.analyzerToken") private var analyzerToken: String = ""
 
     @State private var showingVocabularySheet = false
     @State private var showingPaywall = false
     @State private var showingManageSubs = false
+    @State private var connectionStatus: ConnectionStatus = .unknown
+    @State private var isTestingConnection = false
+
+    private enum ConnectionStatus {
+        case unknown, ok, failed
+    }
 
     var body: some View {
         NavigationStack {
@@ -36,6 +45,37 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                }
+
+                Section("AI Analyzer") {
+                    TextField("Server URL (e.g. http://100.x.x.x:19847)", text: $analyzerURL)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.URL)
+                        .autocorrectionDisabled()
+                        .onChange(of: analyzerURL) { _, _ in connectionStatus = .unknown }
+                    SecureField("Bearer token", text: $analyzerToken)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .onChange(of: analyzerToken) { _, _ in connectionStatus = .unknown }
+                    HStack {
+                        Text("Status")
+                        Spacer()
+                        Text(connectionStatusText)
+                            .foregroundStyle(connectionStatusColor)
+                    }
+                    Button {
+                        Task { await testConnection() }
+                    } label: {
+                        if isTestingConnection {
+                            HStack {
+                                ProgressView().controlSize(.small)
+                                Text("Testing…")
+                            }
+                        } else {
+                            Label("Test connection", systemImage: "antenna.radiowaves.left.and.right")
+                        }
+                    }
+                    .disabled(analyzerURL.isEmpty || isTestingConnection)
                 }
 
                 Section("Subscription") {
@@ -116,6 +156,29 @@ struct SettingsView: View {
         if purchases.hasProPlus { return "Pro+" }
         if purchases.hasPro { return "Pro" }
         return "Free"
+    }
+
+    private var connectionStatusText: String {
+        switch connectionStatus {
+        case .unknown: return analyzerURL.isEmpty ? "Not configured" : "Unknown"
+        case .ok:      return "Connected"
+        case .failed:  return "Not reachable"
+        }
+    }
+
+    private var connectionStatusColor: Color {
+        switch connectionStatus {
+        case .unknown: return .secondary
+        case .ok:      return .green
+        case .failed:  return .red
+        }
+    }
+
+    private func testConnection() async {
+        isTestingConnection = true
+        defer { isTestingConnection = false }
+        let ok = await analysisService.healthCheck()
+        connectionStatus = ok ? .ok : .failed
     }
 
     private var appVersion: String {
