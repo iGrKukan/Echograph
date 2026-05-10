@@ -11,7 +11,7 @@ struct RecordingDetailView: View {
     @Environment(TranscriptionService.self) private var transcription
     @Environment(PurchaseManager.self) private var purchases
     @Environment(SummaryService.self) private var summary
-    @Environment(AnalysisStore.self) private var analysisStore
+    @Environment(AnalysisService.self) private var analysisService
 
     @State private var player = AudioPlayer()
     @State private var showingDeleteConfirm = false
@@ -63,7 +63,11 @@ struct RecordingDetailView: View {
                         Button {
                             Task { await sendForAnalysis(recording) }
                         } label: {
-                            Label("Analyze with AI…", systemImage: "sparkles")
+                            if isAnalyzing {
+                                Label("Analysing…", systemImage: "sparkles")
+                            } else {
+                                Label("Analyze with AI…", systemImage: "sparkles")
+                            }
                         }
                         .disabled(recording.transcript == nil || isAnalyzing)
 
@@ -585,7 +589,10 @@ struct RecordingDetailView: View {
         isAnalyzing = true
         defer { isAnalyzing = false }
         do {
-            try await AnalysisExport.send(recording)
+            let markdown = try await analysisService.analyze(recording)
+            var updated = recording
+            updated.analysis = markdown
+            store.update(updated)
         } catch {
             analysisError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
