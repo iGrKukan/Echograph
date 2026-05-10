@@ -253,7 +253,10 @@ struct RecordingDetailView: View {
                 summarySection(for: recording)
                 // Show analysis to everyone — it's on-device AI via Apple
                 // Intelligence (or, for admins, their Mac pipeline).
-                if recording.analysis != nil {
+                if isAnalyzing {
+                    macAnalysisProgressBanner
+                        .padding(.horizontal)
+                } else if recording.analysis != nil {
                     AnalysisSection(analysis: recording.analysis)
                         .padding(.horizontal)
                 }
@@ -614,16 +617,41 @@ struct RecordingDetailView: View {
         }
     }
 
+    private var macAnalysisProgressBanner: some View {
+        HStack(spacing: 12) {
+            ProgressView()
+                .controlSize(.regular)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Analyzing on Mac AI…")
+                    .font(.subheadline.weight(.medium))
+                Text("Sending transcript to your Mac analyzer over Tailscale.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+    }
+
     private func sendForAnalysis(_ recording: Recording) async {
+        print("[MacAI] start, url=\(analysisService.urlString) tokenLen=\(analysisService.token.count)")
         isAnalyzing = true
-        defer { isAnalyzing = false }
+        defer {
+            isAnalyzing = false
+            print("[MacAI] done")
+        }
         do {
             let markdown = try await analysisService.analyze(recording)
+            print("[MacAI] got \(markdown.count) chars of markdown back")
             var updated = recording
             updated.analysis = markdown
             store.update(updated)
         } catch {
-            analysisError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            print("[MacAI] error: \(msg)")
+            analysisError = msg
         }
     }
 

@@ -60,7 +60,7 @@ final class AnalysisService {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         req.httpBody = body
-        req.timeoutInterval = 180
+        req.timeoutInterval = 300  // claude CLI can take >3 min on long transcripts
 
         let (data, resp): (Data, URLResponse)
         do {
