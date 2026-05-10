@@ -67,14 +67,17 @@ final class SnapshotTests: XCTestCase {
     func test_04_paywall() {
         let app = launchedApp(forcePaywall: true)
         tapFirstRecording(app)
+        sleep(2)
+
+        let transcribe = app.buttons["transcribeMenu"].firstMatch
+        XCTAssertTrue(transcribe.waitForExistence(timeout: 5), "Transcribe menu not found")
+        transcribe.tap()
         sleep(1)
 
-        let transcribe = app.buttons["Transcribe"].firstMatch
-        if transcribe.waitForExistence(timeout: 4) { transcribe.tap() }
-        sleep(1)
-
-        let whisper = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'whisper'")).firstMatch
-        if whisper.waitForExistence(timeout: 3) { whisper.tap() }
+        // Tap Whisper Tiny inside the menu (locked → opens paywall).
+        let whisperTiny = app.buttons["whisperOption_tiny"].firstMatch
+        XCTAssertTrue(whisperTiny.waitForExistence(timeout: 3), "Whisper Tiny option not found")
+        whisperTiny.tap()
         sleep(2)
 
         snapshot("04-paywall")
@@ -95,15 +98,13 @@ final class SnapshotTests: XCTestCase {
 
     func test_06_search() {
         let app = launchedApp()
-        // Search field is hidden until the user pulls down on the list.
-        app.swipeDown()
-        sleep(1)
+        // With placement: .navigationBarDrawer(displayMode: .always) the
+        // search field is rendered in the navigation bar from launch.
         let searchField = app.searchFields.firstMatch
-        if searchField.waitForExistence(timeout: 3) {
-            searchField.tap()
-            searchField.typeText("research")
-            sleep(2)
-        }
+        XCTAssertTrue(searchField.waitForExistence(timeout: 5), "Search field not found")
+        searchField.tap()
+        searchField.typeText("research")
+        sleep(2)
         snapshot("06-search")
     }
 }

@@ -299,6 +299,7 @@ struct RecordingDetailView: View {
                                     let suggestion = model == WhisperModel.recommendedForCurrentDevice ? " ✓" : ""
                                     Label("\(model.displayName) (~\(model.downloadSizeMB) MB)\(suggestion)", systemImage: purchases.hasPro ? "wand.and.stars" : "lock.fill")
                                 }
+                                .accessibilityIdentifier("whisperOption_\(model.rawValue)")
                             }
                             Divider()
                             Button {
@@ -321,6 +322,7 @@ struct RecordingDetailView: View {
                     }
                     .menuStyle(.button)
                     .buttonStyle(.borderedProminent)
+                    .accessibilityIdentifier("transcribeMenu")
                 }
             }
             .padding(.top, 16)
