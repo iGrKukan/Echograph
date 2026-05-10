@@ -21,10 +21,11 @@ Package.resolved
 *.hmap
 *.ipa
 
-# Models (Whisper weights — should be downloaded at runtime)
-Models/
+# Whisper weights / CoreML compiled models — never bundle, downloaded at runtime
 *.mlmodelc
 *.mlmodel
+# (Earlier this section had `Models/` which silently ate Echograph/Core/Models/.
+# DO NOT add bare directory names here — they match anywhere in the tree.)
 
 # Local config
 *.local.xcconfig
