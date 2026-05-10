@@ -43,16 +43,6 @@
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>100.109.250.104</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSIncludesSubdomains</key>
-				<false/>
-			</dict>
-		</dict>
 	</dict>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Voicekeep creates calendar events from recordings only when you tap Add to Calendar.</string>

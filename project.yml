@@ -88,16 +88,11 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
-        # The Mac AI Analyzer (admin-mode-only) talks to the user's own LAN /
-        # Tailscale endpoint over plain HTTP. NSAllowsLocalNetworking covers
-        # RFC1918 (10/8, 172.16/12, 192.168/16) and *.local; the explicit
-        # 100.x exception covers the Tailscale CGNAT range (100.64.0.0/10).
+        # The Mac AI Analyzer reaches the user's Mac over a Cloudflare
+        # tunnel (HTTPS). Local-network HTTP is still allowed for the LAN
+        # fallback case (192.168.x.x).
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
-          NSExceptionDomains:
-            "100.109.250.104":
-              NSExceptionAllowsInsecureHTTPLoads: true
-              NSIncludesSubdomains: false
         CFBundleDocumentTypes:
           - CFBundleTypeName: Audio
             LSItemContentTypes:

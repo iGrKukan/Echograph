@@ -25,22 +25,26 @@ struct EchographApp: App {
         _analysisService = State(initialValue: AnalysisService())
     }
 
-    /// Pre-fills the AI-Analyzer URL/token from DevDefaults the first time
-    /// they're missing in UserDefaults. Once the user types anything in
-    /// Settings → AI Analyzer it sticks; we never overwrite a non-empty
-    /// existing value. DevDefaults.swift is gitignored.
+    /// Synchronizes the AI-Analyzer URL/token with DevDefaults.
+    ///
+    /// On dev machines where DevDefaults.swift carries non-empty values,
+    /// we force-overwrite UserDefaults on every launch. This means the
+    /// dev's paired iPhone always tracks the current Cloudflare quick-tunnel
+    /// URL without any manual re-entry — bumping DevDefaults + reinstall
+    /// is enough.
+    ///
+    /// On production builds (and on machines where DevDefaults.swift is
+    /// the gitignored stub with empty strings), the function is a no-op
+    /// and the user's manually entered values stay untouched.
     private static func seedAnalyzerDefaultsIfEmpty() {
         let defaults = UserDefaults.standard
         let urlKey = "Voicekeep.analyzerURL"
         let tokenKey = "Voicekeep.analyzerToken"
 
-        let currentURL = defaults.string(forKey: urlKey) ?? ""
-        if currentURL.isEmpty, !DevDefaults.analyzerURL.isEmpty {
+        if !DevDefaults.analyzerURL.isEmpty {
             defaults.set(DevDefaults.analyzerURL, forKey: urlKey)
         }
-
-        let currentToken = defaults.string(forKey: tokenKey) ?? ""
-        if currentToken.isEmpty, !DevDefaults.analyzerToken.isEmpty {
+        if !DevDefaults.analyzerToken.isEmpty {
             defaults.set(DevDefaults.analyzerToken, forKey: tokenKey)
         }
     }
