@@ -50,6 +50,15 @@ for p8 in "$ICLOUD"/AuthKey_*.p8; do
     fi
 done
 
+# Personal dev defaults — copy template on first run so the project compiles.
+DEV_DEFAULTS="$REPO_ROOT/Echograph/Core/DevDefaults.swift"
+DEV_TEMPLATE="$REPO_ROOT/Echograph/Core/DevDefaults.template"
+if [ ! -f "$DEV_DEFAULTS" ] && [ -f "$DEV_TEMPLATE" ]; then
+    cp "$DEV_TEMPLATE" "$DEV_DEFAULTS"
+    echo "✓ Created Echograph/Core/DevDefaults.swift from template"
+    echo "  (edit it locally to pre-fill the AI Analyzer URL & bearer token)"
+fi
+
 echo
 echo "✓ Setup complete."
 echo

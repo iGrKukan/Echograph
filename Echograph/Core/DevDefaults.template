@@ -1,0 +1,18 @@
+// Template for Echograph/Core/DevDefaults.swift — gitignored personal defaults.
+//
+// Copy this file to DevDefaults.swift and fill in your values, OR run
+//   bash fastlane/setup_secrets.sh
+// which auto-creates an empty stub if you don't need the dev pre-fills.
+
+import Foundation
+
+enum DevDefaults {
+    /// Default URL for the Mac AI Analyzer HTTP server.
+    /// Empty string = no pre-fill, user must enter manually in Settings.
+    /// Example: "http://100.x.x.x:19847"
+    static let analyzerURL = ""
+
+    /// Bearer token for the analyzer. Empty = no pre-fill.
+    /// Example: "ba1245646cf36800dd2e405b7edee8007dbe493bb837dfc11063b82c4e3858e5"
+    static let analyzerToken = ""
+}

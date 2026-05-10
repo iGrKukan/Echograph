@@ -46,3 +46,7 @@ fastlane/__pycache__/
 # Build artifacts
 build/
 private_keys/
+
+# Personal dev defaults (analyzer URL, bearer token, etc.) — copied
+# from Echograph/Core/DevDefaults.template by setup_secrets.sh.
+Echograph/Core/DevDefaults.swift
