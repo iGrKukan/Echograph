@@ -20,7 +20,7 @@ recordings before committing to a server-backed Pro+ feature.
 - Distribution to other users. The pipeline assumes the author's machines and
   Apple ID.
 - Multiple analysis presets. Single fixed prompt for v1.
-- Writing analysis back into the iOS app. Result lives only as Markdown on disk.
+- ~~Writing analysis back into the iOS app.~~ — **Lifted in Phase B** (see plan `docs/superpowers/plans/2026-05-10-cli-conversation-analysis-phase-b.md`).
 - Multi-recording memory / cross-conversation context.
 - Custom follow-up Q&A on a transcript.
 - iCloud entitlement / app-private CloudKit container. Uses user-visible
