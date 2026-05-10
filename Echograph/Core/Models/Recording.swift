@@ -10,6 +10,9 @@ struct Recording: Identifiable, Hashable, Codable, Sendable {
     var filename: String
     var transcript: Transcript?
     var summary: String?
+    /// Markdown analysis returned by the Mac-side `cli/server.py` analyzer.
+    /// Persisted with the recording so it survives app restarts.
+    var analysis: String?
     var speakerCount: Int
     var tags: [String]
 
@@ -21,6 +24,7 @@ struct Recording: Identifiable, Hashable, Codable, Sendable {
         filename: String,
         transcript: Transcript? = nil,
         summary: String? = nil,
+        analysis: String? = nil,
         speakerCount: Int = 1,
         tags: [String] = []
     ) {
@@ -31,12 +35,13 @@ struct Recording: Identifiable, Hashable, Codable, Sendable {
         self.filename = filename
         self.transcript = transcript
         self.summary = summary
+        self.analysis = analysis
         self.speakerCount = speakerCount
         self.tags = tags
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, title, createdAt, duration, filename, transcript, summary, speakerCount, tags
+        case id, title, createdAt, duration, filename, transcript, summary, analysis, speakerCount, tags
     }
 
     init(from decoder: Decoder) throws {
@@ -48,6 +53,7 @@ struct Recording: Identifiable, Hashable, Codable, Sendable {
         self.filename = try c.decode(String.self, forKey: .filename)
         self.transcript = try c.decodeIfPresent(Transcript.self, forKey: .transcript)
         self.summary = try c.decodeIfPresent(String.self, forKey: .summary)
+        self.analysis = try c.decodeIfPresent(String.self, forKey: .analysis)
         self.speakerCount = try c.decodeIfPresent(Int.self, forKey: .speakerCount) ?? 1
         self.tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
     }
