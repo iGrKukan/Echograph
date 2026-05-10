@@ -52,6 +52,7 @@
 		D708CBC978086FCB8C4A6256 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608AFCF7CF5813BF26DA2C49 /* LiveActivityManager.swift */; };
 		D71DFA5C1E13130D6EEB13FB /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7462AC95C913C18F38D8585 /* StartRecordingIntent.swift */; };
 		E0751B395F547FBEB16A2327 /* SnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EAAE9445ECD1B9CE4F43A15 /* SnapshotTests.swift */; };
+		EBB16DDC6C1CDBD0D64C17C7 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2364555F0E5592F52EAA70 /* MarkdownUI */; };
 		FDE89A68D2318E555424DBC1 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8736C0092BFD7118BEDFB0B5 /* PurchaseManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +102,7 @@
 		A816E1F8F96812598B0337C7 /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		A9603663942E70848CE6A515 /* WatchRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRecorder.swift; sourceTree = "<group>"; };
 		AA584D06B57D91907E958B43 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
+		B246DC3B373D6371AE3F3206 /* Echograph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Echograph.entitlements; sourceTree = "<group>"; };
 		B32C05924C6400A61EEC0F45 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		B5F18E0D40D302A4CF8CF998 /* AnalysisExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisExport.swift; sourceTree = "<group>"; };
 		BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSheet.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6C85179C7D572AB70E032F3E /* WhisperKit in Frameworks */,
+				EBB16DDC6C1CDBD0D64C17C7 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +242,7 @@
 		A40AECFB09ED8D5E124D3350 /* Echograph */ = {
 			isa = PBXGroup;
 			children = (
+				B246DC3B373D6371AE3F3206 /* Echograph.entitlements */,
 				8EA5F4194DEAC0FE59AEDFB2 /* App */,
 				44DA998E0A452D288E68BD82 /* AppIntents */,
 				CAF8466C9BAF5607D5E01BFF /* Audio */,
@@ -414,6 +418,7 @@
 			name = Echograph;
 			packageProductDependencies = (
 				DE29A22C645F1DD6DDB07BEB /* WhisperKit */,
+				5D2364555F0E5592F52EAA70 /* MarkdownUI */,
 			);
 			productName = Echograph;
 			productReference = 62D4B45BB8F5DFB55B73B4AB /* Echograph.app */;
@@ -475,6 +480,7 @@
 			mainGroup = A00EA840B2870E2E2CD7406A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				695A38684E9300D8DF059C88 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -726,6 +732,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Echograph/Echograph.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Echograph/Info.plist;
@@ -765,6 +772,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Echograph/Echograph.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Echograph/Info.plist;
@@ -917,9 +925,22 @@
 				minimumVersion = 0.10.0;
 			};
 		};
+		BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5D2364555F0E5592F52EAA70 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
 		DE29A22C645F1DD6DDB07BEB /* WhisperKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 695A38684E9300D8DF059C88 /* XCRemoteSwiftPackageReference "WhisperKit" */;
