@@ -37,6 +37,7 @@
 		88D2821D2865361369103CC0 /* WhisperKitTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B5E2EB0FE548BA7DF2148 /* WhisperKitTranscriber.swift */; };
 		8B331FCDD89D92CACC38F62D /* ProductID.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8AA5264C5247315FFFBD1A /* ProductID.swift */; };
 		9AF8420E58CE183713DC930D /* ConsentDisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */; };
+		9CA9159523106F36C79DB479 /* AnalysisExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F18E0D40D302A4CF8CF998 /* AnalysisExport.swift */; };
 		9D6B6D675F354CB8AFF6628F /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502EB2FB6AF6EF57EFF1336 /* PaywallView.swift */; };
 		A20BD056C3CBBCB9B19F3FFB /* WatchRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9603663942E70848CE6A515 /* WatchRecorder.swift */; };
 		A5F75E9DA617601699B048BF /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E760532AF2D7DFBA1226573 /* WhisperModel.swift */; };
@@ -101,6 +102,7 @@
 		A9603663942E70848CE6A515 /* WatchRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRecorder.swift; sourceTree = "<group>"; };
 		AA584D06B57D91907E958B43 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 		B32C05924C6400A61EEC0F45 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		B5F18E0D40D302A4CF8CF998 /* AnalysisExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisExport.swift; sourceTree = "<group>"; };
 		BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSheet.swift; sourceTree = "<group>"; };
 		BF38E814877DAF23DB7CD294 /* AskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSheet.swift; sourceTree = "<group>"; };
 		C06C8D2ADF09612FBF63F13B /* AudioFileImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileImporter.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 		B670F896C15F9144834FF6E8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B5F18E0D40D302A4CF8CF998 /* AnalysisExport.swift */,
 				6E605C29E574997450C8EF44 /* Recording.swift */,
 				DDF96D4EEA575F5710469158 /* Transcript.swift */,
 				3C9BBB858362582138DA3857 /* TranscriptionLanguage.swift */,
@@ -533,6 +536,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CA9159523106F36C79DB479 /* AnalysisExport.swift in Sources */,
 				1EB89FAC133365F63AAF9170 /* AppleSpeechTranscriber.swift in Sources */,
 				07E2C8352B77EB43B210F75C /* AskSheet.swift in Sources */,
 				3F39AA88DD62C1D96C28C561 /* AudioFileImporter.swift in Sources */,
