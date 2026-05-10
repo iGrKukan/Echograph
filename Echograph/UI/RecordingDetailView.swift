@@ -226,7 +226,7 @@ struct RecordingDetailView: View {
         if let transcript = recording.transcript {
             VStack(spacing: 16) {
                 summarySection(for: recording)
-                AnalysisSection(recordingId: recording.id)
+                AnalysisSection(analysis: recording.analysis)
                     .padding(.horizontal)
                 TranscriptView(
                     transcript: transcript,

@@ -2,12 +2,10 @@ import SwiftUI
 import MarkdownUI
 
 struct AnalysisSection: View {
-    let recordingId: UUID
-
-    @Environment(AnalysisStore.self) private var analysisStore
+    let analysis: String?
 
     var body: some View {
-        if let markdown = analysisStore.markdown(for: recordingId) {
+        if let analysis, !analysis.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Image(systemName: "sparkles")
@@ -16,7 +14,7 @@ struct AnalysisSection: View {
                         .font(.headline)
                     Spacer()
                 }
-                Markdown(markdown)
+                Markdown(analysis)
                     .markdownTheme(.gitHub)
                     .textSelection(.enabled)
             }
