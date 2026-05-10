@@ -57,6 +57,17 @@ struct RecordingDetailView: View {
                         }
                         .disabled(recording.transcript == nil)
 
+                        ShareLink(
+                            item: AnalysisExport(recording: recording),
+                            preview: SharePreview(
+                                "AI Analysis",
+                                image: Image(systemName: "sparkles")
+                            )
+                        ) {
+                            Label("Analyze with AI…", systemImage: "sparkles")
+                        }
+                        .disabled(recording.transcript == nil)
+
                         Button {
                             translationSource = recording.transcript?.fullText ?? ""
                             showingTranslation = true
