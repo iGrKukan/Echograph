@@ -1,10 +1,12 @@
-# Xcode
+# Xcode — keep .xcodeproj checked in (TimberBid-style workflow), drop only
+# the per-user state so two Macs don't fight over breakpoints / window layout.
 build/
 DerivedData/
-*.xcodeproj/
-*.xcworkspace/
 xcuserdata/
 *.xcuserstate
+project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
 
 # Swift Package Manager
 .build/
