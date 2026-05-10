@@ -37,6 +37,7 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: "gear")
                     }
+                    .accessibilityIdentifier("settingsButton")
                 }
             }
             .sheet(isPresented: $showingSettings) {
@@ -90,6 +91,7 @@ struct HomeView: View {
                     } label: {
                         RecordingRow(recording: recording, query: searchQuery)
                     }
+                    .accessibilityIdentifier("recordingRow_\(recording.id.uuidString)")
                 }
                 .onDelete { indexSet in
                     indexSet.map { filteredRecordings[$0] }.forEach(store.delete)

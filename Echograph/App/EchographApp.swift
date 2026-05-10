@@ -9,6 +9,9 @@ struct EchographApp: App {
     @State private var summary: SummaryService
 
     init() {
+        // UI test hooks — must run before stores observe their state.
+        UITestHooks.applyIfNeeded()
+
         let store = RecordingStore()
         _store = State(initialValue: store)
         _transcription = State(initialValue: TranscriptionService(store: store))

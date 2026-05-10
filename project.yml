@@ -93,6 +93,19 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
 
+  EchographUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - EchographUITests
+    dependencies:
+      - target: Echograph
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.UITests
+        TEST_TARGET_NAME: Echograph
+        GENERATE_INFOPLIST_FILE: YES
+
   EchographLiveActivity:
     type: app-extension
     platform: iOS
@@ -152,5 +165,9 @@ schemes:
     build:
       targets:
         Echograph: all
+        EchographUITests: [test]
     run:
       storeKitConfiguration: StoreKitTesting/Echograph.storekit
+    test:
+      targets:
+        - EchographUITests

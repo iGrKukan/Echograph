@@ -12,6 +12,7 @@ final class PurchaseManager {
 
     var hasPro: Bool {
         #if DEBUG
+        if UITestHooks.forcePaywall { return false }
         return true
         #else
         return purchasedIdentifiers.contains(ProductID.proLifetime.rawValue) || hasProPlus
@@ -20,6 +21,7 @@ final class PurchaseManager {
 
     var hasProPlus: Bool {
         #if DEBUG
+        if UITestHooks.forcePaywall { return false }
         return true
         #else
         return purchasedIdentifiers.contains(ProductID.proPlusMonthly.rawValue) ||
