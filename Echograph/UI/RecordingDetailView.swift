@@ -30,6 +30,7 @@ struct RecordingDetailView: View {
     @State private var analysisError: String?
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
+    @AppStorage("Voicekeep.adminMode") private var adminMode: Bool = false
 
     private var preferredLanguage: TranscriptionLanguage {
         TranscriptionLanguage(rawValue: preferredLanguageRaw) ?? .auto
@@ -60,16 +61,18 @@ struct RecordingDetailView: View {
                         }
                         .disabled(recording.transcript == nil)
 
-                        Button {
-                            Task { await sendForAnalysis(recording) }
-                        } label: {
-                            if isAnalyzing {
-                                Label("Analysing…", systemImage: "sparkles")
-                            } else {
-                                Label("Analyze with AI…", systemImage: "sparkles")
+                        if adminMode {
+                            Button {
+                                Task { await sendForAnalysis(recording) }
+                            } label: {
+                                if isAnalyzing {
+                                    Label("Analysing…", systemImage: "sparkles")
+                                } else {
+                                    Label("Analyze with AI…", systemImage: "sparkles")
+                                }
                             }
+                            .disabled(recording.transcript == nil || isAnalyzing)
                         }
-                        .disabled(recording.transcript == nil || isAnalyzing)
 
                         Button {
                             translationSource = recording.transcript?.fullText ?? ""
@@ -226,8 +229,10 @@ struct RecordingDetailView: View {
         if let transcript = recording.transcript {
             VStack(spacing: 16) {
                 summarySection(for: recording)
-                AnalysisSection(analysis: recording.analysis)
-                    .padding(.horizontal)
+                if adminMode {
+                    AnalysisSection(analysis: recording.analysis)
+                        .padding(.horizontal)
+                }
                 TranscriptView(
                     transcript: transcript,
                     currentTime: player.currentTime,

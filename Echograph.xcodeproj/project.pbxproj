@@ -23,6 +23,7 @@
 		4E8FD0DBB333823CE7F97E21 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E605C29E574997450C8EF44 /* Recording.swift */; };
 		51FB1088D628DD61F7AC5737 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AC654E40BB103B9DB41AA23 /* Assets.xcassets */; };
 		5352F41659F14CB612918531 /* UITestHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8A4F0C6968E14EA002681 /* UITestHooks.swift */; };
+		5C77DA5A2AC780D1E1BE104A /* AnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1723D23A402FD9F640B9C41F /* AnalysisService.swift */; };
 		634CC6F434ACF68C4D5F0AF5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ACFE07E42B5734FEDEDF7 /* AudioRecorder.swift */; };
 		68FBCCFB9E2E6741A294DED9 /* WatchConnectivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927285BE76A5B0029F1316A9 /* WatchConnectivityCoordinator.swift */; };
 		6C85179C7D572AB70E032F3E /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DE29A22C645F1DD6DDB07BEB /* WhisperKit */; };
@@ -71,6 +72,7 @@
 		056251F1412B18056A27E8B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		05B2DAA7BA942AA869D34B93 /* TranscriptionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionEngine.swift; sourceTree = "<group>"; };
 		07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentDisclaimerView.swift; sourceTree = "<group>"; };
+		1723D23A402FD9F640B9C41F /* AnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisService.swift; sourceTree = "<group>"; };
 		1BF0DF46B4745AFB2FFE7EAA /* EchographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchographApp.swift; sourceTree = "<group>"; };
 		1CB8A4F0C6968E14EA002681 /* UITestHooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestHooks.swift; sourceTree = "<group>"; };
 		237B5E2EB0FE548BA7DF2148 /* WhisperKitTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperKitTranscriber.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 		CC011061F8CB7C76513DF9AC /* Stores */ = {
 			isa = PBXGroup;
 			children = (
+				1723D23A402FD9F640B9C41F /* AnalysisService.swift */,
 				D4A016ECEDE27BF97EE000D3 /* RecordingStore.swift */,
 			);
 			path = Stores;
@@ -545,6 +548,7 @@
 			files = (
 				9CA9159523106F36C79DB479 /* AnalysisExport.swift in Sources */,
 				743CC6680A14469FF0C6777B /* AnalysisSection.swift in Sources */,
+				5C77DA5A2AC780D1E1BE104A /* AnalysisService.swift in Sources */,
 				1EB89FAC133365F63AAF9170 /* AppleSpeechTranscriber.swift in Sources */,
 				07E2C8352B77EB43B210F75C /* AskSheet.swift in Sources */,
 				3F39AA88DD62C1D96C28C561 /* AudioFileImporter.swift in Sources */,
@@ -922,7 +926,7 @@
 			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.0;
+				minimumVersion = 1.0.0;
 			};
 		};
 		BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
