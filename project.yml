@@ -1,0 +1,156 @@
+name: Echograph
+options:
+  bundleIdPrefix: by.timberbid
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  developmentLanguage: en
+  knownRegions:
+    - en
+    - ru
+    - de
+    - fr
+    - ja
+    - Base
+  createIntermediateGroups: true
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: ZVYKY9TF2X
+    SWIFT_VERSION: "6.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    GENERATE_INFOPLIST_FILE: NO
+
+packages:
+  WhisperKit:
+    url: https://github.com/argmaxinc/WhisperKit.git
+    from: 0.10.0
+
+targets:
+  Echograph:
+    type: application
+    platform: iOS
+    sources:
+      - path: Echograph
+        excludes:
+          - "Info.plist"
+      - path: Shared
+    resources:
+      - path: Echograph/Resources
+        optional: true
+    dependencies:
+      - package: WhisperKit
+    # Live Activity widget extension — disabled by default because iOS Simulator
+    # consistently fails to register it ("Failed to get descriptors for
+    # extensionBundleID"). The widget target itself still compiles. Re-enable
+    # this dependency when running on a real device to test the Dynamic Island
+    # / Lock Screen widget:
+    # - target: EchographLiveActivity
+    #
+    # EchographWatch is a separate target — to embed it into the iOS bundle,
+    # install the watchOS Simulator runtime (Xcode › Settings › Components)
+    # and then re-enable the embed line below.
+    # - target: EchographWatch
+    #   embed: true
+    #   codeSign: true
+    info:
+      path: Echograph/Info.plist
+      properties:
+        CFBundleDisplayName: Echograph
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen:
+          UIColorName: ""
+        NSMicrophoneUsageDescription: "Echograph records your voice locally — audio never leaves your device."
+        NSSpeechRecognitionUsageDescription: "Echograph transcribes recordings on-device using Apple Speech. Audio never leaves your device."
+        NSRemindersFullAccessUsageDescription: "Echograph creates reminders from transcript segments only when you tap Add to Reminders."
+        NSRemindersUsageDescription: "Echograph creates reminders from transcript segments only when you tap Add to Reminders."
+        NSCalendarsFullAccessUsageDescription: "Echograph creates calendar events from recordings only when you tap Add to Calendar."
+        NSCalendarsUsageDescription: "Echograph creates calendar events from recordings only when you tap Add to Calendar."
+        NSSupportsLiveActivities: true
+        UIBackgroundModes:
+          - audio
+        UIRequiredDeviceCapabilities:
+          - arm64
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+
+  EchographLiveActivity:
+    type: app-extension
+    platform: iOS
+    sources:
+      - EchographLiveActivity
+      - path: Shared
+    info:
+      path: EchographLiveActivity/Info.plist
+      properties:
+        CFBundleDisplayName: Echograph Live Activity
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.LiveActivity
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SKIP_INSTALL: YES
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+
+  EchographWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget:
+      watchOS: "10.0"
+    sources:
+      - EchographWatch
+    info:
+      path: EchographWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Echograph
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: by.timberbid.echograph
+        WKWatchOnly: false
+        NSMicrophoneUsageDescription: "Echograph records your voice locally on Apple Watch."
+        UIBackgroundModes:
+          - audio
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.watchkitapp
+        TARGETED_DEVICE_FAMILY: "4"
+        SDKROOT: watchos
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SUPPORTED_PLATFORMS: "watchos watchsimulator"
+        SUPPORTS_MACCATALYST: NO
+        TARGETED_DEVICE_FAMILY_watchos: "4"
+
+schemes:
+  Echograph:
+    build:
+      targets:
+        Echograph: all
+    run:
+      storeKitConfiguration: Echograph/Resources/Echograph.storekit

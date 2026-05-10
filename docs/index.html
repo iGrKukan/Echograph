@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Echograph — On-device voice transcription for iPhone</title>
+  <meta name="description" content="Whisper-quality voice transcription that runs entirely on your iPhone. No cloud, no upload, no paid minutes." />
+  <link rel="icon" href="assets/icon-1024.png" />
+  <meta property="og:title" content="Echograph — On-device voice transcription" />
+  <meta property="og:description" content="Whisper runs locally on your iPhone. Audio never leaves your device." />
+  <meta property="og:image" content="assets/og.png" />
+  <style>
+    :root {
+      --bg: #0c0d12;
+      --bg-2: #1a0e15;
+      --fg: #f6f3f0;
+      --muted: #8a8590;
+      --accent: #e7472f;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--fg);
+      font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+    nav { display: flex; align-items: center; gap: 24px; margin-bottom: 64px; }
+    nav .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 18px; }
+    nav .brand img { width: 36px; height: 36px; border-radius: 8px; }
+    nav .links { margin-left: auto; display: flex; gap: 20px; }
+    nav .links a { color: var(--muted); font-size: 14px; }
+    .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; margin-bottom: 80px; }
+    @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+    h1 { font-size: clamp(36px, 5vw, 64px); line-height: 1.1; margin: 0 0 20px; letter-spacing: -0.02em; }
+    h1 em { font-style: normal; color: var(--accent); }
+    .lead { font-size: 18px; color: var(--muted); margin-bottom: 28px; max-width: 520px; }
+    .badges { display: flex; gap: 12px; flex-wrap: wrap; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; background: var(--accent); color: white; border-radius: 12px; font-weight: 600; font-size: 16px; }
+    .cta.outline { background: transparent; border: 1px solid var(--border); color: var(--fg); }
+    .hero-art img { width: 100%; max-width: 380px; border-radius: 32px; box-shadow: 0 20px 80px rgba(231,71,47,0.15); }
+    .hero-art { text-align: center; }
+    section { margin-bottom: 64px; }
+    h2 { font-size: clamp(24px, 3vw, 36px); margin: 0 0 24px; letter-spacing: -0.01em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .feature { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .feature h3 { margin: 0 0 8px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .price { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .price.featured { border-color: var(--accent); }
+    .price h3 { margin: 0 0 4px; font-size: 18px; }
+    .price .amount { font-size: 32px; font-weight: 700; margin: 8px 0; }
+    .price ul { margin: 12px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px; }
+    .price li::before { content: "✓ "; color: var(--accent); margin-right: 4px; }
+    footer { color: var(--muted); border-top: 1px solid var(--border); padding-top: 24px; margin-top: 48px; font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .privacy-banner { background: linear-gradient(90deg, rgba(231,71,47,0.1), rgba(231,71,47,0.04)); border: 1px solid rgba(231,71,47,0.25); border-radius: 16px; padding: 18px 22px; margin-bottom: 48px; font-size: 15px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="brand">
+        <img src="assets/icon-1024.png" alt="Echograph" />
+        Echograph
+      </div>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="support.html">Support</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <h1>Your voice. <em>Your iPhone.</em><br>Nothing else.</h1>
+        <p class="lead">
+          Whisper runs locally on your phone. Audio never leaves the device.
+          Transcribe interviews, lectures, meetings — fully offline,
+          with word-level timestamps, search, and on-device AI summaries.
+        </p>
+        <div class="badges" style="margin-bottom: 24px;">
+          <span class="pill">🔒 No cloud</span>
+          <span class="pill">⚡️ Apple Neural Engine</span>
+          <span class="pill">🌐 90+ languages</span>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a class="cta" href="#">Coming soon to App Store</a>
+          <a class="cta outline" href="https://github.com/iGrKukan/Echograph">GitHub</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/01-home-en-marketing.png" alt="Echograph on iPhone" />
+      </div>
+    </div>
+
+    <div class="privacy-banner">
+      <strong>Privacy by design.</strong> Echograph processes everything on your iPhone — no analytics SDKs, no third-party trackers, no audio uploads. Apple Privacy Label: <em>Data Not Collected</em>.
+    </div>
+
+    <section id="features">
+      <h2>Built for serious recording.</h2>
+      <div class="grid">
+        <div class="feature">
+          <h3>🎤 Whisper Large v3 Turbo</h3>
+          <p>State-of-the-art transcription on Apple Neural Engine. 90+ languages, word-level timestamps, custom vocabularies for medical/legal/technical terms.</p>
+        </div>
+        <div class="feature">
+          <h3>✨ Apple Intelligence (Pro+)</h3>
+          <p>On-device summaries with action items. Ask questions about any recording. Auto-suggested topical tags.</p>
+        </div>
+        <div class="feature">
+          <h3>🔍 Instant search</h3>
+          <p>Find any word across every recording. Tap a transcript segment to jump there in audio. Filter by tags, by speakers, by highlights.</p>
+        </div>
+        <div class="feature">
+          <h3>👥 Speaker labels</h3>
+          <p>Color-coded speaker badges for interviews, podcasts, multi-party meetings. Rename, remove, or reassign with one tap.</p>
+        </div>
+        <div class="feature">
+          <h3>📤 Real exports</h3>
+          <p>PDF with timestamps, Word, Markdown, plain text, SRT and VTT subtitles. Send a quote to Reminders or Calendar in one tap.</p>
+        </div>
+        <div class="feature">
+          <h3>📱 Apple-native</h3>
+          <p>iPhone, Apple Watch, Vision Pro. Live Activity, Action Button, Lock Screen widget, Apple Translation, StoreKit 2.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2>Honest pricing.</h2>
+      <div class="pricing">
+        <div class="price">
+          <h3>Free</h3>
+          <div class="amount">$0</div>
+          <p style="color: var(--muted); margin: 0; font-size: 13px;">Forever.</p>
+          <ul>
+            <li>Apple Speech transcription</li>
+            <li>Full search & export</li>
+            <li>Tags, highlights, edit</li>
+            <li>Reminders & Calendar</li>
+          </ul>
+        </div>
+        <div class="price featured">
+          <h3>Pro</h3>
+          <div class="amount">$19.99</div>
+          <p style="color: var(--muted); margin: 0; font-size: 13px;">One-time. No subscription.</p>
+          <ul>
+            <li>Whisper Tiny / Base / Small / Large v3 Turbo</li>
+            <li>Custom vocabulary biasing</li>
+            <li>watchOS standalone recording</li>
+            <li>Live Activity & Action Button</li>
+          </ul>
+        </div>
+        <div class="price">
+          <h3>Pro+</h3>
+          <div class="amount">$29.99<span style="font-size: 14px; color: var(--muted);">/year</span></div>
+          <p style="color: var(--muted); margin: 0; font-size: 13px;">7-day free trial.</p>
+          <ul>
+            <li>Apple Intelligence summaries</li>
+            <li>AI Q&A about recordings</li>
+            <li>Auto-suggested tags</li>
+            <li>Apple Pencil annotations (iPad)</li>
+            <li>E2EE iCloud sync</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Echograph</span>
+      <a href="privacy.html">Privacy</a>
+      <a href="support.html">Support</a>
+      <a href="https://github.com/iGrKukan/Echograph">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>

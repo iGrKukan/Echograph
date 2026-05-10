@@ -1,0 +1,28 @@
+# Xcode
+build/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Generated
+*.hmap
+*.ipa
+
+# Models (Whisper weights — should be downloaded at runtime)
+Models/
+*.mlmodelc
+*.mlmodel
+
+# Local config
+*.local.xcconfig

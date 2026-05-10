@@ -1,0 +1,574 @@
+{
+  "sourceLanguage" : "en",
+  "version" : "1.0",
+  "strings" : {
+    "Echograph" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Echograph" } }
+      }
+    },
+    "Recording" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Запись" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "録音" } }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Настройки" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réglages" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定" } }
+      }
+    },
+    "No recordings yet" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No recordings yet" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Пока нет записей" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch keine Aufnahmen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun enregistrement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "まだ録音はありません" } }
+      }
+    },
+    "Tap the record button to capture your first voice note. Audio stays on your device." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap the record button to capture your first voice note. Audio stays on your device." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Нажмите красную кнопку, чтобы сделать первую запись. Аудио не покидает устройство." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tippe auf den Aufnahme-Button, um deine erste Sprachnotiz zu erstellen. Audio bleibt auf deinem Gerät." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appuyez sur le bouton d'enregistrement pour capturer votre première note vocale. L'audio reste sur votre appareil." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "録音ボタンをタップして、最初のボイスメモを作成します。音声はデバイスに保存されます。" } }
+      }
+    },
+    "Search recordings or transcripts" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search recordings or transcripts" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Поиск по записям и транскриптам" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahmen oder Transkripte durchsuchen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rechercher dans les enregistrements" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "録音や文字起こしを検索" } }
+      }
+    },
+    "Microphone access needed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Microphone access needed" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Нужен доступ к микрофону" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mikrofonzugriff erforderlich" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Accès au microphone requis" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "マイクへのアクセスが必要です" } }
+      }
+    },
+    "Echograph needs access to your microphone to record voice notes. Audio stays on your device." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Echograph needs access to your microphone to record voice notes. Audio stays on your device." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Echograph нужен доступ к микрофону для записи. Аудио остаётся на вашем iPhone." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Echograph benötigt Mikrofonzugriff für Sprachaufnahmen. Audio bleibt auf deinem iPhone." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Echograph a besoin d'accéder au microphone pour enregistrer. L'audio reste sur votre iPhone." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Echographが録音するためにマイクへのアクセスが必要です。音声はiPhoneに保存されます。" } }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Открыть настройки" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen öffnen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir Réglages" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "設定を開く" } }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Отмена" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "キャンセル" } }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "OK" } }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Готово" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Terminé" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Сохранить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Speichern" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrer" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "保存" } }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Добавить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Hinzufügen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "追加" } }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Изменить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bearbeiten" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "編集" } }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Удалить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Löschen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "削除" } }
+      }
+    },
+    "Try Again" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try Again" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Повторить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erneut versuchen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réessayer" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "もう一度" } }
+      }
+    },
+    "Transcribe" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcribe" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Распознать" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkribieren" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Transcrire" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "文字起こし" } }
+      }
+    },
+    "Apple Speech (fast, free)" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Apple Speech (fast, free)" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Apple Speech (быстро, бесплатно)" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Apple Speech (schnell, gratis)" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Apple Speech (rapide, gratuit)" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Apple Speech (高速・無料)" } }
+      }
+    },
+    "Transcribing on-device…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcribing on-device…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Распознавание на устройстве…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkribiere auf dem Gerät…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Transcription sur l'appareil…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "デバイス上で文字起こし中…" } }
+      }
+    },
+    "Loading model & transcribing…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading model & transcribing…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Загрузка модели и распознавание…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Lade Modell & transkribiere…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chargement du modèle & transcription…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "モデルを読み込んで文字起こし中…" } }
+      }
+    },
+    "No transcript yet" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No transcript yet" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Транскрипта ещё нет" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch kein Transkript" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas encore de transcription" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "まだ文字起こしがありません" } }
+      }
+    },
+    "Transcribe on-device. Audio stays on your iPhone." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcribe on-device. Audio stays on your iPhone." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Распознавание на устройстве. Аудио не покидает iPhone." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkription auf dem Gerät. Audio bleibt auf deinem iPhone." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Transcription sur l'appareil. L'audio reste sur votre iPhone." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "デバイス上で文字起こし。音声はiPhoneに残ります。" } }
+      }
+    },
+    "Generate AI Summary" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Generate AI Summary" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Сгенерировать AI-резюме" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "AI-Zusammenfassung erstellen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Générer un résumé IA" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "AI要約を生成" } }
+      }
+    },
+    "AI Summary" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "AI Summary" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "AI-резюме" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "AI-Zusammenfassung" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Résumé IA" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "AI要約" } }
+      }
+    },
+    "Ask AI" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ask AI" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Спросить AI" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "AI fragen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Demander à l'IA" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "AIに質問" } }
+      }
+    },
+    "Generating summary…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Generating summary…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Генерируем резюме…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erstelle Zusammenfassung…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Génération du résumé…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "要約を生成中…" } }
+      }
+    },
+    "Add tag" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add tag" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Добавить тег" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag hinzufügen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un tag" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タグを追加" } }
+      }
+    },
+    "Suggest" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Suggest" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Предложить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Vorschlagen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suggérer" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "提案" } }
+      }
+    },
+    "Custom Vocabulary" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Custom Vocabulary" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Свой словарь" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Eigenes Vokabular" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vocabulaire personnel" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "カスタム語彙" } }
+      }
+    },
+    "Copy Text" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy Text" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Копировать текст" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Text kopieren" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Copier le texte" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "テキストをコピー" } }
+      }
+    },
+    "Copy with Timecode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy with Timecode" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Копировать с таймкодом" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mit Timecode kopieren" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Copier avec timecode" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "タイムコード付きでコピー" } }
+      }
+    },
+    "Share…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Share…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Поделиться…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Teilen…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "共有…" } }
+      }
+    },
+    "Highlight" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Highlight" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Выделить" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Markieren" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Surligner" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ハイライト" } }
+      }
+    },
+    "Remove Highlight" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove Highlight" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Убрать выделение" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Markierung entfernen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retirer le surlignage" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ハイライトを削除" } }
+      }
+    },
+    "Show only highlights" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show only highlights" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Только выделенное" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nur Markierungen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Surlignages seulement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "ハイライトのみ表示" } }
+      }
+    },
+    "Add to Reminders" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add to Reminders" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Добавить в напоминания" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu Erinnerungen hinzufügen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter aux rappels" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "リマインダーに追加" } }
+      }
+    },
+    "Add to Calendar" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add to Calendar" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Добавить в календарь" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zu Kalender hinzufügen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter au calendrier" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "カレンダーに追加" } }
+      }
+    },
+    "Translate Transcript…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Translate Transcript…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Перевести транскрипт…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkript übersetzen…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Traduire la transcription…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "文字起こしを翻訳…" } }
+      }
+    },
+    "Export…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export…" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Экспорт…" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Exportieren…" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exporter…" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "書き出し…" } }
+      }
+    },
+    "Default Language" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Default Language" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Язык по умолчанию" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Standardsprache" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue par défaut" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "既定の言語" } }
+      }
+    },
+    "Subscription" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Subscription" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Подписка" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abonnement" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Abonnement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サブスクリプション" } }
+      }
+    },
+    "Current Tier" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Current Tier" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Текущий тариф" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aktuelle Stufe" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Niveau actuel" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "現在のプラン" } }
+      }
+    },
+    "Upgrade to Pro" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Upgrade to Pro" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Перейти на Pro" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Auf Pro upgraden" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Passer à Pro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Proにアップグレード" } }
+      }
+    },
+    "Restore Purchases" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restore Purchases" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Восстановить покупки" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Käufe wiederherstellen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Restaurer les achats" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "購入を復元" } }
+      }
+    },
+    "Manage Subscription" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Manage Subscription" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Управление подпиской" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abo verwalten" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Gérer l'abonnement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サブスクリプションを管理" } }
+      }
+    },
+    "Privacy" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Приватность" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Datenschutz" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Confidentialité" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "プライバシー" } }
+      }
+    },
+    "Audio never leaves your device." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Audio never leaves your device." } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Аудио никогда не покидает ваше устройство." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Audio verlässt niemals dein Gerät." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "L'audio ne quitte jamais votre appareil." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "音声はデバイスから出ません。" } }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "О приложении" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Über" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "À propos" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "情報" } }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Версия" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "バージョン" } }
+      }
+    },
+    "Contact Support" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Contact Support" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Связаться с поддержкой" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Support kontaktieren" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Contacter l'assistance" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "サポートに連絡" } }
+      }
+    },
+    "Echograph Pro" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "Echograph Pro" } }
+      }
+    },
+    "Speaker Diarization" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speaker Diarization" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Разделение спикеров" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprecher-Trennung" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Diarisation des intervenants" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "話者分離" } }
+      }
+    },
+    "Privacy by Design" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy by Design" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Приватность по дизайну" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Privatsphäre by Design" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Confidentialité par défaut" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "プライバシー重視設計" } }
+      }
+    },
+    "Lifetime" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lifetime" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Навсегда" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Lebenslang" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "À vie" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "永続" } }
+      }
+    },
+    "Auto-detect" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-detect" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Автоопределение" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Automatisch" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Détection auto" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "自動検出" } }
+      }
+    },
+    "Edit Segment" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit Segment" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Изменить сегмент" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Segment bearbeiten" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier le segment" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "セグメントを編集" } }
+      }
+    },
+    "Assign Speaker" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Assign Speaker" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Назначить спикера" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprecher zuweisen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Attribuer un intervenant" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "話者を割り当て" } }
+      }
+    },
+    "New Speaker" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New Speaker" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Новый спикер" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuer Sprecher" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouvel intervenant" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "新規話者" } }
+      }
+    },
+    "Remove Speaker" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove Speaker" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Удалить спикера" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprecher entfernen" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retirer l'intervenant" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "話者を削除" } }
+      }
+    },
+    "Couldn't start recording" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't start recording" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Не удалось начать запись" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme konnte nicht starten" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Impossible de démarrer l'enregistrement" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "録音を開始できません" } }
+      }
+    },
+    "Delete this recording?" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete this recording?" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Удалить запись?" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme löschen?" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer cet enregistrement ?" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "この録音を削除しますか？" } }
+      }
+    },
+    "Recording missing" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording missing" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Запись не найдена" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme fehlt" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrement introuvable" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "録音が見つかりません" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Echograph — Support</title>
+  <link rel="icon" href="assets/icon-1024.png" />
+  <style>
+    :root { --bg: #0c0d12; --fg: #f6f3f0; --muted: #8a8590; --accent: #e7472f; --border: rgba(255,255,255,0.08); --card: rgba(255,255,255,0.04); }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 32px 24px 80px; }
+    nav { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; }
+    nav .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+    nav .brand img { width: 32px; height: 32px; border-radius: 7px; }
+    nav .links { margin-left: auto; display: flex; gap: 20px; }
+    nav .links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    h1 { font-size: 36px; letter-spacing: -0.02em; margin: 0 0 16px; }
+    h2 { font-size: 20px; margin: 32px 0 8px; }
+    p, li { color: #d9d4cf; }
+    a { color: var(--accent); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin: 16px 0; }
+    .card details { margin: 0; }
+    .card summary { cursor: pointer; font-weight: 600; font-size: 16px; padding: 4px 0; }
+    .card summary::-webkit-details-marker { color: var(--accent); }
+    .card details[open] summary { margin-bottom: 12px; }
+    code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+    footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="brand">
+        <img src="assets/icon-1024.png" alt="Echograph" />
+        Echograph
+      </div>
+      <div class="links">
+        <a href="index.html">Home</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </nav>
+
+    <h1>Support</h1>
+    <p>The fastest way to get help is email. We read every message.</p>
+    <p><a href="mailto:support@echograph.app">support@echograph.app</a></p>
+
+    <h2>Frequent questions</h2>
+
+    <div class="card">
+      <details>
+        <summary>Is my audio uploaded anywhere?</summary>
+        <p>No. Recordings, transcripts, and summaries stay on your iPhone. The only network request the app ever makes is downloading Whisper model weights from <code>huggingface.co/argmaxinc/whisperkit-coreml</code> on first use, and Apple Translation if you tap "Translate Transcript". See the <a href="privacy.html">privacy policy</a> for details.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Why does Whisper say "No speech detected"?</summary>
+        <p>Three usual causes: (1) the recording is too quiet — try closer to the mic; (2) you picked Whisper Tiny on a noisy clip — try Whisper Small or Large v3 Turbo; (3) the language hint doesn't match what you said — set Language to "Auto-detect" or pick the actual language of the recording.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Does Whisper work on older iPhones?</summary>
+        <p>Yes, but slower. Whisper Tiny / Base run fine on iPhone 12 / 13. Whisper Large v3 Turbo wants iPhone 15 or newer for comfortable speed. Apple Speech (Free tier) works on all iPhones with iOS 17+.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Is Apple Intelligence required?</summary>
+        <p>Only for the AI Summary, AI Q&A, and Auto-tag features (the Pro+ tier). The base transcription works on every iPhone running iOS 17+. Apple Intelligence requires iPhone 15 Pro / 16 / 17 and iOS 26.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>How do I cancel my Pro+ subscription?</summary>
+        <p>Open Settings → tap your name → Subscriptions → Echograph Pro+ → Cancel Subscription. Your subscription stays active until the end of the billing period.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Pro is one-time. Why is there also a Pro+ subscription?</summary>
+        <p>Pro covers everything most people need — Whisper, custom vocabulary, exports — for a single $19.99 payment. Pro+ adds AI features that depend on continuously-updated Apple Intelligence models, which is why it's a yearly subscription. You can stay on Pro forever and never pay again.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Can I use it with Apple Watch?</summary>
+        <p>Yes. The watchOS companion app records audio standalone (great for one-handed capture), then transfers the file to your iPhone over WatchConnectivity when you stop. Transcription happens on the phone.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Can I export to my note-taking app?</summary>
+        <p>Yes. Tap the ••• menu in any recording → Export → choose Markdown for Obsidian/Bear, Word/PDF for traditional notes, SRT/VTT for video editors. Or use Share to AirDrop, Mail, or any iOS share extension.</p>
+      </details>
+    </div>
+
+    <h2>Bug reports</h2>
+    <p>Please include: iPhone model, iOS version, Echograph version (Settings → About), and what you were doing. A short screen recording helps a lot.</p>
+    <p>Email <a href="mailto:support@echograph.app">support@echograph.app</a>.</p>
+
+    <footer>
+      © 2026 Echograph · <a href="privacy.html">Privacy</a>
+    </footer>
+  </div>
+</body>
+</html>
