@@ -12,6 +12,8 @@ struct HomeView: View {
     @State private var searchQuery = ""
     @State private var didConsumePendingIntent = false
     @State private var showingSettings = false
+    @State private var showingImporter = false
+    @State private var importErrorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -31,6 +33,14 @@ struct HomeView: View {
             }
             .navigationTitle("Echograph")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingImporter = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
+                    }
+                    .accessibilityIdentifier("importButton")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingSettings = true
@@ -42,6 +52,21 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
+            }
+            .fileImporter(
+                isPresented: $showingImporter,
+                allowedContentTypes: [.audio],
+                allowsMultipleSelection: false
+            ) { result in
+                Task { await handleImport(result) }
+            }
+            .alert("Import failed", isPresented: Binding(
+                get: { importErrorMessage != nil },
+                set: { if !$0 { importErrorMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(importErrorMessage ?? "")
             }
         }
         .alert("Microphone access needed", isPresented: $showPermissionAlert) {
@@ -60,6 +85,21 @@ struct HomeView: View {
             Text(recordingErrorMessage)
         }
         .task { consumePendingIntentIfNeeded() }
+    }
+
+    private func handleImport(_ result: Result<[URL], Error>) async {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else { return }
+            do {
+                let recording = try await AudioFileImporter.import(from: url)
+                store.add(recording)
+            } catch {
+                importErrorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            }
+        case .failure(let error):
+            importErrorMessage = error.localizedDescription
+        }
     }
 
     private func consumePendingIntentIfNeeded() {

@@ -8,8 +8,10 @@ struct EchographApp: App {
     @State private var purchases: PurchaseManager
     @State private var summary: SummaryService
 
+    @AppStorage("Echograph.didShowConsentDisclaimer") private var didShowConsentDisclaimer = false
+    @State private var showingConsent = false
+
     init() {
-        // UI test hooks — must run before stores observe their state.
         UITestHooks.applyIfNeeded()
 
         let store = RecordingStore()
@@ -28,6 +30,15 @@ struct EchographApp: App {
                 .environment(watchSync)
                 .environment(purchases)
                 .environment(summary)
+                .sheet(isPresented: $showingConsent) {
+                    ConsentDisclaimerView {
+                        didShowConsentDisclaimer = true
+                        showingConsent = false
+                    }
+                }
+                .task {
+                    if !didShowConsentDisclaimer { showingConsent = true }
+                }
         }
     }
 }

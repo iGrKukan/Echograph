@@ -81,6 +81,17 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Audio
+            LSItemContentTypes:
+              - public.audio
+              - public.mp3
+              - public.mpeg-4-audio
+              - public.aifc-audio
+              - com.apple.m4a-audio
+            LSHandlerRank: Alternate
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
