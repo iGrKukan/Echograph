@@ -54,19 +54,30 @@ Sign in to Xcode with the Apple ID that's a member of team `U5BAN54DL2`.
 Automatic signing will create a development provisioning profile on the
 first build.
 
-### Secrets you'll need to bring over
+### Secrets — synced via iCloud Drive
 
-These are **gitignored** — they have to be transferred manually from the
-old Mac (or recreated):
+`.p8` API keys are NEVER committed. They live in iCloud Drive at:
 
 ```
-fastlane/secrets/AuthKey_798ZTD68WF.p8     # App Store Connect API key
-private_keys/AuthKey_798ZTD68WF.p8          # same file, used by altool
+~/Library/Mobile Documents/com~apple~CloudDocs/voicekeep-secrets/
 ```
 
-If the `.p8` was lost, generate a new one at
-https://appstoreconnect.apple.com/access/integrations/api and update
-`KEY_ID` / `ISSUER_ID` in `fastlane/asc_token.py`.
+iCloud automatically syncs the folder across every Mac signed into the
+same Apple ID. To wire `fastlane/secrets/` and `private_keys/` to that
+folder via symlinks, run **once per Mac** after cloning:
+
+```bash
+bash fastlane/setup_secrets.sh
+```
+
+The script creates `fastlane/secrets` and `private_keys/AuthKey_*.p8` as
+symlinks into the iCloud folder. Both are gitignored, so commits stay
+clean.
+
+If iCloud Drive is empty (e.g. fresh Apple ID), generate a new key at
+https://appstoreconnect.apple.com/access/integrations/api → save the
+`.p8` into the iCloud folder, update `KEY_ID` / `ISSUER_ID` in
+`fastlane/asc_token.py`, and rerun `setup_secrets.sh`.
 
 You'll also need a Python 3 venv for the ASC scripts:
 
