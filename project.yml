@@ -93,6 +93,11 @@ targets:
         # fallback case (192.168.x.x).
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
+        # Export compliance: only Apple's standard HTTPS/Keychain crypto is used,
+        # nothing classified as non-exempt under U.S. EAR §740.17(b). Setting this
+        # to false suppresses the "Export Compliance" prompt for every TestFlight
+        # build going forward.
+        ITSAppUsesNonExemptEncryption: false
         CFBundleDocumentTypes:
           - CFBundleTypeName: Audio
             LSItemContentTypes:
