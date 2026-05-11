@@ -187,23 +187,26 @@ struct RecordingDetailView: View {
 
     @ViewBuilder
     private func content(for recording: Recording) -> some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(recording.title)
-                    .font(.title2.weight(.semibold))
-                Text(recording.createdAt.formatted(date: .abbreviated, time: .shortened))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                tagsRow(for: recording)
+        ScrollView {
+            VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(recording.title)
+                        .font(.title2.weight(.semibold))
+                    Text(recording.createdAt.formatted(date: .abbreviated, time: .shortened))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    tagsRow(for: recording)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+
+                playerCard
+
+                transcriptSection(for: recording)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
-
-            playerCard
-
-            transcriptSection(for: recording)
+            .padding(.top)
+            .padding(.bottom, 32)
         }
-        .padding(.top)
     }
 
     private var playerCard: some View {
