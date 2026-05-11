@@ -20,21 +20,20 @@ final class AudioRecorder {
     private var recorder: AVAudioRecorder?
     private var pendingURL: URL?
     private var timer: Timer?
-    nonisolated(unsafe) private var interruptionObserver: NSObjectProtocol?
+    private let observerHolder = ObserverHolder()
 
     init() {
-        interruptionObserver = NotificationCenter.default.addObserver(
+        observerHolder.token = NotificationCenter.default.addObserver(
             forName: AVAudioSession.interruptionNotification,
             object: nil,
             queue: .main
         ) { [weak self] note in
-            Task { @MainActor in self?.handleInterruption(note) }
-        }
-    }
-
-    deinit {
-        if let interruptionObserver {
-            NotificationCenter.default.removeObserver(interruptionObserver)
+            let info = note.userInfo
+            let typeRaw = info?[AVAudioSessionInterruptionTypeKey] as? UInt
+            let optionsRaw = info?[AVAudioSessionInterruptionOptionKey] as? UInt
+            Task { @MainActor in
+                self?.handleInterruption(typeRaw: typeRaw, optionsRaw: optionsRaw)
+            }
         }
     }
 
@@ -115,10 +114,9 @@ final class AudioRecorder {
         try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
 
-    private func handleInterruption(_ note: Notification) {
-        guard let info = note.userInfo,
-              let raw = info[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: raw) else { return }
+    private func handleInterruption(typeRaw: UInt?, optionsRaw: UInt?) {
+        guard let typeRaw,
+              let type = AVAudioSession.InterruptionType(rawValue: typeRaw) else { return }
 
         switch type {
         case .began:
@@ -136,12 +134,9 @@ final class AudioRecorder {
 
         case .ended:
             guard case .interrupted(_, let accumulated) = state else { return }
-            let shouldResume: Bool = {
-                if let optsRaw = info[AVAudioSessionInterruptionOptionKey] as? UInt {
-                    return AVAudioSession.InterruptionOptions(rawValue: optsRaw).contains(.shouldResume)
-                }
-                return true
-            }()
+            let shouldResume = optionsRaw
+                .map { AVAudioSession.InterruptionOptions(rawValue: $0).contains(.shouldResume) }
+                ?? true
             guard shouldResume else { return }
             do {
                 try AVAudioSession.sharedInstance().setActive(true, options: [])
@@ -180,6 +175,16 @@ final class AudioRecorder {
 
     enum RecorderError: Error {
         case startFailed
+    }
+
+    /// Holds the NotificationCenter observer outside the @MainActor isolation
+    /// domain so its `deinit` can fire from any context (Swift 6 forbids a
+    /// nonisolated deinit on @MainActor classes from touching isolated state).
+    private final class ObserverHolder: @unchecked Sendable {
+        var token: NSObjectProtocol?
+        deinit {
+            if let token { NotificationCenter.default.removeObserver(token) }
+        }
     }
 
     private static func timestampString() -> String {
