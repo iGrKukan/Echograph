@@ -9,6 +9,7 @@ final class AudioRecorder {
         case idle
         case preparing
         case recording(startedAt: Date)
+        case interrupted(reason: String, accumulated: TimeInterval)
         case stopped
         case failed(message: String)
     }
@@ -19,6 +20,23 @@ final class AudioRecorder {
     private var recorder: AVAudioRecorder?
     private var pendingURL: URL?
     private var timer: Timer?
+    nonisolated(unsafe) private var interruptionObserver: NSObjectProtocol?
+
+    init() {
+        interruptionObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] note in
+            Task { @MainActor in self?.handleInterruption(note) }
+        }
+    }
+
+    deinit {
+        if let interruptionObserver {
+            NotificationCenter.default.removeObserver(interruptionObserver)
+        }
+    }
 
     /// Begin recording. Returns the destination URL on success.
     @discardableResult
@@ -62,7 +80,12 @@ final class AudioRecorder {
     }
 
     func stop() -> URL? {
-        guard case .recording = state else { return nil }
+        switch state {
+        case .recording, .interrupted:
+            break
+        default:
+            return nil
+        }
         timer?.invalidate()
         timer = nil
 
@@ -90,6 +113,53 @@ final class AudioRecorder {
         state = .idle
         Task { await LiveActivityManager.shared.end() }
         try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+    }
+
+    private func handleInterruption(_ note: Notification) {
+        guard let info = note.userInfo,
+              let raw = info[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: raw) else { return }
+
+        switch type {
+        case .began:
+            guard case .recording(let startedAt) = state else { return }
+            recorder?.pause()
+            timer?.invalidate()
+            timer = nil
+            let accumulated = Date.now.timeIntervalSince(startedAt)
+            elapsed = accumulated
+            // iOS doesn't tell us the cause directly, but during a phone call
+            // this is the only interruption that fires — surface a useful reason.
+            let reason = "Paused — phone call active (iOS blocks third-party recording during calls)"
+            state = .interrupted(reason: reason, accumulated: accumulated)
+            Task { await LiveActivityManager.shared.update(elapsed: accumulated, startedAt: startedAt) }
+
+        case .ended:
+            guard case .interrupted(_, let accumulated) = state else { return }
+            let shouldResume: Bool = {
+                if let optsRaw = info[AVAudioSessionInterruptionOptionKey] as? UInt {
+                    return AVAudioSession.InterruptionOptions(rawValue: optsRaw).contains(.shouldResume)
+                }
+                return true
+            }()
+            guard shouldResume else { return }
+            do {
+                try AVAudioSession.sharedInstance().setActive(true, options: [])
+                guard let recorder, recorder.record() else {
+                    state = .failed(message: "Couldn't resume after interruption")
+                    return
+                }
+                // Reset startedAt so elapsed math continues seamlessly from `accumulated`.
+                let virtualStart = Date.now.addingTimeInterval(-accumulated)
+                state = .recording(startedAt: virtualStart)
+                startTimer()
+            } catch {
+                state = .failed(message: "Couldn't reactivate audio: \(error.localizedDescription)")
+            }
+
+        @unknown default:
+            break
+        }
     }
 
     private func startTimer() {

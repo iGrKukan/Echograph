@@ -160,11 +160,24 @@ struct HomeView: View {
 
     private var recordingIndicator: some View {
         HStack(spacing: 8) {
-            BlinkingDot()
-            Text(format(time: recorder.elapsed))
-                .monospacedDigit()
-                .font(.title3.weight(.semibold))
-                .contentTransition(.numericText())
+            if case .interrupted = recorder.state {
+                Image(systemName: "pause.circle.fill")
+                    .foregroundStyle(.orange)
+            } else {
+                BlinkingDot()
+            }
+            VStack(alignment: .leading, spacing: 0) {
+                Text(format(time: recorder.elapsed))
+                    .monospacedDigit()
+                    .font(.title3.weight(.semibold))
+                    .contentTransition(.numericText())
+                if case .interrupted(let reason, _) = recorder.state {
+                    Text(reason)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
@@ -173,8 +186,10 @@ struct HomeView: View {
     }
 
     private var isRecording: Bool {
-        if case .recording = recorder.state { return true }
-        return false
+        switch recorder.state {
+        case .recording, .interrupted: return true
+        default: return false
+        }
     }
 
     private func toggleRecording() async {
