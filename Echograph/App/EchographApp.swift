@@ -25,22 +25,18 @@ struct EchographApp: App {
         _analysisService = State(initialValue: AnalysisService())
     }
 
-    /// Public Tailscale Funnel fallback URL for the AI Analyzer. Not a
-    /// secret — Funnel exposes the Mac to the public internet but every
-    /// POST /analyze still requires the bearer token to do anything.
-    private static let analyzerFallbackURL = "https://maru.tail4504ee.ts.net"
+    /// Substrings that mark an obsolete or private transport. Any stored URL
+    /// matching one of these is purged on launch: it can never answer, and
+    /// leaving it in Settings only produces a hang on the connection test.
+    private static let analyzerStaleURLPatterns = ["trycloudflare.com", "tail4504ee.ts.net"]
 
-    /// Substrings that mark an obsolete transport. Any stored URL matching
-    /// one of these gets purged on launch so the fallback can take over.
-    private static let analyzerStaleURLPatterns = ["trycloudflare.com"]
-
-    /// Synchronizes the AI-Analyzer URL/token with DevDefaults and the
-    /// public fallback. Order on every launch:
-    ///   1. If stored URL matches a known-dead pattern → clear it.
+    /// Synchronizes the AI-Analyzer URL/token with DevDefaults. Order on
+    /// every launch:
+    ///   1. If the stored URL matches a known-dead pattern → clear it.
     ///   2. If DevDefaults has values → force-overwrite (dev machine).
-    ///   3. Else if stored URL is empty → fall back to the public Funnel
-    ///      URL. Token still has to come from DevDefaults or manual entry
-    ///      in Settings — we never hardcode the bearer.
+    /// There is no built-in fallback server: the analyzer is an optional
+    /// self-hosted feature, so an unconfigured install simply shows
+    /// "Not configured" instead of pointing at somebody else's machine.
     private static func seedAnalyzerDefaultsIfEmpty() {
         let defaults = UserDefaults.standard
         let urlKey = "Voicekeep.analyzerURL"
@@ -53,8 +49,6 @@ struct EchographApp: App {
 
         if !DevDefaults.analyzerURL.isEmpty {
             defaults.set(DevDefaults.analyzerURL, forKey: urlKey)
-        } else if (defaults.string(forKey: urlKey) ?? "").trimmingCharacters(in: .whitespaces).isEmpty {
-            defaults.set(analyzerFallbackURL, forKey: urlKey)
         }
 
         if !DevDefaults.analyzerToken.isEmpty {
