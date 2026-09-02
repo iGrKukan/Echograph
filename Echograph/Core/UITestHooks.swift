@@ -12,6 +12,11 @@ enum UITestHooks {
         let args = CommandLine.arguments
         guard args.contains(where: { $0.hasPrefix("-uitest_") }) else { return }
 
+        // Дисклеймер согласия перекрывает любой экран при первом запуске, поэтому
+        // в UI-тестах и при съёмке скриншотов сразу помечаем его показанным —
+        // иначе все снимки получаются одинаковыми, с приветственным экраном.
+        UserDefaults.standard.set(true, forKey: "Echograph.didShowConsentDisclaimer")
+
         if args.contains("-uitest_seed_recordings") {
             seedMockRecordings()
         }

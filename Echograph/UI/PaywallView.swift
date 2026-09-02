@@ -57,9 +57,9 @@ struct PaywallView: View {
             Image(systemName: "waveform.badge.magnifyingglass")
                 .font(.system(size: 56))
                 .foregroundStyle(.tint)
-            Text("Echograph Pro")
+            Text("Voicekeep Pro+")
                 .font(.largeTitle.weight(.semibold))
-            Text("Pro-quality on-device transcription with AI summary, multi-track recording and Apple Pencil annotations.")
+            Text("Pro-quality on-device transcription with AI summary and Q&A. Everything stays on your iPhone.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
@@ -73,8 +73,8 @@ struct PaywallView: View {
                        title: "Whisper Large v3 Turbo",
                        text: "State-of-the-art on-device transcription, fully offline.")
             BenefitRow(icon: "person.2.wave.2",
-                       title: "Speaker Diarization",
-                       text: "Identify multiple speakers without sending audio anywhere.")
+                       title: "Speaker labels",
+                       text: "Tag who is speaking in each segment of the transcript.")
             BenefitRow(icon: "sparkles",
                        title: "AI Summary",
                        text: "Apple Intelligence summarizes meetings into action items.")
