@@ -495,11 +495,30 @@ struct RecordingDetailView: View {
             "\(recording.createdAt.formatted(date: .abbreviated, time: .shortened)) · \(durationLabel(recording.duration))",
             "",
         ]
-        lines.append(contentsOf: transcript.segments.map { segment in
-            let speakerPrefix = segment.speaker.map { "\($0.label): " } ?? ""
-            return "[\(shareTimecode(segment.startTime))] \(speakerPrefix)\(segment.text)"
-        })
+        // Сегменты распознавания бывают очень короткими (вплоть до слова),
+        // поэтому в отправку идёт сплошной текст, а не строка на сегмент.
+        // Новый абзац — только когда меняется говорящий.
+        var paragraphs: [String] = []
+        var current: [String] = []
+        var currentSpeaker: String?? = nil
+        for segment in transcript.segments {
+            let speaker = segment.speaker?.label
+            if currentSpeaker != nil, currentSpeaker! != speaker, !current.isEmpty {
+                paragraphs.append(paragraph(current, speaker: currentSpeaker!))
+                current = []
+            }
+            currentSpeaker = .some(speaker)
+            let text = segment.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !text.isEmpty { current.append(text) }
+        }
+        if !current.isEmpty { paragraphs.append(paragraph(current, speaker: currentSpeaker ?? nil)) }
+        lines.append(paragraphs.joined(separator: "\n\n"))
         return lines.joined(separator: "\n")
+    }
+
+    private func paragraph(_ parts: [String], speaker: String?) -> String {
+        let body = parts.joined(separator: " ")
+        return speaker.map { "\($0): \(body)" } ?? body
     }
 
     private func shareText(forSummary summaryText: String, in recording: Recording) -> String {
