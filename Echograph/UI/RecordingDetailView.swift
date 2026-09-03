@@ -87,6 +87,21 @@ struct RecordingDetailView: View {
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
+                        // Продублировано в меню с подписью: иконку «поделиться»
+                        // в панели навигации пользователи не находят.
+                        if let transcript = recording.transcript {
+                            ShareLink(item: shareText(forTranscript: transcript, in: recording)) {
+                                Label(String(localized: "Share Transcript"), systemImage: "square.and.arrow.up")
+                            }
+                        }
+                        if let summaryText = recording.summary, !summaryText.isEmpty {
+                            ShareLink(item: shareText(forSummary: summaryText, in: recording)) {
+                                Label(String(localized: "Share Summary"), systemImage: "square.and.arrow.up")
+                            }
+                        }
+
+                        Divider()
+
                         Button {
                             showingExportSheet = true
                         } label: {
