@@ -23,10 +23,11 @@ final class SnapshotTests: XCTestCase {
         try? img.pngRepresentation.write(to: URL(fileURLWithPath: "\(dir)/\(name).png"))
     }
 
-    private func launchedApp(forcePaywall: Bool = false) -> XCUIApplication {
+    private func launchedApp(forcePaywall: Bool = false, exhaustFreeTranscriptions: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-uitest_seed_recordings"]
         if forcePaywall { app.launchArguments += ["-uitest_force_paywall"] }
+        if exhaustFreeTranscriptions { app.launchArguments += ["-uitest_exhaust_free_transcriptions"] }
         app.launch()
         sleep(2)
         return app
@@ -37,6 +38,15 @@ final class SnapshotTests: XCTestCase {
         // NavigationLink row from XCUITest in iOS 17+.
         let window = app.windows.firstMatch
         let coord = window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.22))
+        coord.tap()
+    }
+
+    /// Taps the second seeded recording ("Лекция…") — unlike the first one,
+    /// it has no preset transcript, so it lands on the "No transcript yet" /
+    /// Transcribe-menu screen instead of an already-transcribed detail view.
+    private func tapSecondRecording(_ app: XCUIApplication) {
+        let window = app.windows.firstMatch
+        let coord = window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
         coord.tap()
     }
 
@@ -65,8 +75,12 @@ final class SnapshotTests: XCTestCase {
     }
 
     func test_04_paywall() {
-        let app = launchedApp(forcePaywall: true)
-        tapFirstRecording(app)
+        // Parakeet itself is free (up to the free-transcription quota) —
+        // the paywall now shows only once that quota is exhausted, not
+        // merely for lacking a subscription. Exhaust it deterministically
+        // instead of actually running 10 (network-downloading) transcriptions.
+        let app = launchedApp(forcePaywall: true, exhaustFreeTranscriptions: true)
+        tapSecondRecording(app)
         sleep(2)
 
         let transcribe = app.buttons["transcribeMenu"].firstMatch
@@ -74,7 +88,7 @@ final class SnapshotTests: XCTestCase {
         transcribe.tap()
         sleep(1)
 
-        // Tap Parakeet v3 inside the menu (locked → opens paywall).
+        // Tap Parakeet v3 inside the menu (free quota exhausted → opens paywall).
         let parakeetOption = app.buttons["parakeetOption"].firstMatch
         XCTAssertTrue(parakeetOption.waitForExistence(timeout: 3), "Parakeet v3 option not found")
         parakeetOption.tap()

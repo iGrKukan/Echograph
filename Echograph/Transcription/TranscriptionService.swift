@@ -15,6 +15,11 @@ final class TranscriptionService {
             }
         }
 
+        // NOTE: `.appleSpeech` is deliberately exempt from
+        // `FreeTranscriptionLimiter` — once the 10 free Parakeet
+        // transcriptions run out, the app must still transcribe
+        // (just with the free engine), not turn into a paperweight.
+
         var requiresDownload: Bool {
             if case .parakeet = self { return true }
             return false
@@ -37,11 +42,15 @@ final class TranscriptionService {
         self.store = store
     }
 
+    /// - Parameter unlimited: pass `purchases.hasPro` (or `hasProPlus`) from
+    ///   the caller. Subscribers bypass `FreeTranscriptionLimiter` entirely —
+    ///   the free-transcription counter is never read or written for them.
     func transcribe(
         _ recording: Recording,
         using engine: Engine = .parakeet,
         languageHint: String? = nil,
-        vocabularyPrompt: String? = nil
+        vocabularyPrompt: String? = nil,
+        unlimited: Bool = false
     ) async {
         let phase = engine.requiresDownload
             ? "Loading model & transcribing…"
@@ -53,7 +62,8 @@ final class TranscriptionService {
                 for: recording,
                 engine: engine,
                 languageHint: languageHint,
-                vocabularyPrompt: vocabularyPrompt
+                vocabularyPrompt: vocabularyPrompt,
+                unlimited: unlimited
             )
             var updated = recording
             updated.transcript = transcript
@@ -69,34 +79,50 @@ final class TranscriptionService {
         for recording: Recording,
         engine: Engine,
         languageHint: String?,
-        vocabularyPrompt: String?
+        vocabularyPrompt: String?,
+        unlimited: Bool
     ) async throws -> Transcript {
         switch engine {
         case .appleSpeech:
             // Apple Speech doesn't accept biasing prompts via SFSpeechRecognizer.
+            // Never limited — see the note on Engine.displayName.
             return try await appleTranscriber().transcribe(
                 fileURL: recording.fileURL,
                 languageHint: languageHint
             )
         case .parakeet:
+            // Defensive fallback for a call site that skipped the
+            // paywall-vs-transcribe check the UI is expected to do before
+            // ever reaching here (see RecordingDetailView).
+            if !unlimited && FreeTranscriptionLimiter.isExhausted {
+                throw TranscriptionError.freeLimitReached
+            }
             do {
-                return try await parakeetTranscriber().transcribe(
+                let result = try await parakeetTranscriber().transcribe(
                     fileURL: recording.fileURL,
                     languageHint: languageHint,
                     vocabularyPrompt: vocabularyPrompt
                 )
+                // Only an actual Parakeet success spends the free quota — a
+                // fallback to Apple Speech below does not (it's caught
+                // separately, this line is unreached in that case).
+                if !unlimited {
+                    FreeTranscriptionLimiter.recordSuccessfulTranscription()
+                }
+                return result
             } catch let error as TranscriptionError {
                 switch error {
                 case .languageNotSupported, .engineUnavailable, .engineFailed:
                     // Silent fallback: Parakeet either doesn't cover this
                     // language or failed to load/run. Retry with Apple Speech
-                    // instead of surfacing an error to the user.
+                    // instead of surfacing an error to the user. Does NOT
+                    // spend the free Parakeet quota — Parakeet didn't run.
                     print("[TranscriptionService] Parakeet unavailable (\(error.localizedDescription)); falling back to Apple Speech")
                     return try await appleTranscriber().transcribe(
                         fileURL: recording.fileURL,
                         languageHint: languageHint
                     )
-                case .permissionDenied, .fileNotFound:
+                case .permissionDenied, .fileNotFound, .freeLimitReached:
                     throw error
                 }
             }

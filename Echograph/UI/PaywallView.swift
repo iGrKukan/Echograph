@@ -59,7 +59,7 @@ struct PaywallView: View {
                 .foregroundStyle(.tint)
             Text("Voicekeep Pro+")
                 .font(.largeTitle.weight(.semibold))
-            Text("Pro-quality on-device transcription with AI summary and Q&A. Everything stays on your iPhone.")
+            Text("AI summaries, questions and tags for every recording. Everything stays on your iPhone.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
@@ -70,14 +70,23 @@ struct PaywallView: View {
     private var benefits: some View {
         VStack(alignment: .leading, spacing: 12) {
             BenefitRow(icon: "wand.and.stars",
-                       title: "Parakeet v3",
-                       text: "Fast multilingual transcription, fully on-device.")
+                       title: "Unlimited transcription",
+                       text: "Fast on-device transcription in 25 languages, without limits.")
+            BenefitRow(icon: "sparkles",
+                       title: "AI Summary",
+                       text: "Turns any recording into a concise summary with action items.")
+            BenefitRow(icon: "bubble.left.and.text.bubble.right",
+                       title: "Ask AI",
+                       text: "Ask questions about a recording and get answers drawn from the transcript.")
+            BenefitRow(icon: "tag",
+                       title: "Auto Tags",
+                       text: "Get topic tags suggested automatically for every recording.")
+            BenefitRow(icon: "checkmark.seal",
+                       title: "Works on every iPhone",
+                       text: "AI runs on Apple Intelligence where available, or on a downloadable on-device model everywhere else.")
             BenefitRow(icon: "person.2.wave.2",
                        title: "Speaker labels",
                        text: "Tag who is speaking in each segment of the transcript.")
-            BenefitRow(icon: "sparkles",
-                       title: "AI Summary",
-                       text: "Apple Intelligence summarizes meetings into action items.")
             BenefitRow(icon: "lock.shield",
                        title: "Privacy by Design",
                        text: "Recordings, transcripts and summaries never leave your iPhone.")
@@ -113,8 +122,11 @@ struct PaywallView: View {
 
 private struct BenefitRow: View {
     let icon: String
-    let title: String
-    let text: String
+    // LocalizedStringKey (not String) so `Text(title)` / `Text(text)` below
+    // actually look these up in Localizable.xcstrings instead of displaying
+    // the source-language literal verbatim regardless of device locale.
+    let title: LocalizedStringKey
+    let text: LocalizedStringKey
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {

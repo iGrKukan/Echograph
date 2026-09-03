@@ -13,9 +13,11 @@
 		0E63EA28EA5D487BEE04CBB8 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CE3EAE59594B578E8D2370 /* RecordingDetailView.swift */; };
 		0F2C4D838442635149482916 /* WatchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816E1F8F96812598B0337C7 /* WatchHomeView.swift */; };
 		0FDB01356655BA052EB166CD /* EchographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF0DF46B4745AFB2FFE7EAA /* EchographApp.swift */; };
+		170C9667189C14BC599F26D3 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = A948FEB1AE5BDC08B8543391 /* MLXLLM */; };
 		18F183A0B163BB66BC9D3080 /* ExportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */; };
 		19F55FF3144C00B22B7CC9E0 /* RecordingActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2518120F942901165E05C6C8 /* RecordingActivityAttributes.swift */; };
 		1EB89FAC133365F63AAF9170 /* AppleSpeechTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4805347F40A579B3875C8ADE /* AppleSpeechTranscriber.swift */; };
+		2A96C8B355038982ADD0A0A6 /* HuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = 16556CA08A6046E89E3E8F1D /* HuggingFace */; };
 		2FFAB5B9D68C1DFAE20CCACB /* RecordingActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2518120F942901165E05C6C8 /* RecordingActivityAttributes.swift */; };
 		301C04139ADBC166E6BB839A /* TranscriptionLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9BBB858362582138DA3857 /* TranscriptionLanguage.swift */; };
 		39FA8F59042A8B3654BA33CD /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA584D06B57D91907E958B43 /* TranscriptionService.swift */; };
@@ -24,6 +26,7 @@
 		47B1F9AB97649709345E2898 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6E0DB4374AC5A1F836D2E /* SettingsView.swift */; };
 		4E8FD0DBB333823CE7F97E21 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E605C29E574997450C8EF44 /* Recording.swift */; };
 		51FB1088D628DD61F7AC5737 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AC654E40BB103B9DB41AA23 /* Assets.xcassets */; };
+		5345F0AB832F49EB1846D97E /* Tokenizers in Frameworks */ = {isa = PBXBuildFile; productRef = C52740D1E2683D8CB4E05773 /* Tokenizers */; };
 		5352F41659F14CB612918531 /* UITestHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8A4F0C6968E14EA002681 /* UITestHooks.swift */; };
 		634CC6F434ACF68C4D5F0AF5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ACFE07E42B5734FEDEDF7 /* AudioRecorder.swift */; };
 		68FBCCFB9E2E6741A294DED9 /* WatchConnectivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927285BE76A5B0029F1316A9 /* WatchConnectivityCoordinator.swift */; };
@@ -37,13 +40,17 @@
 		7E559387501ECE4EA20EF070 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32C05924C6400A61EEC0F45 /* CalendarService.swift */; };
 		82ED7DD9CEC8331346BC23CF /* EchographLiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B606C766F048585CE0F5E7 /* EchographLiveActivityBundle.swift */; };
 		852CF402D2E0FDCB78B4E5DF /* MicrophonePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D8BEAE59854CF62AEFA63E /* MicrophonePermission.swift */; };
+		8785647F32A3B18DACA7A4D6 /* FreeTranscriptionLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9B2944E0E465F2F1B161A79 /* FreeTranscriptionLimiter.swift */; };
 		8B331FCDD89D92CACC38F62D /* ProductID.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8AA5264C5247315FFFBD1A /* ProductID.swift */; };
 		9AF8420E58CE183713DC930D /* ConsentDisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */; };
 		9D6B6D675F354CB8AFF6628F /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502EB2FB6AF6EF57EFF1336 /* PaywallView.swift */; };
 		A20BD056C3CBBCB9B19F3FFB /* WatchRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9603663942E70848CE6A515 /* WatchRecorder.swift */; };
 		A77454A1F48374FC9DD25EE8 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D8BB9377B0A1D730632042 /* RecordButton.swift */; };
+		A9408701B38686B24C7BFB6F /* MLXHuggingFace in Frameworks */ = {isa = PBXBuildFile; productRef = A9D78DEE022E202B3E8F269C /* MLXHuggingFace */; };
 		AA5B66B08E627E6FEC3547FA /* RecordingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A016ECEDE27BF97EE000D3 /* RecordingStore.swift */; };
 		AB3E3452A2540B039AC29090 /* RemindersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89E5E1235AE5F544C50E380 /* RemindersService.swift */; };
+		ABA8D500CC23D07BB7FD2EE8 /* LocalLLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979535084A08A0BFE19A948A /* LocalLLMService.swift */; };
+		B2093BE0B8077423F200B844 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 44EA6D96BB5B5009F9004105 /* MLXLMCommon */; };
 		B4D2B13CEBA23BF880FC7A41 /* Transcript.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF96D4EEA575F5710469158 /* Transcript.swift */; };
 		B9B50DD2808B37C8BA5D6E3D /* DevDefaults.template in Resources */ = {isa = PBXBuildFile; fileRef = 36E9965EDF0541459487A33E /* DevDefaults.template */; };
 		C8AE78850E1FEB47B52F3128 /* TranscriptExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC61AE0C046E41697D91CA /* TranscriptExporter.swift */; };
@@ -100,11 +107,13 @@
 		86C6E0DB4374AC5A1F836D2E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8736C0092BFD7118BEDFB0B5 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		927285BE76A5B0029F1316A9 /* WatchConnectivityCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityCoordinator.swift; sourceTree = "<group>"; };
+		979535084A08A0BFE19A948A /* LocalLLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLLMService.swift; sourceTree = "<group>"; };
 		99D8BB9377B0A1D730632042 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		A816E1F8F96812598B0337C7 /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		A9603663942E70848CE6A515 /* WatchRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRecorder.swift; sourceTree = "<group>"; };
 		AA584D06B57D91907E958B43 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 		B32C05924C6400A61EEC0F45 /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		B9B2944E0E465F2F1B161A79 /* FreeTranscriptionLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTranscriptionLimiter.swift; sourceTree = "<group>"; };
 		BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSheet.swift; sourceTree = "<group>"; };
 		BF38E814877DAF23DB7CD294 /* AskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSheet.swift; sourceTree = "<group>"; };
 		C06C8D2ADF09612FBF63F13B /* AudioFileImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileImporter.swift; sourceTree = "<group>"; };
@@ -128,6 +137,11 @@
 			files = (
 				6C85179C7D572AB70E032F3E /* FluidAudio in Frameworks */,
 				EBB16DDC6C1CDBD0D64C17C7 /* MarkdownUI in Frameworks */,
+				170C9667189C14BC599F26D3 /* MLXLLM in Frameworks */,
+				B2093BE0B8077423F200B844 /* MLXLMCommon in Frameworks */,
+				A9408701B38686B24C7BFB6F /* MLXHuggingFace in Frameworks */,
+				2A96C8B355038982ADD0A0A6 /* HuggingFace in Frameworks */,
+				5345F0AB832F49EB1846D97E /* Tokenizers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +171,7 @@
 		45482C535336EBF495405609 /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				B9B2944E0E465F2F1B161A79 /* FreeTranscriptionLimiter.swift */,
 				DE8AA5264C5247315FFFBD1A /* ProductID.swift */,
 				8736C0092BFD7118BEDFB0B5 /* PurchaseManager.swift */,
 			);
@@ -313,6 +328,7 @@
 		DCDACC7AC6C0E504B7577472 /* Summary */ = {
 			isa = PBXGroup;
 			children = (
+				979535084A08A0BFE19A948A /* LocalLLMService.swift */,
 				33FC7BA91B2DB0A2FE0E0DF6 /* SummaryService.swift */,
 			);
 			path = Summary;
@@ -420,6 +436,11 @@
 			packageProductDependencies = (
 				D61C86AE08710172525CD796 /* FluidAudio */,
 				5D2364555F0E5592F52EAA70 /* MarkdownUI */,
+				A948FEB1AE5BDC08B8543391 /* MLXLLM */,
+				44EA6D96BB5B5009F9004105 /* MLXLMCommon */,
+				A9D78DEE022E202B3E8F269C /* MLXHuggingFace */,
+				16556CA08A6046E89E3E8F1D /* HuggingFace */,
+				C52740D1E2683D8CB4E05773 /* Tokenizers */,
 			);
 			productName = Echograph;
 			productReference = 62D4B45BB8F5DFB55B73B4AB /* Echograph.app */;
@@ -482,7 +503,10 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D29AFB51A014E3E4490301EE /* XCRemoteSwiftPackageReference "FluidAudio" */,
+				316ECF49A31A0D579AE964C0 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
 				BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				837B79542041326C3D218FE1 /* XCRemoteSwiftPackageReference "swift-huggingface" */,
+				A4B6E310817B1B1D21643055 /* XCRemoteSwiftPackageReference "swift-transformers" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E525969A6E585FA2BBC6A26F /* Products */;
@@ -555,8 +579,10 @@
 				0CAE8254D83D39B642E8B38C /* DevDefaults.swift in Sources */,
 				0FDB01356655BA052EB166CD /* EchographApp.swift in Sources */,
 				18F183A0B163BB66BC9D3080 /* ExportSheet.swift in Sources */,
+				8785647F32A3B18DACA7A4D6 /* FreeTranscriptionLimiter.swift in Sources */,
 				7772DFA78E93E6AC4E52B9EA /* HomeView.swift in Sources */,
 				D708CBC978086FCB8C4A6256 /* LiveActivityManager.swift in Sources */,
+				ABA8D500CC23D07BB7FD2EE8 /* LocalLLMService.swift in Sources */,
 				852CF402D2E0FDCB78B4E5DF /* MicrophonePermission.swift in Sources */,
 				0D6A3DB4D32DA17026D0CD18 /* ParakeetTranscriber.swift in Sources */,
 				9D6B6D675F354CB8AFF6628F /* PaywallView.swift in Sources */,
@@ -596,14 +622,14 @@
 		19317E26B99C23276CA484C3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = EchographLiveActivity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.LiveActivity;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -680,14 +706,14 @@
 		2814A78A1594559C760D1CA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = EchographLiveActivity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.LiveActivity;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -735,14 +761,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = Echograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -755,9 +781,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = EchographWatch/Info.plist;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -774,14 +800,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = Echograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -794,9 +820,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = EchographWatch/Info.plist;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -917,6 +943,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		316ECF49A31A0D579AE964C0 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ml-explore/mlx-swift-lm.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		837B79542041326C3D218FE1 /* XCRemoteSwiftPackageReference "swift-huggingface" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huggingface/swift-huggingface.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+		A4B6E310817B1B1D21643055 /* XCRemoteSwiftPackageReference "swift-transformers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huggingface/swift-transformers.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
@@ -936,10 +986,35 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		16556CA08A6046E89E3E8F1D /* HuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 837B79542041326C3D218FE1 /* XCRemoteSwiftPackageReference "swift-huggingface" */;
+			productName = HuggingFace;
+		};
+		44EA6D96BB5B5009F9004105 /* MLXLMCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 316ECF49A31A0D579AE964C0 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXLMCommon;
+		};
 		5D2364555F0E5592F52EAA70 /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		A948FEB1AE5BDC08B8543391 /* MLXLLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 316ECF49A31A0D579AE964C0 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXLLM;
+		};
+		A9D78DEE022E202B3E8F269C /* MLXHuggingFace */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 316ECF49A31A0D579AE964C0 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
+			productName = MLXHuggingFace;
+		};
+		C52740D1E2683D8CB4E05773 /* Tokenizers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A4B6E310817B1B1D21643055 /* XCRemoteSwiftPackageReference "swift-transformers" */;
+			productName = Tokenizers;
 		};
 		D61C86AE08710172525CD796 /* FluidAudio */ = {
 			isa = XCSwiftPackageProductDependency;

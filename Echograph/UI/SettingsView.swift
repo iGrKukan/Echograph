@@ -47,6 +47,15 @@ struct SettingsView: View {
                     }
 
                     if !purchases.hasPro {
+                        HStack {
+                            Label("Free Parakeet Transcriptions", systemImage: "waveform")
+                            Spacer()
+                            Text(freeTranscriptionsRemainingLabel)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    if !purchases.hasPro {
                         Button {
                             showingPaywall = true
                         } label: {
@@ -89,6 +98,9 @@ struct SettingsView: View {
                     Text("Speech recognition: NVIDIA Parakeet TDT 0.6B v3 (CC-BY-4.0)")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                    Text("On-device AI: Qwen3 (Apache-2.0)")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Settings")
@@ -119,6 +131,11 @@ struct SettingsView: View {
         if purchases.hasProPlus { return "Pro+" }
         if purchases.hasPro { return "Pro" }
         return "Free"
+    }
+
+    private var freeTranscriptionsRemainingLabel: String {
+        let remaining = FreeTranscriptionLimiter.remaining
+        return String(localized: "\(remaining) of \(FreeTranscriptionLimiter.freeTranscriptionLimit)")
     }
 
     private var appVersion: String {

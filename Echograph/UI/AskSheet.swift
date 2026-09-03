@@ -19,7 +19,7 @@ struct AskSheet: View {
                     ContentUnavailableView {
                         Label("Ask anything", systemImage: "bubble.left.and.text.bubble.right")
                     } description: {
-                        Text("Ask a question about “\(recording.title)”. Apple Intelligence answers using only the transcript, on-device.")
+                        Text("Ask a question about “\(recording.title)”. AI answers using only the transcript, on-device.")
                     }
                     .frame(maxHeight: .infinity)
                 } else {

@@ -28,6 +28,29 @@ packages:
   MarkdownUI:
     url: https://github.com/gonzalezreal/swift-markdown-ui.git
     from: 2.4.0
+  # On-device fallback LLM (Qwen3, Apache-2.0) for devices without Apple
+  # Intelligence — see Echograph/Summary/LocalLLMService.swift.
+  #
+  # NOTE: the task brief that kicked this off pointed at
+  # ml-explore/mlx-swift-examples for the MLXLLM/MLXLMCommon products, but
+  # that repo split those libraries out into a dedicated package — its
+  # current README says so explicitly:
+  #   "MLXLMCommon, MLXLLM, MLXVLM and MLXEmbedders have moved to a new
+  #    repository containing only reusable libraries: mlx-swift-lm"
+  # Verified against mlx-swift-lm's own Package.swift (no tags published
+  # yet, hence `branch: main` rather than a version pin — same pattern the
+  # brief specified for the old URL).
+  MLXSwiftLM:
+    url: https://github.com/ml-explore/mlx-swift-lm.git
+    branch: main
+  # Hugging Face Hub client + tokenizer, used by MLXHuggingFace's
+  # #huggingFaceLoadModelContainer macro to download/cache model weights.
+  SwiftHuggingFace:
+    url: https://github.com/huggingface/swift-huggingface.git
+    from: 0.9.0
+  SwiftTransformers:
+    url: https://github.com/huggingface/swift-transformers.git
+    from: 1.3.0
 
 targets:
   Echograph:
@@ -46,6 +69,16 @@ targets:
         product: FluidAudio
       - package: MarkdownUI
         product: MarkdownUI
+      - package: MLXSwiftLM
+        product: MLXLLM
+      - package: MLXSwiftLM
+        product: MLXLMCommon
+      - package: MLXSwiftLM
+        product: MLXHuggingFace
+      - package: SwiftHuggingFace
+        product: HuggingFace
+      - package: SwiftTransformers
+        product: Tokenizers
     # Live Activity widget extension — disabled by default because iOS Simulator
     # consistently fails to register it ("Failed to get descriptors for
     # extensionBundleID"). The widget target itself still compiles. Re-enable
@@ -63,8 +96,8 @@ targets:
       path: Echograph/Info.plist
       properties:
         CFBundleDisplayName: Voicekeep
-        CFBundleShortVersionString: "1.0.1"
-        CFBundleVersion: "5"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "6"
         UILaunchScreen:
           UIColorName: ""
         NSMicrophoneUsageDescription: "Voicekeep records your voice locally — audio never leaves your device."
@@ -113,8 +146,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
         TARGETED_DEVICE_FAMILY: "1"
         SUPPORTS_MACCATALYST: NO
-        MARKETING_VERSION: "1.0.1"
-        CURRENT_PROJECT_VERSION: "5"
+        MARKETING_VERSION: "1.1.0"
+        CURRENT_PROJECT_VERSION: "6"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -143,8 +176,8 @@ targets:
       path: EchographLiveActivity/Info.plist
       properties:
         CFBundleDisplayName: Echograph Live Activity
-        CFBundleShortVersionString: "1.0.1"
-        CFBundleVersion: "5"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "6"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -152,8 +185,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.LiveActivity
         TARGETED_DEVICE_FAMILY: "1,2"
         SKIP_INSTALL: YES
-        MARKETING_VERSION: "1.0.1"
-        CURRENT_PROJECT_VERSION: "5"
+        MARKETING_VERSION: "1.1.0"
+        CURRENT_PROJECT_VERSION: "6"
 
   EchographWatch:
     type: application
@@ -166,8 +199,8 @@ targets:
       path: EchographWatch/Info.plist
       properties:
         CFBundleDisplayName: Echograph
-        CFBundleShortVersionString: "1.0.1"
-        CFBundleVersion: "5"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "6"
         WKApplication: true
         WKCompanionAppBundleIdentifier: by.timberbid.echograph
         WKWatchOnly: false
@@ -181,8 +214,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
         SDKROOT: watchos
-        MARKETING_VERSION: "1.0.1"
-        CURRENT_PROJECT_VERSION: "5"
+        MARKETING_VERSION: "1.1.0"
+        CURRENT_PROJECT_VERSION: "6"
         SUPPORTED_PLATFORMS: "watchos watchsimulator"
         SUPPORTS_MACCATALYST: NO
         TARGETED_DEVICE_FAMILY_watchos: "4"

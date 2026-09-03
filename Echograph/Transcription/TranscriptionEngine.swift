@@ -15,6 +15,12 @@ enum TranscriptionError: LocalizedError {
     case engineUnavailable(String)
     case engineFailed(String)
     case fileNotFound(URL)
+    /// The free Parakeet quota (`FreeTranscriptionLimiter`) is used up and
+    /// the caller isn't a subscriber. Callers should check
+    /// `FreeTranscriptionLimiter.isExhausted` before calling `transcribe`
+    /// and show the paywall directly instead — this is the defensive
+    /// fallback for a call site that skips that check.
+    case freeLimitReached
 
     var errorDescription: String? {
         switch self {
@@ -28,6 +34,8 @@ enum TranscriptionError: LocalizedError {
             return "Transcription failed: \(detail)"
         case .fileNotFound(let url):
             return "Recording file not found at \(url.lastPathComponent)."
+        case .freeLimitReached:
+            return "You've used all your free Parakeet transcriptions. Subscribe to keep using Parakeet."
         }
     }
 }

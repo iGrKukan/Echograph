@@ -20,6 +20,13 @@ enum UITestHooks {
         if args.contains("-uitest_seed_recordings") {
             seedMockRecordings()
         }
+
+        // Lets a UI test exercise the "free Parakeet transcriptions used up"
+        // paywall path deterministically, without actually running 10 real
+        // (network-downloading) transcriptions first.
+        if args.contains("-uitest_exhaust_free_transcriptions") {
+            FreeTranscriptionLimiter.uitestExhaust()
+        }
     }
 
     private static func seedMockRecordings() {
@@ -53,36 +60,36 @@ enum UITestHooks {
               "segments": [
                 {
                   "endTime": 8.4,
-                  "id": "S1AAAAAA-0001-0001-0001-000000000001",
+                  "id": "B1AAAAAA-0001-0001-0001-000000000001",
                   "isHighlighted": false,
-                  "speaker": {"id": "SPK00001-1111-1111-1111-111111111111", "label": "Interviewer"},
+                  "speaker": {"id": "DEC00001-1111-1111-1111-111111111111", "label": "Interviewer"},
                   "startTime": 0,
                   "text": "So tell me, why did you switch your entire practice to on-device transcription?",
                   "words": []
                 },
                 {
                   "endTime": 24.1,
-                  "id": "S1AAAAAA-0002-0002-0002-000000000002",
+                  "id": "B1AAAAAA-0002-0002-0002-000000000002",
                   "isHighlighted": true,
-                  "speaker": {"id": "SPK00002-2222-2222-2222-222222222222", "label": "Dr. Vasquez"},
+                  "speaker": {"id": "DEC00002-2222-2222-2222-222222222222", "label": "Dr. Vasquez"},
                   "startTime": 8.4,
                   "text": "Honestly? After the Otter class action last year I just couldn't justify uploading patient consultations to a third-party server, no matter how many SOC 2 badges they had.",
                   "words": []
                 },
                 {
                   "endTime": 38.2,
-                  "id": "S1AAAAAA-0003-0003-0003-000000000003",
+                  "id": "B1AAAAAA-0003-0003-0003-000000000003",
                   "isHighlighted": true,
-                  "speaker": {"id": "SPK00002-2222-2222-2222-222222222222", "label": "Dr. Vasquez"},
+                  "speaker": {"id": "DEC00002-2222-2222-2222-222222222222", "label": "Dr. Vasquez"},
                   "startTime": 24.5,
                   "text": "Parakeet running locally on my iPhone gives me great accuracy and the audio literally never leaves the device. That changes the conversation with hospital legal completely.",
                   "words": []
                 },
                 {
                   "endTime": 47.8,
-                  "id": "S1AAAAAA-0004-0004-0004-000000000004",
+                  "id": "B1AAAAAA-0004-0004-0004-000000000004",
                   "isHighlighted": false,
-                  "speaker": {"id": "SPK00001-1111-1111-1111-111111111111", "label": "Interviewer"},
+                  "speaker": {"id": "DEC00001-1111-1111-1111-111111111111", "label": "Interviewer"},
                   "startTime": 39.0,
                   "text": "And the AI summary feature — Apple Intelligence does it all on-device too?",
                   "words": []

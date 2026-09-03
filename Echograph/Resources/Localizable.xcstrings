@@ -2650,6 +2650,877 @@
           }
         }
       }
+    },
+    "AI Summary · Pro+": {
+      "comment": "Button label: generating an AI summary of the recording is a Pro+ feature, gated behind the paywall.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KI-Zusammenfassung · Pro+"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI Summary · Pro+"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumé IA · Pro+"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI要約 · Pro+"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Конспект ИИ · Pro+"
+          }
+        }
+      }
+    },
+    "On-device AI unavailable": {
+      "comment": "Shown instead of the AI buttons when neither Apple Intelligence nor the local on-device model can run (Simulator, in practice).",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerätebasierte KI nicht verfügbar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On-device AI unavailable"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IA sur l’appareil indisponible"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デバイス内AIは利用できません"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ИИ на устройстве недоступен"
+          }
+        }
+      }
+    },
+    "Downloading…": {
+      "comment": "Prefix shown while the on-device AI model is downloading, followed by a plain \"NN%\" the app appends in code.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird heruntergeladen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Téléchargement…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ダウンロード中…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Загрузка…"
+          }
+        }
+      }
+    },
+    "Download AI Model (%lld MB)": {
+      "comment": "Button label to start downloading the local on-device AI model, with its approximate size in megabytes.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KI-Modell herunterladen (%lld MB)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download AI Model (%lld MB)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Télécharger le modèle IA (%lld Mo)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIモデルをダウンロード（%lld MB）"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скачать ИИ-модель (%lld МБ)"
+          }
+        }
+      }
+    },
+    "The AI model runs on your device. It downloads once — you'll only need internet for that.": {
+      "comment": "Explainer shown next to the on-device AI model download button, before the first download.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das KI-Modell läuft auf deinem Gerät. Es wird nur einmal heruntergeladen — Internet brauchst du nur dafür."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AI model runs on your device. It downloads once — you'll only need internet for that."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le modèle d’IA fonctionne sur votre appareil. Il se télécharge une seule fois : une connexion internet n’est nécessaire que pour cela."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIモデルは端末上で動作します。ダウンロードは一度だけで、その間だけインターネットが必要です。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Модель работает на устройстве. Скачивается один раз, интернет нужен только для загрузки."
+          }
+        }
+      }
+    },
+    "Ask a question about “%@”. AI answers using only the transcript, on-device.": {
+      "comment": "A description of the content of the Ask AI view, before any question has been asked. %@ is the recording title.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stelle eine Frage zu „%@“. Die KI antwortet ausschließlich anhand des Transkripts, auf dem Gerät."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask a question about “%@”. AI answers using only the transcript, on-device."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posez une question sur « %@ ». L’IA répond uniquement à partir de la transcription, sur l’appareil."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「%@」について質問してください。AIは文字起こしのみを使い、端末内で回答します。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Задайте вопрос о записи «%@». ИИ отвечает на устройстве, используя только расшифровку."
+          }
+        }
+      }
+    },
+    "On-device AI: Qwen3 (Apache-2.0)": {
+      "comment": "Attribution line in Settings > About, crediting the on-device fallback AI model, as required by its Apache-2.0 license.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerätebasierte KI: Qwen3 (Apache-2.0)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On-device AI: Qwen3 (Apache-2.0)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IA sur l’appareil : Qwen3 (Apache-2.0)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デバイス内AI: Qwen3（Apache-2.0）"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ИИ на устройстве: Qwen3 (Apache-2.0)"
+          }
+        }
+      }
+    },
+    "AI summaries, questions and tags for every recording. Everything stays on your iPhone.": {
+      "comment": "Paywall subtitle under the app icon, describing what Pro+ unlocks now that Parakeet transcription itself is free.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KI-Zusammenfassungen, Fragen und Tags für jede Aufnahme. Alles bleibt auf deinem iPhone."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI summaries, questions and tags for every recording. Everything stays on your iPhone."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumés, questions et tags par IA pour chaque enregistrement. Tout reste sur votre iPhone."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべての録音にAIによる要約・質問応答・タグ付け。すべてiPhone内で完結します。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Конспекты, вопросы к записям и теги на основе ИИ. Всё остаётся на вашем iPhone."
+          }
+        }
+      }
+    },
+    "Turns any recording into a concise summary with action items.": {
+      "comment": "Paywall benefit row description for the AI Summary feature.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwandelt jede Aufnahme in eine knappe Zusammenfassung mit Aufgabenliste."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turns any recording into a concise summary with action items."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transforme tout enregistrement en résumé concis avec une liste d’actions."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録音を要点とタスクリストにまとめます。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Превращает любую запись в краткий конспект со списком задач."
+          }
+        }
+      }
+    },
+    "Ask questions about a recording and get answers drawn from the transcript.": {
+      "comment": "Paywall benefit row description for the Ask AI feature.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stelle Fragen zu einer Aufnahme und erhalte Antworten aus dem Transkript."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask questions about a recording and get answers drawn from the transcript."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posez des questions sur un enregistrement et obtenez des réponses tirées de la transcription."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録音について質問すると、文字起こしをもとに回答します。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Задавайте вопросы о записи и получайте ответы на основе расшифровки."
+          }
+        }
+      }
+    },
+    "Auto Tags": {
+      "comment": "Paywall benefit row title for automatic tag suggestions.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatische Tags"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto Tags"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tags automatiques"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自動タグ"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Автотеги"
+          }
+        }
+      }
+    },
+    "Get topic tags suggested automatically for every recording.": {
+      "comment": "Paywall benefit row description for automatic tag suggestions.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Themen-Tags werden für jede Aufnahme automatisch vorgeschlagen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get topic tags suggested automatically for every recording."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Des tags thématiques sont suggérés automatiquement pour chaque enregistrement."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録音ごとにトピックタグを自動で提案します。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Теги по темам подбираются автоматически для каждой записи."
+          }
+        }
+      }
+    },
+    "Works on every iPhone": {
+      "comment": "Paywall benefit row title explaining the AI features work without Apple Intelligence too.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funktioniert auf jedem iPhone"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Works on every iPhone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fonctionne sur tous les iPhone"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どのiPhoneでも動作します"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Работает на любом iPhone"
+          }
+        }
+      }
+    },
+    "AI runs on Apple Intelligence where available, or on a downloadable on-device model everywhere else.": {
+      "comment": "Paywall benefit row description explaining the two-backend AI strategy (Apple Intelligence vs local model fallback).",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die KI läuft über Apple Intelligence, wo verfügbar, oder sonst über ein herunterladbares Modell direkt auf dem Gerät."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI runs on Apple Intelligence where available, or on a downloadable on-device model everywhere else."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’IA fonctionne via Apple Intelligence lorsque disponible, ou via un modèle téléchargeable sur l’appareil partout ailleurs."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Intelligenceが使える端末ではそれを使用し、それ以外の端末でもダウンロード可能な端末内モデルでAIが動作します。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ИИ работает через Apple Intelligence там, где она доступна, либо через скачиваемую модель на устройстве — везде остальном."
+          }
+        }
+      }
+    },
+    "Parakeet": {
+      "comment": "Section header in the Transcribe engine menu, above the Parakeet option.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet"
+          }
+        }
+      }
+    },
+    "Unlimited transcription": {
+      "comment": "Paywall benefit row title for unlimited Parakeet transcription (free tier caps it at 10).",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unbegrenzte Transkription"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlimited transcription"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription illimitée"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無制限の文字起こし"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Безлимитная расшифровка"
+          }
+        }
+      }
+    },
+    "Fast on-device transcription in 25 languages, without limits.": {
+      "comment": "Paywall benefit row description for unlimited Parakeet transcription.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schnelle Transkription auf dem Gerät in 25 Sprachen, ohne Limit."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fast on-device transcription in 25 languages, without limits."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription rapide sur l’appareil en 25 langues, sans limite."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "25言語に対応した高速な端末内文字起こしを、制限なくご利用いただけます。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Быстрая расшифровка на устройстве на 25 языках без ограничений."
+          }
+        }
+      }
+    },
+    "Last free transcription": {
+      "comment": "Warning shown next to the Parakeet option when exactly one free transcription remains.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte kostenlose Transkription"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last free transcription"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernière transcription gratuite"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無料の文字起こしは残り1回です"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Последняя бесплатная расшифровка"
+          }
+        }
+      }
+    },
+    "Free transcriptions used up": {
+      "comment": "Shown next to the Parakeet option once the free quota is exhausted; tapping it opens the paywall.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kostenlose Transkriptionen aufgebraucht"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free transcriptions used up"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcriptions gratuites épuisées"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無料の文字起こし回数を使い切りました"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бесплатные расшифровки закончились"
+          }
+        }
+      }
+    },
+    "Free Parakeet Transcriptions": {
+      "comment": "Settings row label showing how many free Parakeet transcriptions remain, for non-subscribers.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kostenlose Parakeet-Transkriptionen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free Parakeet Transcriptions"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcriptions Parakeet gratuites"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parakeet無料文字起こし"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бесплатные расшифровки Parakeet"
+          }
+        }
+      }
+    },
+    "%lld of %lld": {
+      "comment": "Settings row value showing free transcriptions remaining out of the total free quota, e.g. \"3 of 10\".",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld von %lld"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld sur %lld"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld / %lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld из %lld"
+          }
+        }
+      }
+    },
+    "%lld free transcriptions left": {
+      "comment": "Shown next to the Parakeet option in the Transcribe menu, with the count of free transcriptions remaining (shown only when 2 or more remain — 1 remaining uses \"Last free transcription\" instead).",
+      "localizations": {
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Noch %lld kostenlose Transkription übrig"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Noch %lld kostenlose Transkriptionen übrig"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld free transcription left"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld free transcriptions left"
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transcription gratuite restante"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transcriptions gratuites restantes"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "無料の文字起こしはあと%lld件です"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld бесплатная расшифровка"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld бесплатные расшифровки"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld бесплатных расшифровок"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Осталось %lld бесплатных расшифровок"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Recordings, transcripts and summaries never leave your iPhone.": {
+      "comment": "Paywall benefit row description for the Privacy by Design row.",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahmen, Transkripte und Zusammenfassungen verlassen dein iPhone nie."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordings, transcripts and summaries never leave your iPhone."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrements, transcriptions et résumés ne quittent jamais votre iPhone."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "録音・文字起こし・要約は、あなたのiPhoneの外に出ることはありません。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Записи, расшифровки и конспекты никогда не покидают ваш iPhone."
+          }
+        }
+      }
     }
   },
   "version": "1.1"

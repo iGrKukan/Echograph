@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 #if canImport(Translation)
 import Translation
@@ -25,6 +26,8 @@ struct RecordingDetailView: View {
     @State private var showingTranslation = false
     @State private var translationSource: String = ""
     @State private var calendarError: String?
+    @State private var isPreparingLocalModel = false
+    @State private var localModelDownloadError: String?
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
 
@@ -57,14 +60,16 @@ struct RecordingDetailView: View {
                         }
                         .disabled(recording.transcript == nil)
 
-                        // On-device Apple Intelligence analysis — App Store-friendly,
-                        // available to Pro+ on iPhone 15 Pro+ / iOS 26.
+                        // On-device analysis — Apple Intelligence when available,
+                        // otherwise the local Qwen3 fallback (App Store-friendly),
+                        // available to Pro+.
                         Button {
                             if !purchases.hasProPlus {
                                 showingPaywall = true
-                            } else if !summary.isAvailable {
-                                // surfaces the "Apple Intelligence required" message
-                                // through the existing summary error path on retry
+                            } else if aiUIState == .needsDownload || aiUIState == .downloading {
+                                downloadLocalModelIfNeeded()
+                            } else if aiUIState == .unavailable {
+                                // no-op; nothing can answer (Simulator, in practice)
                             } else {
                                 Task { await summary.analyze(recording) }
                             }
@@ -271,11 +276,7 @@ struct RecordingDetailView: View {
                     .padding(.horizontal)
                 Button("Try Again") {
                     transcription.clearError()
-                    // Parakeet is the default engine, but stays behind Pro
-                    // like Whisper did — don't let a retry hand a free user
-                    // the paid engine.
-                    let engine: TranscriptionService.Engine = purchases.hasPro ? .parakeet : .appleSpeech
-                    Task { await transcription.transcribe(recording, using: engine, languageHint: preferredLanguage.languageHint) }
+                    transcribeWithParakeet(recording)
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -313,22 +314,22 @@ struct RecordingDetailView: View {
                         } label: {
                             Label("Apple Speech (fast, free)", systemImage: "waveform")
                         }
-                        Section("Parakeet" + (purchases.hasPro ? "" : " · Pro")) {
+                        Section("Parakeet") {
                             Button {
-                                if purchases.hasPro {
-                                    Task {
-                                        await transcription.transcribe(
-                                            recording,
-                                            using: .parakeet,
-                                            languageHint: preferredLanguage.languageHint,
-                                            vocabularyPrompt: customVocabulary
-                                        )
-                                    }
-                                } else {
-                                    showingPaywall = true
-                                }
+                                transcribeWithParakeet(recording, vocabularyPrompt: customVocabulary)
                             } label: {
-                                Label("Parakeet v3 (~\(ParakeetTranscriber.downloadSizeMB) MB)", systemImage: purchases.hasPro ? "wand.and.stars" : "lock.fill")
+                                Label {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Parakeet v3 (~\(ParakeetTranscriber.downloadSizeMB) MB)")
+                                        if let status = freeTranscriptionStatusText {
+                                            Text(status)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                } icon: {
+                                    Image(systemName: "wand.and.stars")
+                                }
                             }
                             .accessibilityIdentifier("parakeetOption")
                             Divider()
@@ -394,13 +395,16 @@ struct RecordingDetailView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
+        } else if purchases.hasProPlus && (aiUIState == .needsDownload || aiUIState == .downloading) {
+            downloadPromptView
+                .padding(.horizontal)
         } else {
             VStack(spacing: 8) {
                 Button {
                     if !purchases.hasProPlus {
                         showingPaywall = true
-                    } else if !self.summary.isAvailable {
-                        // silently no-op; the button label already explains it
+                    } else if aiUIState != .ready {
+                        // handled by downloadPromptView above
                     } else {
                         Task { await self.summary.summarize(recording) }
                     }
@@ -422,22 +426,106 @@ struct RecordingDetailView: View {
         }
     }
 
+    /// The three states the local AI backend can be in from this view's
+    /// perspective. Apple Intelligence, when it's the active backend, is
+    /// always `.ready` — nothing to download.
+    private enum AIUIState: Equatable {
+        case ready
+        case needsDownload
+        case downloading
+        /// Neither backend can answer (only the Simulator, in practice).
+        case unavailable
+    }
+
+    private var aiUIState: AIUIState {
+        switch summary.activeBackend {
+        case .appleIntelligence:
+            return .ready
+        case .localModel:
+            if summary.isLocalModelReady { return .ready }
+            return isPreparingLocalModel ? .downloading : .needsDownload
+        case .none:
+            return .unavailable
+        }
+    }
+
+    /// Shared by the summary button, the ask button and the tag-suggest
+    /// button — whichever the user taps first kicks off the one-time
+    /// download, and all three reflect its progress the same way.
+    private func downloadLocalModelIfNeeded() {
+        guard !isPreparingLocalModel else { return }
+        isPreparingLocalModel = true
+        localModelDownloadError = nil
+        Task {
+            do {
+                try await summary.prepareLocalModel()
+            } catch {
+                localModelDownloadError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            }
+            isPreparingLocalModel = false
+        }
+    }
+
+    @ViewBuilder
+    private var downloadPromptView: some View {
+        VStack(spacing: 8) {
+            Text("The AI model runs on your device. It downloads once — you'll only need internet for that.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                downloadLocalModelIfNeeded()
+            } label: {
+                HStack(spacing: 8) {
+                    if aiUIState == .downloading {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Image(systemName: "arrow.down.circle")
+                    }
+                    Text(downloadButtonLabel)
+                        .fontWeight(.medium)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .disabled(aiUIState == .downloading)
+
+            if let localModelDownloadError {
+                Text(localModelDownloadError)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+        }
+    }
+
+    private var downloadButtonLabel: String {
+        if aiUIState == .downloading {
+            let percent = Int(summary.localModelDownloadProgress * 100)
+            return String(localized: "Downloading…") + " \(percent)%"
+        }
+        return String(localized: "Download AI Model (\(summary.localModelSizeMB) MB)")
+    }
+
     @ViewBuilder
     private var askButton: some View {
         Button {
             if !purchases.hasProPlus {
                 showingPaywall = true
-            } else if !summary.isAvailable {
-                // no-op
+            } else if aiUIState == .needsDownload || aiUIState == .downloading {
+                downloadLocalModelIfNeeded()
+            } else if aiUIState == .unavailable {
+                // no-op; the button label already explains it
             } else {
                 showingAskSheet = true
             }
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: purchases.hasProPlus ? "bubble.left.and.text.bubble.right" : "lock.fill")
-                Text(purchases.hasProPlus
-                     ? (summary.isAvailable ? "Ask AI" : "Apple Intelligence required")
-                     : "Ask AI · Pro+")
+                Text(askButtonLabel)
                     .fontWeight(.medium)
             }
             .frame(maxWidth: .infinity)
@@ -447,10 +535,53 @@ struct RecordingDetailView: View {
         .buttonStyle(.plain)
     }
 
+    private var askButtonLabel: String {
+        if !purchases.hasProPlus { return String(localized: "Ask AI · Pro+") }
+        switch aiUIState {
+        case .ready: return String(localized: "Ask AI")
+        case .needsDownload, .downloading: return downloadButtonLabel
+        case .unavailable: return String(localized: "On-device AI unavailable")
+        }
+    }
+
     private var summaryButtonLabel: String {
-        if !purchases.hasProPlus { return "AI Summary · Pro+" }
-        if !summary.isAvailable { return "Apple Intelligence required" }
-        return "Generate AI Summary"
+        if !purchases.hasProPlus { return String(localized: "AI Summary · Pro+") }
+        switch aiUIState {
+        case .ready: return String(localized: "Generate AI Summary")
+        case .needsDownload, .downloading: return downloadButtonLabel
+        case .unavailable: return String(localized: "On-device AI unavailable")
+        }
+    }
+
+    /// Runs Parakeet, gated by `FreeTranscriptionLimiter` for non-subscribers
+    /// — shows the paywall instead of transcribing once the free quota is
+    /// spent. Shared by the "Transcribe" menu and the error screen's
+    /// "Try Again" button so both respect the same gate.
+    private func transcribeWithParakeet(_ recording: Recording, vocabularyPrompt: String? = nil) {
+        if !purchases.hasPro && FreeTranscriptionLimiter.isExhausted {
+            showingPaywall = true
+            return
+        }
+        Task {
+            await transcription.transcribe(
+                recording,
+                using: .parakeet,
+                languageHint: preferredLanguage.languageHint,
+                vocabularyPrompt: vocabularyPrompt,
+                unlimited: purchases.hasPro
+            )
+        }
+    }
+
+    /// `nil` for subscribers (no quota to report). Otherwise one of three
+    /// states: a pluralized "N left" count, a "last one" warning at 1, or
+    /// "used up" at 0 — matches `FreeTranscriptionLimiter`.
+    private var freeTranscriptionStatusText: String? {
+        guard !purchases.hasPro else { return nil }
+        let remaining = FreeTranscriptionLimiter.remaining
+        if remaining <= 0 { return String(localized: "Free transcriptions used up") }
+        if remaining == 1 { return String(localized: "Last free transcription") }
+        return String(localized: "\(remaining) free transcriptions left")
     }
 
     private func updateSegment(_ segment: Transcript.Segment, text: String, in recording: Recording) {
@@ -504,15 +635,19 @@ struct RecordingDetailView: View {
                     .background(.thinMaterial, in: Capsule())
                 }
                 .buttonStyle(.plain)
-                if recording.transcript != nil && summary.isAvailable {
+                if recording.transcript != nil && aiUIState != .unavailable {
                     Button {
-                        Task { await suggestTags(for: recording) }
+                        if aiUIState == .needsDownload || aiUIState == .downloading {
+                            downloadLocalModelIfNeeded()
+                        } else {
+                            Task { await suggestTags(for: recording) }
+                        }
                     } label: {
                         HStack(spacing: 4) {
-                            if isSuggestingTags {
+                            if isSuggestingTags || aiUIState == .downloading {
                                 ProgressView().controlSize(.mini)
                             } else {
-                                Image(systemName: "sparkles")
+                                Image(systemName: aiUIState == .needsDownload ? "arrow.down.circle" : "sparkles")
                                     .imageScale(.small)
                             }
                             Text("Suggest")
@@ -523,7 +658,7 @@ struct RecordingDetailView: View {
                         .background(.thinMaterial, in: Capsule())
                     }
                     .buttonStyle(.plain)
-                    .disabled(isSuggestingTags)
+                    .disabled(isSuggestingTags || aiUIState == .downloading)
                 }
                 Spacer(minLength: 0)
             }
