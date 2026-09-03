@@ -10,7 +10,6 @@ struct EchographApp: App {
 
     @AppStorage("Echograph.didShowConsentDisclaimer") private var didShowConsentDisclaimer = false
     @State private var showingConsent = false
-    @Environment(\.scenePhase) private var scenePhase
 
     init() {
         UITestHooks.applyIfNeeded()
@@ -53,14 +52,6 @@ struct EchographApp: App {
                 .task {
                     if !didShowConsentDisclaimer { showingConsent = true }
                 }
-        }
-        // The local fallback AI model (Qwen3 via MLX) is ~1 GB resident in
-        // memory once loaded — iOS will jetsam the app if that stays around
-        // in the background, so release it as soon as we're backgrounded.
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .background {
-                summary.releaseLocalModelMemory()
-            }
         }
     }
 }

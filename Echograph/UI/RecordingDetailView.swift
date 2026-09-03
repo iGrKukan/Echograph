@@ -29,8 +29,6 @@ struct RecordingDetailView: View {
     @State private var showingTranslation = false
     @State private var translationSource: String = ""
     @State private var calendarError: String?
-    @State private var isPreparingLocalModel = false
-    @State private var localModelDownloadError: String?
     @State private var selectedTab: DetailTab = .transcript
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
 
@@ -42,17 +40,16 @@ struct RecordingDetailView: View {
         store.recordings.first(where: { $0.id == recordingID })
     }
 
-    /// The three panes of the recording screen. "Summary" and "Analysis"
-    /// show exactly the content that used to be stacked under the
-    /// transcript, just split into their own panes.
+    /// The two panes of the recording screen. "Summary" shows exactly the
+    /// content that used to be stacked under the transcript, split into its
+    /// own pane.
     private enum DetailTab: String, CaseIterable, Identifiable {
-        case transcript, summary, analysis
+        case transcript, summary
         var id: String { rawValue }
         var title: String {
             switch self {
             case .transcript: return String(localized: "Transcript")
             case .summary: return String(localized: "Summary")
-            case .analysis: return String(localized: "Analysis")
             }
         }
     }
@@ -70,6 +67,24 @@ struct RecordingDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if let recording {
+                if selectedTab == .transcript, let transcript = recording.transcript, !transcript.segments.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ShareLink(item: shareText(forTranscript: transcript, in: recording)) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .accessibilityLabel(Text("Share Transcript"))
+                        .tint(DS.Color.accent)
+                    }
+                } else if selectedTab == .summary, let summaryText = recording.summary, !summaryText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ShareLink(item: shareText(forSummary: summaryText, in: recording)) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .accessibilityLabel(Text("Share Summary"))
+                        .tint(DS.Color.accent)
+                    }
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
@@ -78,30 +93,6 @@ struct RecordingDetailView: View {
                             Label("Export…", systemImage: "square.and.arrow.up")
                         }
                         .disabled(recording.transcript == nil)
-
-                        // On-device analysis — Apple Intelligence when available,
-                        // otherwise the local Qwen3 fallback (App Store-friendly),
-                        // available to Pro+.
-                        Button {
-                            if !purchases.hasProPlus {
-                                showingPaywall = true
-                            } else if aiUIState == .needsDownload || aiUIState == .downloading {
-                                downloadLocalModelIfNeeded()
-                            } else if aiUIState == .unavailable {
-                                // no-op; nothing can answer (Simulator, in practice)
-                            } else {
-                                selectedTab = .analysis
-                                Task { await summary.analyze(recording) }
-                            }
-                        } label: {
-                            if summary.isRunning(for: recording.id) {
-                                Label("Analyzing…", systemImage: "sparkles")
-                            } else {
-                                Label(purchases.hasProPlus ? "Deep Analysis (AI)…" : "Deep Analysis · Pro+",
-                                      systemImage: purchases.hasProPlus ? "sparkles" : "lock.fill")
-                            }
-                        }
-                        .disabled(recording.transcript == nil || summary.isRunning(for: recording.id))
 
                         Button {
                             translationSource = recording.transcript?.fullText ?? ""
@@ -324,8 +315,6 @@ struct RecordingDetailView: View {
             }
         case .summary:
             summaryTab(for: recording)
-        case .analysis:
-            analysisTab(for: recording)
         }
     }
 
@@ -341,8 +330,6 @@ struct RecordingDetailView: View {
                         .textSelection(.enabled)
                 } else if summary.isRunning(for: recording.id) {
                     generatingRow("Generating summary…")
-                } else if purchases.hasProPlus && (aiUIState == .needsDownload || aiUIState == .downloading) {
-                    downloadPromptView
                 } else {
                     generateButton(
                         icon: purchases.hasProPlus ? "sparkles" : "lock.fill",
@@ -350,42 +337,10 @@ struct RecordingDetailView: View {
                     ) {
                         if !purchases.hasProPlus {
                             showingPaywall = true
-                        } else if aiUIState == .ready {
+                        } else if summary.isAvailable {
                             Task { await self.summary.summarize(recording) }
                         }
                     }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, DS.Spacing.horizontal)
-            .padding(.top, 16)
-            .padding(.bottom, 32)
-        }
-    }
-
-    /// "Разбор" — the deep-analysis markdown report, same document style.
-    @ViewBuilder
-    private func analysisTab(for recording: Recording) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let analysisText = recording.analysis, !analysisText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Markdown(analysisText)
-                        .markdownTheme(.gitHub)
-                        .textSelection(.enabled)
-                } else if summary.isRunning(for: recording.id) {
-                    generatingRow("Analyzing…")
-                } else {
-                    VStack(spacing: 6) {
-                        Text("No analysis yet")
-                            .font(DS.Typography.body.weight(.semibold))
-                            .foregroundStyle(DS.Color.textPrimary)
-                        Text("Use the ••• menu above to run Deep Analysis.")
-                            .font(DS.Typography.secondary)
-                            .foregroundStyle(DS.Color.textSecondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 40)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -512,98 +467,39 @@ struct RecordingDetailView: View {
         return String(format: "%d:%02d", m, s)
     }
 
-    /// The three states the local AI backend can be in from this view's
-    /// perspective. Apple Intelligence, when it's the active backend, is
-    /// always `.ready` — nothing to download.
-    private enum AIUIState: Equatable {
-        case ready
-        case needsDownload
-        case downloading
-        /// Neither backend can answer (only the Simulator, in practice).
-        case unavailable
+    // MARK: - Share
+
+    /// "[мм:сс] Speaker: text" per line, one line per segment, under a
+    /// two-line header (title, then date · duration) and a blank line.
+    private func shareText(forTranscript transcript: Transcript, in recording: Recording) -> String {
+        var lines = [
+            recording.title,
+            "\(recording.createdAt.formatted(date: .abbreviated, time: .shortened)) · \(durationLabel(recording.duration))",
+            "",
+        ]
+        lines.append(contentsOf: transcript.segments.map { segment in
+            let speakerPrefix = segment.speaker.map { "\($0.label): " } ?? ""
+            return "[\(shareTimecode(segment.startTime))] \(speakerPrefix)\(segment.text)"
+        })
+        return lines.joined(separator: "\n")
     }
 
-    private var aiUIState: AIUIState {
-        switch summary.activeBackend {
-        case .appleIntelligence:
-            return .ready
-        case .localModel:
-            if summary.isLocalModelReady { return .ready }
-            return isPreparingLocalModel ? .downloading : .needsDownload
-        case .none:
-            return .unavailable
-        }
+    private func shareText(forSummary summaryText: String, in recording: Recording) -> String {
+        "\(recording.title)\n\n\(summaryText)"
     }
 
-    /// Shared by the summary tab, the analysis tab and the tag-suggest
-    /// button — whichever the user taps first kicks off the one-time
-    /// download, and all three reflect its progress the same way.
-    private func downloadLocalModelIfNeeded() {
-        guard !isPreparingLocalModel else { return }
-        isPreparingLocalModel = true
-        localModelDownloadError = nil
-        Task {
-            do {
-                try await summary.prepareLocalModel()
-            } catch {
-                localModelDownloadError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-            }
-            isPreparingLocalModel = false
-        }
-    }
-
-    @ViewBuilder
-    private var downloadPromptView: some View {
-        VStack(spacing: 8) {
-            Text("The AI model runs on your device. It downloads once — you'll only need internet for that.")
-                .font(DS.Typography.secondary)
-                .foregroundStyle(DS.Color.textSecondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-
-            Button {
-                downloadLocalModelIfNeeded()
-            } label: {
-                HStack(spacing: 8) {
-                    if aiUIState == .downloading {
-                        ProgressView().controlSize(.small)
-                    } else {
-                        Image(systemName: "arrow.down.circle")
-                    }
-                    Text(downloadButtonLabel)
-                        .fontWeight(.medium)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
-                .background(DS.Color.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: DS.Radius.field))
-                .foregroundStyle(DS.Color.accent)
-            }
-            .buttonStyle(.plain)
-            .disabled(aiUIState == .downloading)
-
-            if let localModelDownloadError {
-                Text(localModelDownloadError)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
-        }
-    }
-
-    private var downloadButtonLabel: String {
-        if aiUIState == .downloading {
-            let percent = Int(summary.localModelDownloadProgress * 100)
-            return String(localized: "Downloading…") + " \(percent)%"
-        }
-        return String(localized: "Download AI Model (\(summary.localModelSizeMB) MB)")
+    private func shareTimecode(_ time: TimeInterval) -> String {
+        let total = Int(time.rounded())
+        let m = total / 60
+        let s = total % 60
+        return String(format: "%02d:%02d", m, s)
     }
 
     private var summaryButtonLabel: String {
         if !purchases.hasProPlus { return String(localized: "AI Summary · Pro+") }
-        switch aiUIState {
-        case .ready: return String(localized: "Generate AI Summary")
-        case .needsDownload, .downloading: return downloadButtonLabel
-        case .unavailable: return String(localized: "On-device AI unavailable")
-        }
+        return summary.isAvailable
+            ? String(localized: "Generate AI Summary")
+            : String(localized: "Apple Intelligence required")
     }
 
     // MARK: - Ask bar (pinned)
@@ -768,19 +664,15 @@ struct RecordingDetailView: View {
                         .foregroundStyle(DS.Color.textSecondary)
                     }
                     .buttonStyle(.plain)
-                    if recording.transcript != nil && aiUIState != .unavailable {
+                    if recording.transcript != nil && summary.isAvailable {
                         Button {
-                            if aiUIState == .needsDownload || aiUIState == .downloading {
-                                downloadLocalModelIfNeeded()
-                            } else {
-                                Task { await suggestTags(for: recording) }
-                            }
+                            Task { await suggestTags(for: recording) }
                         } label: {
                             HStack(spacing: 4) {
-                                if isSuggestingTags || aiUIState == .downloading {
+                                if isSuggestingTags {
                                     ProgressView().controlSize(.mini)
                                 } else {
-                                    Image(systemName: aiUIState == .needsDownload ? "arrow.down.circle" : "sparkles")
+                                    Image(systemName: "sparkles")
                                         .imageScale(.small)
                                 }
                                 Text("Suggest")
@@ -794,7 +686,7 @@ struct RecordingDetailView: View {
                             .foregroundStyle(DS.Color.textSecondary)
                         }
                         .buttonStyle(.plain)
-                        .disabled(isSuggestingTags || aiUIState == .downloading)
+                        .disabled(isSuggestingTags)
                     }
                 }
             }

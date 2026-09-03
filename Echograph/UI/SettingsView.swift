@@ -95,9 +95,6 @@ struct SettingsView: View {
                     Link(destination: URL(string: "mailto:support@timberbid.by")!) {
                         Label("Contact Support", systemImage: "envelope")
                     }
-                    Text("On-device AI: Qwen3 (Apache-2.0)")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                 }
             }
             .scrollContentBackground(.hidden)

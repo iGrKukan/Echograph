@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Echograph records your voice locally on Apple Watch.</string>
 	<key>UIBackgroundModes</key>
