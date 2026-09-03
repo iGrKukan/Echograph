@@ -75,23 +75,18 @@ final class SnapshotTests: XCTestCase {
     }
 
     func test_04_paywall() {
-        // Parakeet itself is free (up to the free-transcription quota) —
-        // the paywall now shows only once that quota is exhausted, not
+        // Transcription itself is free (up to the free-transcription quota)
+        // — the paywall now shows only once that quota is exhausted, not
         // merely for lacking a subscription. Exhaust it deterministically
-        // instead of actually running 10 (network-downloading) transcriptions.
+        // instead of actually running 10 real transcriptions.
         let app = launchedApp(forcePaywall: true, exhaustFreeTranscriptions: true)
         tapSecondRecording(app)
         sleep(2)
 
-        let transcribe = app.buttons["transcribeMenu"].firstMatch
-        XCTAssertTrue(transcribe.waitForExistence(timeout: 5), "Transcribe menu not found")
+        // Tap the single Transcribe button (free quota exhausted → opens paywall).
+        let transcribe = app.buttons["transcribeButton"].firstMatch
+        XCTAssertTrue(transcribe.waitForExistence(timeout: 5), "Transcribe button not found")
         transcribe.tap()
-        sleep(1)
-
-        // Tap Parakeet v3 inside the menu (free quota exhausted → opens paywall).
-        let parakeetOption = app.buttons["parakeetOption"].firstMatch
-        XCTAssertTrue(parakeetOption.waitForExistence(timeout: 3), "Parakeet v3 option not found")
-        parakeetOption.tap()
         sleep(2)
 
         snapshot("04-paywall")

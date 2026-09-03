@@ -22,7 +22,6 @@ struct RecordingDetailView: View {
     @State private var newTagText = ""
     @State private var suggestedTags: [String] = []
     @State private var isSuggestingTags = false
-    @State private var showingVocabularySheet = false
     @State private var showingAskSheet = false
     @State private var askInitialQuestion = ""
     @State private var quickAskText = ""
@@ -34,7 +33,6 @@ struct RecordingDetailView: View {
     @State private var localModelDownloadError: String?
     @State private var selectedTab: DetailTab = .transcript
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
-    @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
 
     private var preferredLanguage: TranscriptionLanguage {
         TranscriptionLanguage(rawValue: preferredLanguageRaw) ?? .auto
@@ -159,9 +157,6 @@ struct RecordingDetailView: View {
                 if let recording { addTag(to: recording) }
             }
             Button("Cancel", role: .cancel) { newTagText = "" }
-        }
-        .sheet(isPresented: $showingVocabularySheet) {
-            VocabularySheet(text: $customVocabulary)
         }
         .sheet(isPresented: $showingAskSheet) {
             if let recording {
@@ -449,7 +444,7 @@ struct RecordingDetailView: View {
                     .padding(.horizontal)
                 Button("Try Again") {
                     transcription.clearError()
-                    transcribeWithParakeet(recording)
+                    transcribeRecording(recording)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(DS.Color.accent)
@@ -482,54 +477,24 @@ struct RecordingDetailView: View {
                     .buttonStyle(.bordered)
                     .tint(DS.Color.accent)
 
-                    // Engine menu — Apple Speech or Parakeet.
-                    Menu {
-                        Button {
-                            Task { await transcription.transcribe(recording, using: .appleSpeech, languageHint: preferredLanguage.languageHint) }
-                        } label: {
-                            Label("Apple Speech (fast, free)", systemImage: "waveform")
-                        }
-                        Section("Parakeet") {
-                            Button {
-                                transcribeWithParakeet(recording, vocabularyPrompt: customVocabulary)
-                            } label: {
-                                Label {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Parakeet v3 (~\(ParakeetTranscriber.downloadSizeMB) MB)")
-                                        if let status = freeTranscriptionStatusText {
-                                            Text(status)
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    }
-                                } icon: {
-                                    Image(systemName: "wand.and.stars")
-                                }
-                            }
-                            .accessibilityIdentifier("parakeetOption")
-                            Divider()
-                            Button {
-                                showingVocabularySheet = true
-                            } label: {
-                                let count = customVocabulary
-                                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                                    .components(separatedBy: .whitespacesAndNewlines)
-                                    .filter { !$0.isEmpty }
-                                    .count
-                                Label(
-                                    count > 0 ? "Custom Vocabulary (\(count) terms)" : "Add Custom Vocabulary…",
-                                    systemImage: "text.book.closed"
-                                )
-                            }
-                        }
+                    // Single button — Apple Speech is the only transcription
+                    // engine now (Parakeet was removed: its model download
+                    // from Hugging Face silently failed on real devices).
+                    Button {
+                        transcribeRecording(recording)
                     } label: {
-                        Label("Transcribe", systemImage: "wand.and.stars")
-                            .padding(.horizontal, 8)
+                        VStack(spacing: 2) {
+                            Label("Transcribe", systemImage: "wand.and.stars")
+                            if let status = freeTranscriptionStatusText {
+                                Text(status)
+                                    .font(.caption2)
+                            }
+                        }
+                        .padding(.horizontal, 8)
                     }
-                    .menuStyle(.button)
                     .buttonStyle(.borderedProminent)
                     .tint(DS.Color.accent)
-                    .accessibilityIdentifier("transcribeMenu")
+                    .accessibilityIdentifier("transcribeButton")
                 }
             }
             .padding(.top, 16)
@@ -714,11 +679,11 @@ struct RecordingDetailView: View {
         showingAskSheet = true
     }
 
-    /// Runs Parakeet, gated by `FreeTranscriptionLimiter` for non-subscribers
-    /// — shows the paywall instead of transcribing once the free quota is
-    /// spent. Shared by the "Transcribe" menu and the error screen's
-    /// "Try Again" button so both respect the same gate.
-    private func transcribeWithParakeet(_ recording: Recording, vocabularyPrompt: String? = nil) {
+    /// Runs the transcription, gated by `FreeTranscriptionLimiter` for
+    /// non-subscribers — shows the paywall instead of transcribing once the
+    /// free quota is spent. Shared by the "Transcribe" button and the error
+    /// screen's "Try Again" button so both respect the same gate.
+    private func transcribeRecording(_ recording: Recording) {
         if !purchases.hasPro && FreeTranscriptionLimiter.isExhausted {
             showingPaywall = true
             return
@@ -726,9 +691,7 @@ struct RecordingDetailView: View {
         Task {
             await transcription.transcribe(
                 recording,
-                using: .parakeet,
                 languageHint: preferredLanguage.languageHint,
-                vocabularyPrompt: vocabularyPrompt,
                 unlimited: purchases.hasPro
             )
         }
@@ -1229,40 +1192,6 @@ private struct TranslationOverlay: ViewModifier {
         #else
         content
         #endif
-    }
-}
-
-private struct VocabularySheet: View {
-    @Binding var text: String
-    @Environment(\.dismiss) private var dismiss
-    @FocusState private var focused: Bool
-
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Add proper nouns, technical terms, brand names you want the transcript to get right. One per line works best.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal)
-                TextEditor(text: $text)
-                    .font(.body.monospaced())
-                    .padding(.horizontal, 12)
-                    .focused($focused)
-            }
-            .padding(.top, 8)
-            .navigationTitle("Custom Vocabulary")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Clear", role: .destructive) { text = "" }
-                        .disabled(text.isEmpty)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
-                }
-            }
-            .onAppear { focused = true }
-        }
     }
 }
 

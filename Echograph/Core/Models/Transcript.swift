@@ -76,10 +76,16 @@ extension Transcript {
 
 enum TranscriptionModel: String, Hashable, Codable, Sendable {
     case appleSpeechAnalyzer
+    // Parakeet (NVIDIA Parakeet TDT 0.6B v3, via FluidAudio) was removed as
+    // an engine — its Hugging Face model download silently failed on real
+    // devices, leaving zero-byte weight files in the cache while reporting
+    // success. Apple Speech is now the only engine. This case stays so
+    // previously saved transcripts (already-transcribed recordings on a
+    // subscriber's device) keep decoding instead of throwing.
     case parakeetTDT
-    // Whisper was removed as an engine (replaced by Parakeet TDT), but these
-    // cases stay so previously saved transcripts (already-transcribed
-    // recordings on a subscriber's device) keep decoding instead of throwing.
+    // Whisper was removed as an engine (replaced by Parakeet TDT, itself
+    // later removed above), but these cases stay so previously saved
+    // transcripts keep decoding instead of throwing.
     case whisperTiny
     case whisperBase
     case whisperSmall

@@ -86,7 +86,7 @@ struct PaywallView: View {
         [
             BenefitRow(icon: "wand.and.stars",
                        title: "Unlimited transcription",
-                       text: "Fast on-device transcription in 25 languages, without limits."),
+                       text: "Recognise as much as you need, without the 10-recording limit."),
             BenefitRow(icon: "sparkles",
                        title: "AI Summary",
                        text: "Turns any recording into a concise summary with action items."),

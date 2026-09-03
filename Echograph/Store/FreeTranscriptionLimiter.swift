@@ -1,16 +1,15 @@
 import Foundation
 
-/// Tracks how many free (non-subscriber) Parakeet transcriptions have been
-/// used. Parakeet is free up to `freeTranscriptionLimit`, after which it
+/// Tracks how many free (non-subscriber) transcriptions have been used.
+/// Transcription is free up to `freeTranscriptionLimit`, after which it
 /// requires a Pro/Pro+ subscription — see `TranscriptionService.transcribe`.
 ///
-/// Apple Speech is never limited by this — see the comment on
-/// `TranscriptionService.Engine.appleSpeech`. Subscribers
-/// (`PurchaseManager.hasPro` / `hasProPlus`) bypass this entirely: callers
-/// pass `unlimited: true` and the counter is never touched for them.
+/// Subscribers (`PurchaseManager.hasPro` / `hasProPlus`) bypass this
+/// entirely: callers pass `unlimited: true` and the counter is never
+/// touched for them.
 enum FreeTranscriptionLimiter {
-    /// Free Parakeet transcriptions before a subscription is required.
-    /// Single knob — change this to adjust the limit.
+    /// Free transcriptions before a subscription is required. Single knob —
+    /// change this to adjust the limit.
     static let freeTranscriptionLimit = 10
 
     private static let usedCountKey = "Voicekeep.freeTranscriptionsUsed"
@@ -27,9 +26,8 @@ enum FreeTranscriptionLimiter {
         remaining <= 0
     }
 
-    /// Call this only after a Parakeet transcription has actually
-    /// *succeeded* — not on failure, cancellation, or a silent fallback to
-    /// Apple Speech, and not at all for subscribers (see
+    /// Call this only after a transcription has actually *succeeded* — not
+    /// on failure or cancellation, and not at all for subscribers (see
     /// `TranscriptionService.transcribe`'s `unlimited` parameter, which
     /// guards every call site of this method).
     static func recordSuccessfulTranscription() {

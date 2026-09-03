@@ -31,9 +31,8 @@ enum TranscriptionLanguage: String, CaseIterable, Identifiable, Hashable, Sendab
         }
     }
 
-    /// Returns nil for `auto` — Parakeet detects language on its own regardless
-    /// of the hint, so this only affects the supported-language check and the
-    /// stored transcript language; Apple Speech falls back to `Locale.current`.
+    /// Returns nil for `auto` — Apple Speech then falls back to `Locale.current`
+    /// instead of a hinted locale.
     var languageHint: String? {
         self == .auto ? nil : rawValue
     }

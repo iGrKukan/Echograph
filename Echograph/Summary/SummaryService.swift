@@ -5,10 +5,25 @@ import Observation
 import FoundationModels
 #endif
 
-/// A note appended to every system prompt below so replies match whichever
-/// language the recording happens to be in — transcripts are frequently
-/// Russian, but the prompts themselves stay in English.
-private let respondInTranscriptLanguage = "Answer in the same language as the transcript."
+/// Fallback instruction appended to a system prompt when `LanguageDetector`
+/// can't confidently name the transcript's language — better than nothing,
+/// but far less reliable than naming the language outright (see
+/// `languageInstruction(for:)`), which is why it's only a fallback.
+private let respondInTranscriptLanguageFallback = "Answer in the same language as the transcript."
+
+/// Builds the line appended as the LAST line of every system prompt below,
+/// telling the model explicitly which language to reply in. Transcripts are
+/// frequently Russian while the prompts themselves stay in English; a
+/// generic "answer in the same language as the transcript" instruction
+/// wasn't reliably followed, so this names the language outright instead.
+/// Detection runs on `text` (the transcript itself, not the prompt), and the
+/// instruction goes last because models follow it more reliably there.
+private func languageInstruction(for text: String) -> String {
+    guard let detected = LanguageDetector.detect(in: text) else {
+        return respondInTranscriptLanguageFallback
+    }
+    return "Write your entire response in \(detected.name)."
+}
 
 @MainActor
 @Observable
@@ -147,7 +162,7 @@ final class SummaryService {
         1. A 2-3 sentence summary of the conversation.
         2. A bulleted list of action items (if any), prefixed with "- ".
         Keep tone neutral and factual.
-        \(respondInTranscriptLanguage)
+        \(languageInstruction(for: text))
         """
         return try await generate(system: system, user: "Transcript:\n\n\(text)", maxTokens: 500)
     }
@@ -162,7 +177,7 @@ final class SummaryService {
         - Each tag is 1-3 lowercase words, no punctuation, no #.
         - Use kebab-case for multi-word tags (e.g. ai-ethics).
         - Prefer concrete topics over generic ones.
-        \(respondInTranscriptLanguage)
+        \(languageInstruction(for: transcript.fullText))
         """
         let content = try await generate(system: system, user: transcript.fullText, maxTokens: 60)
         return content
@@ -221,7 +236,7 @@ final class SummaryService {
 
         Output ONLY GitHub-flavored markdown. Do not add disclaimers
         about not having the transcript — work with whatever is given.
-        \(respondInTranscriptLanguage)
+        \(languageInstruction(for: text))
         """
         return try await generate(system: system, user: "Transcript:\n\n\(text)", maxTokens: 1200)
     }
@@ -234,7 +249,7 @@ final class SummaryService {
         - Only use information from the transcript.
         - If the answer is not in the transcript, say so plainly.
         - Be concise: 1-3 sentences unless the user asks for detail.
-        \(respondInTranscriptLanguage)
+        \(languageInstruction(for: transcript.fullText))
         """
         let user = """
         Transcript:

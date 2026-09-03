@@ -48,7 +48,7 @@ struct SettingsView: View {
 
                     if !purchases.hasPro {
                         HStack {
-                            Label("Free Parakeet Transcriptions", systemImage: "waveform")
+                            Label("Free Transcriptions", systemImage: "waveform")
                             Spacer()
                             Text(freeTranscriptionsRemainingLabel)
                                 .foregroundStyle(.secondary)
@@ -95,9 +95,6 @@ struct SettingsView: View {
                     Link(destination: URL(string: "mailto:support@timberbid.by")!) {
                         Label("Contact Support", systemImage: "envelope")
                     }
-                    Text("Speech recognition: NVIDIA Parakeet TDT 0.6B v3 (CC-BY-4.0)")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                     Text("On-device AI: Qwen3 (Apache-2.0)")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
