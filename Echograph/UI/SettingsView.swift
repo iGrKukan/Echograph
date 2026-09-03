@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(SummaryService.self) private var summary
     @Environment(\.dismiss) private var dismiss
 
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
@@ -11,6 +12,8 @@ struct SettingsView: View {
     @State private var showingVocabularySheet = false
     @State private var showingPaywall = false
     @State private var showingManageSubs = false
+    @State private var isDownloadingLocalModel = false
+    @State private var localModelError: String?
 
     var body: some View {
         NavigationStack {
@@ -78,6 +81,12 @@ struct SettingsView: View {
                     }
                 }
 
+                if summary.needsLocalModel {
+                    Section("AI Model") {
+                        localModelRow
+                    }
+                }
+
                 Section("Privacy") {
                     Label("Audio never leaves your device.", systemImage: "lock.shield.fill")
                         .foregroundStyle(.secondary)
@@ -114,6 +123,71 @@ struct SettingsView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubs)
+        }
+    }
+
+    // MARK: - AI Model (local fallback)
+
+    /// The only entry point that downloads the local model — nothing else
+    /// in the app triggers this automatically.
+    @ViewBuilder
+    private var localModelRow: some View {
+        if summary.isLocalModelReady {
+            HStack {
+                Label("Model Ready", systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button(role: .destructive) {
+                    summary.deleteLocalModel()
+                } label: {
+                    Text("Delete Model")
+                }
+            }
+        } else if isDownloadingLocalModel {
+            VStack(alignment: .leading, spacing: 6) {
+                ProgressView(value: summary.localModelDownloadProgress)
+                Text(downloadProgressLabel)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            VStack(alignment: .leading, spacing: 6) {
+                Button {
+                    downloadLocalModel()
+                } label: {
+                    Label(downloadButtonLabel, systemImage: "arrow.down.circle")
+                }
+                Text("Needed for summaries where Apple Intelligence isn't available. Works on-device, downloads once.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        if let localModelError {
+            Text(localModelError)
+                .font(.footnote)
+                .foregroundStyle(.red)
+        }
+    }
+
+    private var downloadButtonLabel: String {
+        String(localized: "Download AI Model (\(summary.localModelSizeMB) MB)")
+    }
+
+    private var downloadProgressLabel: String {
+        let percent = Int((summary.localModelDownloadProgress * 100).rounded())
+        return String(localized: "Downloading… \(percent)%")
+    }
+
+    private func downloadLocalModel() {
+        localModelError = nil
+        isDownloadingLocalModel = true
+        Task {
+            do {
+                try await summary.prepareLocalModel()
+            } catch {
+                localModelError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            }
+            isDownloadingLocalModel = false
         }
     }
 

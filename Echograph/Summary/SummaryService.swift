@@ -34,22 +34,87 @@ final class SummaryService {
         case failed(recordingID: UUID, message: String)
     }
 
-    private(set) var state: State = .idle
-    private let store: RecordingStore
-
-    init(store: RecordingStore) {
-        self.store = store
+    /// Which engine actually answers AI requests right now.
+    enum Backend {
+        /// Apple Foundation Models — iPhone 15 Pro+, iOS 26, Apple Intelligence on.
+        case appleIntelligence
+        /// Local Qwen3 via MLX — everything else, once the model is downloaded.
+        case localModel
+        /// Neither is usable (e.g. Simulator, or Apple Intelligence off with no
+        /// local model support).
+        case none
     }
 
-    /// True when Apple Foundation Models can answer right now — iPhone 15
-    /// Pro+, iOS 26, Apple Intelligence on. The only backend the app uses.
-    var isAvailable: Bool {
+    private(set) var state: State = .idle
+    private let store: RecordingStore
+    private let localLLM: LocalLLMService
+
+    init(store: RecordingStore, localLLM: LocalLLMService = LocalLLMService()) {
+        self.store = store
+        self.localLLM = localLLM
+    }
+
+    /// Which backend a call to `generate` would actually use right now.
+    /// Apple Intelligence is preferred when available (faster, nothing to
+    /// download); the local model is the fallback for every other iPhone —
+    /// but only once the user has explicitly downloaded it (see
+    /// `isLocalModelReady` / `prepareLocalModel`).
+    var activeBackend: Backend {
+        if isAppleIntelligenceAvailable { return .appleIntelligence }
+        if localLLM.isSupported && localLLM.isModelReady { return .localModel }
+        return .none
+    }
+
+    /// True as long as *some* backend can answer right now — Apple
+    /// Intelligence, or the local model once it's downloaded. Does NOT
+    /// trigger a download; the local model must be fetched explicitly from
+    /// Settings first.
+    var isAvailable: Bool { activeBackend != .none }
+
+    private var isAppleIntelligenceAvailable: Bool {
         #if canImport(FoundationModels)
         if #available(iOS 26.0, *) {
             return SystemLanguageModel.default.availability == .available
         }
         #endif
         return false
+    }
+
+    // MARK: - Local model status (surfaced for Settings' download UI)
+
+    /// True when Apple Foundation Models are unavailable — the "AI model"
+    /// section in Settings only shows up when this is true, regardless of
+    /// whether the local model can actually run here (the Simulator has no
+    /// Metal GPU, but the section should still be visible there so its UI
+    /// can be reviewed; a download attempt just surfaces a graceful error).
+    var needsLocalModel: Bool { !isAppleIntelligenceAvailable }
+
+    /// True once the local model's weights are downloaded and ready to load.
+    var isLocalModelReady: Bool { localLLM.isModelReady }
+
+    /// 0...1 while the local model is downloading.
+    var localModelDownloadProgress: Double { localLLM.downloadProgress }
+
+    /// Approximate download size, for the "Download AI model (938 MB)" label.
+    var localModelSizeMB: Int { localLLM.modelChoice.approximateDownloadMB }
+
+    /// Downloads and loads the local model. Only called from Settings when
+    /// the user explicitly taps "Download AI model" — never automatically.
+    /// The caller drives the "Downloading… N%" UI off
+    /// `localModelDownloadProgress` while this runs.
+    func prepareLocalModel() async throws {
+        try await localLLM.prepare()
+    }
+
+    /// Releases the local model's memory — call from
+    /// `applicationDidEnterBackground`. No-op if nothing local is loaded.
+    func releaseLocalModelMemory() {
+        localLLM.unload()
+    }
+
+    /// Deletes the downloaded model weights from disk, freeing storage.
+    func deleteLocalModel() {
+        localLLM.deleteDownload()
     }
 
     func summarize(_ recording: Recording) async {
@@ -89,14 +154,21 @@ final class SummaryService {
     /// symmetry with the prompt builders below; Foundation Models has no
     /// token-cap parameter to pass it through to.
     private func generate(system: String, user: String, maxTokens: Int) async throws -> String {
-        #if canImport(FoundationModels)
-        if #available(iOS 26.0, *) {
-            let session = LanguageModelSession { system }
-            let response = try await session.respond(to: user)
-            return response.content
+        switch activeBackend {
+        case .appleIntelligence:
+            #if canImport(FoundationModels)
+            if #available(iOS 26.0, *) {
+                let session = LanguageModelSession { system }
+                let response = try await session.respond(to: user)
+                return response.content
+            }
+            #endif
+            throw SummaryError.unavailable
+        case .localModel:
+            return try await localLLM.respond(system: system, user: user, maxTokens: maxTokens)
+        case .none:
+            throw SummaryError.unavailable
         }
-        #endif
-        throw SummaryError.unavailable
     }
 
     private func generateSummary(text: String) async throws -> String {
@@ -160,7 +232,7 @@ enum SummaryError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unavailable:
-            return "Apple Intelligence required."
+            return "On-device AI is unavailable — Apple Intelligence is off and the local model isn't ready."
         }
     }
 }

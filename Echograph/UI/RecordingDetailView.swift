@@ -18,6 +18,7 @@ struct RecordingDetailView: View {
     @State private var showingDeleteConfirm = false
     @State private var showingExportSheet = false
     @State private var showingPaywall = false
+    @State private var showingAISettings = false
     @State private var showingAddTag = false
     @State private var newTagText = ""
     @State private var suggestedTags: [String] = []
@@ -155,6 +156,9 @@ struct RecordingDetailView: View {
         }
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
+        }
+        .sheet(isPresented: $showingAISettings) {
+            SettingsView()
         }
         .alert("Add tag", isPresented: $showingAddTag) {
             TextField("e.g. interview", text: $newTagText)
@@ -345,17 +349,16 @@ struct RecordingDetailView: View {
                         .textSelection(.enabled)
                 } else if summary.isRunning(for: recording.id) {
                     generatingRow("Generating summary…")
-                } else {
-                    generateButton(
-                        icon: purchases.hasProPlus ? "sparkles" : "lock.fill",
-                        label: summaryButtonLabel
-                    ) {
-                        if !purchases.hasProPlus {
-                            showingPaywall = true
-                        } else if summary.isAvailable {
-                            Task { await self.summary.summarize(recording) }
-                        }
+                } else if !purchases.hasProPlus {
+                    generateButton(icon: "lock.fill", label: String(localized: "AI Summary · Pro+")) {
+                        showingPaywall = true
                     }
+                } else if summary.isAvailable {
+                    generateButton(icon: "sparkles", label: String(localized: "Generate AI Summary")) {
+                        Task { await self.summary.summarize(recording) }
+                    }
+                } else {
+                    aiModelNeededState()
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -510,11 +513,27 @@ struct RecordingDetailView: View {
         return String(format: "%02d:%02d", m, s)
     }
 
-    private var summaryButtonLabel: String {
-        if !purchases.hasProPlus { return String(localized: "AI Summary · Pro+") }
-        return summary.isAvailable
-            ? String(localized: "Generate AI Summary")
-            : String(localized: "Apple Intelligence required")
+    /// Shown on the "Конспект" tab when Apple Intelligence is unavailable
+    /// and the local fallback model hasn't been downloaded yet. Never
+    /// starts a download itself — it only points at the "AI Model" section
+    /// in Settings, where the user explicitly opts in.
+    @ViewBuilder
+    private func aiModelNeededState() -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("AI model needed for summaries")
+                .font(DS.Typography.body)
+                .foregroundStyle(DS.Color.textSecondary)
+            Button {
+                showingAISettings = true
+            } label: {
+                Text("Open Settings")
+                    .fontWeight(.medium)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(DS.Color.accent)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.top, 8)
     }
 
     // MARK: - Ask bar (pinned)
