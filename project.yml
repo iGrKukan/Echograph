@@ -62,8 +62,8 @@ targets:
       path: Echograph/Info.plist
       properties:
         CFBundleDisplayName: Voicekeep
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "2"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "4"
         UILaunchScreen:
           UIColorName: ""
         NSMicrophoneUsageDescription: "Voicekeep records your voice locally — audio never leaves your device."
@@ -112,8 +112,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph
         TARGETED_DEVICE_FAMILY: "1"
         SUPPORTS_MACCATALYST: NO
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "2"
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "4"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -142,8 +142,8 @@ targets:
       path: EchographLiveActivity/Info.plist
       properties:
         CFBundleDisplayName: Echograph Live Activity
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "2"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "4"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -151,8 +151,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.LiveActivity
         TARGETED_DEVICE_FAMILY: "1,2"
         SKIP_INSTALL: YES
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "2"
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "4"
 
   EchographWatch:
     type: application
@@ -165,8 +165,8 @@ targets:
       path: EchographWatch/Info.plist
       properties:
         CFBundleDisplayName: Echograph
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "2"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "4"
         WKApplication: true
         WKCompanionAppBundleIdentifier: by.timberbid.echograph
         WKWatchOnly: false
@@ -180,8 +180,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: by.timberbid.echograph.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
         SDKROOT: watchos
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "2"
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "4"
         SUPPORTED_PLATFORMS: "watchos watchsimulator"
         SUPPORTS_MACCATALYST: NO
         TARGETED_DEVICE_FAMILY_watchos: "4"

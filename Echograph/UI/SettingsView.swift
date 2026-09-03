@@ -3,28 +3,14 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchases
-    @Environment(AnalysisService.self) private var analysisService
     @Environment(\.dismiss) private var dismiss
 
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
-    @AppStorage("Voicekeep.analyzerURL") private var analyzerURL: String = ""
-    @AppStorage("Voicekeep.analyzerToken") private var analyzerToken: String = ""
-    @AppStorage("Voicekeep.adminMode") private var adminMode: Bool = false
 
     @State private var showingVocabularySheet = false
     @State private var showingPaywall = false
     @State private var showingManageSubs = false
-    @State private var connectionStatus: ConnectionStatus = .unknown
-    @State private var isTestingConnection = false
-
-    @State private var showingAdminPrompt = false
-    @State private var adminCode = ""
-    @State private var showingAdminError = false
-
-    private enum ConnectionStatus {
-        case unknown, ok, failed
-    }
 
     var body: some View {
         NavigationStack {
@@ -50,49 +36,6 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.plain)
-                }
-
-                if adminMode {
-                    Section {
-                        TextField("Server URL (e.g. http://100.x.x.x:19847)", text: $analyzerURL)
-                            .textInputAutocapitalization(.never)
-                            .keyboardType(.URL)
-                            .autocorrectionDisabled()
-                            .onChange(of: analyzerURL) { _, _ in connectionStatus = .unknown }
-                        SecureField("Bearer token", text: $analyzerToken)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            .onChange(of: analyzerToken) { _, _ in connectionStatus = .unknown }
-                        HStack {
-                            Text("Status")
-                            Spacer()
-                            Text(connectionStatusText)
-                                .foregroundStyle(connectionStatusColor)
-                        }
-                        Button {
-                            Task { await testConnection() }
-                        } label: {
-                            if isTestingConnection {
-                                HStack {
-                                    ProgressView().controlSize(.small)
-                                    Text("Testing…")
-                                }
-                            } else {
-                                Label("Test connection", systemImage: "antenna.radiowaves.left.and.right")
-                            }
-                        }
-                        .disabled(analyzerURL.isEmpty || isTestingConnection)
-                    } header: {
-                        HStack(spacing: 6) {
-                            Text("AI Analyzer")
-                            Image(systemName: "lock.open.fill")
-                                .foregroundStyle(.green)
-                                .imageScale(.small)
-                        }
-                    } footer: {
-                        Text("Sends transcript to your own Mac for analysis. Disabled in normal mode.")
-                            .font(.caption)
-                    }
                 }
 
                 Section("Subscription") {
@@ -132,31 +75,6 @@ struct SettingsView: View {
                         .font(.footnote)
                 }
 
-                Section("Advanced") {
-                    if adminMode {
-                        HStack {
-                            Label("Admin Mode", systemImage: "checkmark.seal.fill")
-                                .foregroundStyle(.green)
-                            Spacer()
-                            Text("Active")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        Button(role: .destructive) {
-                            adminMode = false
-                        } label: {
-                            Label("Exit Admin Mode", systemImage: "lock.fill")
-                        }
-                    } else {
-                        Button {
-                            adminCode = ""
-                            showingAdminPrompt = true
-                        } label: {
-                            Label("Enter Admin Code", systemImage: "lock.shield")
-                        }
-                    }
-                }
-
                 Section("About") {
                     HStack {
                         Text("Version")
@@ -184,19 +102,6 @@ struct SettingsView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubs)
-            .alert("Enter Admin Code", isPresented: $showingAdminPrompt) {
-                SecureField("Code", text: $adminCode)
-                    .textInputAutocapitalization(.never)
-                Button("Unlock") { submitAdminCode() }
-                Button("Cancel", role: .cancel) { adminCode = "" }
-            } message: {
-                Text("Unlocks advanced developer features including the AI Analyzer integration.")
-            }
-            .alert("Wrong code", isPresented: $showingAdminError) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text("That code didn't unlock admin mode.")
-            }
         }
     }
 
@@ -211,38 +116,6 @@ struct SettingsView: View {
         if purchases.hasProPlus { return "Pro+" }
         if purchases.hasPro { return "Pro" }
         return "Free"
-    }
-
-    private var connectionStatusText: String {
-        switch connectionStatus {
-        case .unknown: return analyzerURL.isEmpty ? "Not configured" : "Unknown"
-        case .ok:      return "Connected"
-        case .failed:  return "Not reachable"
-        }
-    }
-
-    private var connectionStatusColor: Color {
-        switch connectionStatus {
-        case .unknown: return .secondary
-        case .ok:      return .green
-        case .failed:  return .red
-        }
-    }
-
-    private func testConnection() async {
-        isTestingConnection = true
-        defer { isTestingConnection = false }
-        let ok = await analysisService.healthCheck()
-        connectionStatus = ok ? .ok : .failed
-    }
-
-    private func submitAdminCode() {
-        if adminCode == "205202" {
-            adminMode = true
-        } else {
-            showingAdminError = true
-        }
-        adminCode = ""
     }
 
     private var appVersion: String {

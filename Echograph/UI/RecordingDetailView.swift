@@ -11,7 +11,6 @@ struct RecordingDetailView: View {
     @Environment(TranscriptionService.self) private var transcription
     @Environment(PurchaseManager.self) private var purchases
     @Environment(SummaryService.self) private var summary
-    @Environment(AnalysisService.self) private var analysisService
 
     @State private var player = AudioPlayer()
     @State private var showingDeleteConfirm = false
@@ -26,11 +25,8 @@ struct RecordingDetailView: View {
     @State private var showingTranslation = false
     @State private var translationSource: String = ""
     @State private var calendarError: String?
-    @State private var isAnalyzing = false
-    @State private var analysisError: String?
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
-    @AppStorage("Voicekeep.adminMode") private var adminMode: Bool = false
 
     private var preferredLanguage: TranscriptionLanguage {
         TranscriptionLanguage(rawValue: preferredLanguageRaw) ?? .auto
@@ -81,20 +77,6 @@ struct RecordingDetailView: View {
                             }
                         }
                         .disabled(recording.transcript == nil || summary.isRunning(for: recording.id))
-
-                        // Mac CLI fallback for power users (Claude / OpenAI / etc.).
-                        if adminMode {
-                            Button {
-                                Task { await sendForAnalysis(recording) }
-                            } label: {
-                                if isAnalyzing {
-                                    Label("Analysing on Mac…", systemImage: "macbook")
-                                } else {
-                                    Label("Analyze on Mac AI…", systemImage: "macbook")
-                                }
-                            }
-                            .disabled(recording.transcript == nil || isAnalyzing)
-                        }
 
                         Button {
                             translationSource = recording.transcript?.fullText ?? ""
@@ -166,14 +148,6 @@ struct RecordingDetailView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(calendarError ?? "")
-        }
-        .alert("Analysis error", isPresented: Binding(
-            get: { analysisError != nil },
-            set: { if !$0 { analysisError = nil } }
-        )) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(analysisError ?? "")
         }
         .onAppear {
             if let recording {
@@ -254,12 +228,8 @@ struct RecordingDetailView: View {
         if let transcript = recording.transcript {
             VStack(spacing: 16) {
                 summarySection(for: recording)
-                // Show analysis to everyone — it's on-device AI via Apple
-                // Intelligence (or, for admins, their Mac pipeline).
-                if isAnalyzing {
-                    macAnalysisProgressBanner
-                        .padding(.horizontal)
-                } else if recording.analysis != nil {
+                // Deep analysis via on-device Apple Intelligence (Pro+).
+                if recording.analysis != nil {
                     AnalysisSection(analysis: recording.analysis)
                         .padding(.horizontal)
                 }
@@ -617,44 +587,6 @@ struct RecordingDetailView: View {
             )
         } catch {
             calendarError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-        }
-    }
-
-    private var macAnalysisProgressBanner: some View {
-        HStack(spacing: 12) {
-            ProgressView()
-                .controlSize(.regular)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Analyzing on Mac AI…")
-                    .font(.subheadline.weight(.medium))
-                Text("Sending transcript to your Mac analyzer over Tailscale.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
-    }
-
-    private func sendForAnalysis(_ recording: Recording) async {
-        print("[MacAI] start, url=\(analysisService.urlString) tokenLen=\(analysisService.token.count)")
-        isAnalyzing = true
-        defer {
-            isAnalyzing = false
-            print("[MacAI] done")
-        }
-        do {
-            let markdown = try await analysisService.analyze(recording)
-            print("[MacAI] got \(markdown.count) chars of markdown back")
-            var updated = recording
-            updated.analysis = markdown
-            store.update(updated)
-        } catch {
-            let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-            print("[MacAI] error: \(msg)")
-            analysisError = msg
         }
     }
 
