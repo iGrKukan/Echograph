@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import MarkdownUI
 #if canImport(Translation)
 import Translation
 #endif
@@ -23,11 +24,15 @@ struct RecordingDetailView: View {
     @State private var isSuggestingTags = false
     @State private var showingVocabularySheet = false
     @State private var showingAskSheet = false
+    @State private var askInitialQuestion = ""
+    @State private var quickAskText = ""
+    @FocusState private var quickAskFocused: Bool
     @State private var showingTranslation = false
     @State private var translationSource: String = ""
     @State private var calendarError: String?
     @State private var isPreparingLocalModel = false
     @State private var localModelDownloadError: String?
+    @State private var selectedTab: DetailTab = .transcript
     @AppStorage("Echograph.preferredLanguage") private var preferredLanguageRaw: String = TranscriptionLanguage.auto.rawValue
     @AppStorage("Echograph.customVocabulary") private var customVocabulary: String = ""
 
@@ -39,6 +44,21 @@ struct RecordingDetailView: View {
         store.recordings.first(where: { $0.id == recordingID })
     }
 
+    /// The three panes of the recording screen. "Summary" and "Analysis"
+    /// show exactly the content that used to be stacked under the
+    /// transcript, just split into their own panes.
+    private enum DetailTab: String, CaseIterable, Identifiable {
+        case transcript, summary, analysis
+        var id: String { rawValue }
+        var title: String {
+            switch self {
+            case .transcript: return String(localized: "Transcript")
+            case .summary: return String(localized: "Summary")
+            case .analysis: return String(localized: "Analysis")
+            }
+        }
+    }
+
     var body: some View {
         Group {
             if let recording {
@@ -47,6 +67,7 @@ struct RecordingDetailView: View {
                 ContentUnavailableView("Recording missing", systemImage: "exclamationmark.triangle")
             }
         }
+        .background(DS.Color.background)
         .navigationTitle("Recording")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -71,6 +92,7 @@ struct RecordingDetailView: View {
                             } else if aiUIState == .unavailable {
                                 // no-op; nothing can answer (Simulator, in practice)
                             } else {
+                                selectedTab = .analysis
                                 Task { await summary.analyze(recording) }
                             }
                         } label: {
@@ -107,6 +129,7 @@ struct RecordingDetailView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
+                    .tint(DS.Color.accent)
                 }
             }
         }
@@ -142,7 +165,7 @@ struct RecordingDetailView: View {
         }
         .sheet(isPresented: $showingAskSheet) {
             if let recording {
-                AskSheet(recording: recording)
+                AskSheet(recording: recording, initialQuestion: askInitialQuestion)
             }
         }
         .modifier(TranslationOverlay(isPresented: $showingTranslation, text: translationSource))
@@ -166,48 +189,76 @@ struct RecordingDetailView: View {
 
     @ViewBuilder
     private func content(for recording: Recording) -> some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(recording.title)
-                        .font(.title2.weight(.semibold))
-                    Text(recording.createdAt.formatted(date: .abbreviated, time: .shortened))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    tagsRow(for: recording)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
+        VStack(alignment: .leading, spacing: 0) {
+            headerBlock(for: recording)
+                .padding(.top, 12)
 
-                playerCard
+            playerRow
+                .padding(.top, 18)
 
-                transcriptSection(for: recording)
+            Hairline()
+                .padding(.top, 16)
+
+            if recording.transcript != nil {
+                tabPicker
+                    .padding(.horizontal, DS.Spacing.horizontal)
+                    .padding(.top, 14)
+
+                tabContent(for: recording)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            } else {
+                noTranscriptState(for: recording)
+                    .frame(maxWidth: .infinity)
             }
-            .padding(.top)
-            .padding(.bottom, 32)
+        }
+        .safeAreaInset(edge: .bottom) {
+            askBar(for: recording)
         }
     }
 
-    private var playerCard: some View {
-        VStack(spacing: 16) {
-            Slider(
-                value: Binding(
-                    get: { player.currentTime },
-                    set: { player.seek(to: $0) }
-                ),
-                in: 0...max(player.duration, 0.01)
-            )
+    // MARK: - Header
 
-            HStack {
-                Text(format(time: player.currentTime))
-                    .monospacedDigit()
-                Spacer()
-                Text(format(time: player.duration))
-                    .monospacedDigit()
+    @ViewBuilder
+    private func headerBlock(for recording: Recording) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(recording.title)
+                .font(DS.Typography.recordingTitle)
+                .foregroundStyle(DS.Color.textPrimary)
+                .lineLimit(3)
+
+            HStack(spacing: 6) {
+                Text(recording.createdAt.formatted(date: .abbreviated, time: .shortened))
+                Text("·")
+                Text(durationLabel(recording.duration))
+                if let transcript = recording.transcript {
+                    Text("·")
+                    Text(languageLabel(transcript.language))
+                }
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .font(DS.Typography.secondary)
+            .foregroundStyle(DS.Color.textSecondary)
 
+            tagsRow(for: recording)
+        }
+        .padding(.horizontal, DS.Spacing.horizontal)
+    }
+
+    private func durationLabel(_ duration: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+        return formatter.string(from: duration) ?? ""
+    }
+
+    private func languageLabel(_ code: String) -> String {
+        Locale.current.localizedString(forIdentifier: code) ?? code
+    }
+
+    // MARK: - Player (compact row, not a card)
+
+    private var playerRow: some View {
+        HStack(spacing: 12) {
             Button {
                 if player.isPlaying {
                     player.pause()
@@ -215,29 +266,48 @@ struct RecordingDetailView: View {
                     player.play()
                 }
             } label: {
-                Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                    .resizable()
-                    .frame(width: 64, height: 64)
-                    .foregroundStyle(.tint)
+                Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 36, height: 36)
+                    .background(DS.Color.accent, in: Circle())
             }
             .buttonStyle(.plain)
             .sensoryFeedback(.selection, trigger: player.isPlaying)
+
+            Slider(
+                value: Binding(
+                    get: { player.currentTime },
+                    set: { player.seek(to: $0) }
+                ),
+                in: 0...max(player.duration, 0.01)
+            )
+            .tint(DS.Color.accent)
+
+            Text("\(format(time: player.currentTime))/\(format(time: player.duration))")
+                .font(DS.Typography.timecode)
+                .foregroundStyle(DS.Color.textSecondary)
+                .fixedSize()
         }
-        .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal)
+        .padding(.horizontal, DS.Spacing.horizontal)
+    }
+
+    // MARK: - Tabs
+
+    private var tabPicker: some View {
+        Picker("", selection: $selectedTab) {
+            ForEach(DetailTab.allCases) { tab in
+                Text(tab.title).tag(tab)
+            }
+        }
+        .pickerStyle(.segmented)
     }
 
     @ViewBuilder
-    private func transcriptSection(for recording: Recording) -> some View {
-        if let transcript = recording.transcript {
-            VStack(spacing: 16) {
-                summarySection(for: recording)
-                // Deep analysis via on-device Apple Intelligence (Pro+).
-                if recording.analysis != nil {
-                    AnalysisSection(analysis: recording.analysis)
-                        .padding(.horizontal)
-                }
+    private func tabContent(for recording: Recording) -> some View {
+        switch selectedTab {
+        case .transcript:
+            if let transcript = recording.transcript {
                 TranscriptView(
                     transcript: transcript,
                     currentTime: player.currentTime,
@@ -257,12 +327,115 @@ struct RecordingDetailView: View {
                     }
                 )
             }
-        } else if transcription.isRunning(for: recording.id) {
+        case .summary:
+            summaryTab(for: recording)
+        case .analysis:
+            analysisTab(for: recording)
+        }
+    }
+
+    /// "Конспект" — a document-style summary: bold section openers,
+    /// numbered/bulleted lists, air between blocks, no card chrome.
+    @ViewBuilder
+    private func summaryTab(for recording: Recording) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if let summaryText = recording.summary {
+                    Markdown(summaryText)
+                        .markdownTheme(.gitHub)
+                        .textSelection(.enabled)
+                } else if summary.isRunning(for: recording.id) {
+                    generatingRow("Generating summary…")
+                } else if purchases.hasProPlus && (aiUIState == .needsDownload || aiUIState == .downloading) {
+                    downloadPromptView
+                } else {
+                    generateButton(
+                        icon: purchases.hasProPlus ? "sparkles" : "lock.fill",
+                        label: summaryButtonLabel
+                    ) {
+                        if !purchases.hasProPlus {
+                            showingPaywall = true
+                        } else if aiUIState == .ready {
+                            Task { await self.summary.summarize(recording) }
+                        }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, DS.Spacing.horizontal)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
+        }
+    }
+
+    /// "Разбор" — the deep-analysis markdown report, same document style.
+    @ViewBuilder
+    private func analysisTab(for recording: Recording) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if let analysisText = recording.analysis, !analysisText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Markdown(analysisText)
+                        .markdownTheme(.gitHub)
+                        .textSelection(.enabled)
+                } else if summary.isRunning(for: recording.id) {
+                    generatingRow("Analyzing…")
+                } else {
+                    VStack(spacing: 6) {
+                        Text("No analysis yet")
+                            .font(DS.Typography.body.weight(.semibold))
+                            .foregroundStyle(DS.Color.textPrimary)
+                        Text("Use the ••• menu above to run Deep Analysis.")
+                            .font(DS.Typography.secondary)
+                            .foregroundStyle(DS.Color.textSecondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 40)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, DS.Spacing.horizontal)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
+        }
+    }
+
+    private func generatingRow(_ text: String) -> some View {
+        HStack(spacing: 10) {
+            ProgressView().controlSize(.small)
+            Text(text)
+                .font(DS.Typography.body)
+                .foregroundStyle(DS.Color.textSecondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 24)
+    }
+
+    @ViewBuilder
+    private func generateButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                Text(label).fontWeight(.medium)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(DS.Color.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: DS.Radius.field))
+            .foregroundStyle(DS.Color.accent)
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - No-transcript state
+
+    @ViewBuilder
+    private func noTranscriptState(for recording: Recording) -> some View {
+        if transcription.isRunning(for: recording.id) {
             VStack(spacing: 12) {
                 ProgressView()
                 Text(transcription.phase(for: recording.id) ?? "Transcribing on-device…")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(DS.Typography.body)
+                    .foregroundStyle(DS.Color.textSecondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
             }
@@ -272,13 +445,14 @@ struct RecordingDetailView: View {
             VStack(spacing: 12) {
                 Label(error, systemImage: "exclamationmark.triangle.fill")
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DS.Color.textSecondary)
                     .padding(.horizontal)
                 Button("Try Again") {
                     transcription.clearError()
                     transcribeWithParakeet(recording)
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(DS.Color.accent)
             }
             .padding(.top, 24)
         } else {
@@ -306,6 +480,7 @@ struct RecordingDetailView: View {
                     }
                     .menuStyle(.button)
                     .buttonStyle(.bordered)
+                    .tint(DS.Color.accent)
 
                     // Engine menu — Apple Speech or Parakeet.
                     Menu {
@@ -353,6 +528,7 @@ struct RecordingDetailView: View {
                     }
                     .menuStyle(.button)
                     .buttonStyle(.borderedProminent)
+                    .tint(DS.Color.accent)
                     .accessibilityIdentifier("transcribeMenu")
                 }
             }
@@ -369,61 +545,6 @@ struct RecordingDetailView: View {
             return String(format: "%d:%02d:%02d", h, m, s)
         }
         return String(format: "%d:%02d", m, s)
-    }
-
-    @ViewBuilder
-    private func summarySection(for recording: Recording) -> some View {
-        if let summary = recording.summary {
-            VStack(alignment: .leading, spacing: 8) {
-                Label("AI Summary", systemImage: "sparkles")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.tint)
-                Text(summary)
-                    .font(.body)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                askButton
-            }
-            .padding()
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
-            .padding(.horizontal)
-        } else if self.summary.isRunning(for: recording.id) {
-            HStack(spacing: 10) {
-                ProgressView().controlSize(.small)
-                Text("Generating summary…")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-        } else if purchases.hasProPlus && (aiUIState == .needsDownload || aiUIState == .downloading) {
-            downloadPromptView
-                .padding(.horizontal)
-        } else {
-            VStack(spacing: 8) {
-                Button {
-                    if !purchases.hasProPlus {
-                        showingPaywall = true
-                    } else if aiUIState != .ready {
-                        // handled by downloadPromptView above
-                    } else {
-                        Task { await self.summary.summarize(recording) }
-                    }
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: purchases.hasProPlus ? "sparkles" : "lock.fill")
-                        Text(summaryButtonLabel)
-                            .fontWeight(.medium)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
-                }
-                .buttonStyle(.plain)
-
-                askButton
-            }
-            .padding(.horizontal)
-        }
     }
 
     /// The three states the local AI backend can be in from this view's
@@ -449,7 +570,7 @@ struct RecordingDetailView: View {
         }
     }
 
-    /// Shared by the summary button, the ask button and the tag-suggest
+    /// Shared by the summary tab, the analysis tab and the tag-suggest
     /// button — whichever the user taps first kicks off the one-time
     /// download, and all three reflect its progress the same way.
     private func downloadLocalModelIfNeeded() {
@@ -470,8 +591,8 @@ struct RecordingDetailView: View {
     private var downloadPromptView: some View {
         VStack(spacing: 8) {
             Text("The AI model runs on your device. It downloads once — you'll only need internet for that.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(DS.Typography.secondary)
+                .foregroundStyle(DS.Color.textSecondary)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
 
@@ -489,7 +610,8 @@ struct RecordingDetailView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 10)
-                .background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                .background(DS.Color.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: DS.Radius.field))
+                .foregroundStyle(DS.Color.accent)
             }
             .buttonStyle(.plain)
             .disabled(aiUIState == .downloading)
@@ -510,40 +632,6 @@ struct RecordingDetailView: View {
         return String(localized: "Download AI Model (\(summary.localModelSizeMB) MB)")
     }
 
-    @ViewBuilder
-    private var askButton: some View {
-        Button {
-            if !purchases.hasProPlus {
-                showingPaywall = true
-            } else if aiUIState == .needsDownload || aiUIState == .downloading {
-                downloadLocalModelIfNeeded()
-            } else if aiUIState == .unavailable {
-                // no-op; the button label already explains it
-            } else {
-                showingAskSheet = true
-            }
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: purchases.hasProPlus ? "bubble.left.and.text.bubble.right" : "lock.fill")
-                Text(askButtonLabel)
-                    .fontWeight(.medium)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .background(.tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var askButtonLabel: String {
-        if !purchases.hasProPlus { return String(localized: "Ask AI · Pro+") }
-        switch aiUIState {
-        case .ready: return String(localized: "Ask AI")
-        case .needsDownload, .downloading: return downloadButtonLabel
-        case .unavailable: return String(localized: "On-device AI unavailable")
-        }
-    }
-
     private var summaryButtonLabel: String {
         if !purchases.hasProPlus { return String(localized: "AI Summary · Pro+") }
         switch aiUIState {
@@ -551,6 +639,79 @@ struct RecordingDetailView: View {
         case .needsDownload, .downloading: return downloadButtonLabel
         case .unavailable: return String(localized: "On-device AI unavailable")
         }
+    }
+
+    // MARK: - Ask bar (pinned)
+
+    /// Quick entry point pinned to the bottom of the screen. For a
+    /// free user it shows a lock and opens the paywall; otherwise it opens
+    /// `AskSheet` pre-filled with whatever was typed here.
+    @ViewBuilder
+    private func askBar(for recording: Recording) -> some View {
+        Group {
+            if !purchases.hasProPlus {
+                Button {
+                    showingPaywall = true
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "lock.fill")
+                            .foregroundStyle(DS.Color.textSecondary)
+                        Text("Ask about this recording · Pro+")
+                            .foregroundStyle(DS.Color.textSecondary)
+                        Spacer(minLength: 0)
+                    }
+                    .font(DS.Typography.body)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
+                    .background(DS.Color.surface, in: RoundedRectangle(cornerRadius: DS.Radius.field))
+                }
+                .buttonStyle(.plain)
+            } else if recording.transcript == nil {
+                HStack(spacing: 10) {
+                    Image(systemName: "bubble.left.and.text.bubble.right")
+                        .foregroundStyle(DS.Color.textTertiary)
+                    Text("Transcribe first to ask about this recording")
+                        .foregroundStyle(DS.Color.textTertiary)
+                    Spacer(minLength: 0)
+                }
+                .font(DS.Typography.body)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(DS.Color.surface, in: RoundedRectangle(cornerRadius: DS.Radius.field))
+            } else {
+                HStack(spacing: 8) {
+                    TextField("Ask about this recording…", text: $quickAskText, axis: .vertical)
+                        .lineLimit(1...3)
+                        .focused($quickAskFocused)
+                        .submitLabel(.send)
+                        .onSubmit { openAskSheet() }
+                    Button {
+                        openAskSheet()
+                    } label: {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .resizable()
+                            .frame(width: 26, height: 26)
+                            .foregroundStyle(DS.Color.accent)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("quickAskSend")
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 14)
+                .background(DS.Color.surface, in: RoundedRectangle(cornerRadius: DS.Radius.field))
+            }
+        }
+        .padding(.horizontal, DS.Spacing.horizontal)
+        .padding(.top, 8)
+        .padding(.bottom, 8)
+        .background(.ultraThinMaterial)
+    }
+
+    private func openAskSheet() {
+        askInitialQuestion = quickAskText
+        quickAskText = ""
+        quickAskFocused = false
+        showingAskSheet = true
     }
 
     /// Runs Parakeet, gated by `FreeTranscriptionLimiter` for non-subscribers
@@ -599,68 +760,80 @@ struct RecordingDetailView: View {
     @ViewBuilder
     private func tagsRow(for recording: Recording) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                ForEach(recording.tags, id: \.self) { tag in
-                    Menu {
-                        Button(role: .destructive) {
-                            removeTag(tag, from: recording)
-                        } label: {
-                            Label("Remove “\(tag)”", systemImage: "xmark")
-                        }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "number")
-                                .imageScale(.small)
-                            Text(tag)
-                        }
-                        .font(.caption.weight(.medium))
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
-                        .background(.tint.opacity(0.15), in: Capsule())
-                        .foregroundStyle(.tint)
-                    }
-                }
-                Button {
-                    newTagText = ""
-                    showingAddTag = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                            .imageScale(.small)
-                        Text(recording.tags.isEmpty ? "Add tag" : "Add")
-                    }
-                    .font(.caption.weight(.medium))
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(.thinMaterial, in: Capsule())
-                }
-                .buttonStyle(.plain)
-                if recording.transcript != nil && aiUIState != .unavailable {
-                    Button {
-                        if aiUIState == .needsDownload || aiUIState == .downloading {
-                            downloadLocalModelIfNeeded()
-                        } else {
-                            Task { await suggestTags(for: recording) }
-                        }
-                    } label: {
-                        HStack(spacing: 4) {
-                            if isSuggestingTags || aiUIState == .downloading {
-                                ProgressView().controlSize(.mini)
-                            } else {
-                                Image(systemName: aiUIState == .needsDownload ? "arrow.down.circle" : "sparkles")
-                                    .imageScale(.small)
+            // Horizontal scroll (not a wrapping HStack) so pills keep their
+            // natural pill shape instead of squeezing their text onto two
+            // lines when there isn't room for everything.
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(recording.tags, id: \.self) { tag in
+                        Menu {
+                            Button(role: .destructive) {
+                                removeTag(tag, from: recording)
+                            } label: {
+                                Label("Remove “\(tag)”", systemImage: "xmark")
                             }
-                            Text("Suggest")
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "number")
+                                    .imageScale(.small)
+                                Text(tag)
+                                    .lineLimit(1)
+                                    .fixedSize()
+                            }
+                            .font(DS.Typography.pill)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(DS.Color.lavender, in: Capsule())
+                            .foregroundStyle(DS.Color.textPrimary)
                         }
-                        .font(.caption.weight(.medium))
+                    }
+                    Button {
+                        newTagText = ""
+                        showingAddTag = true
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus")
+                                .imageScale(.small)
+                            Text(recording.tags.isEmpty ? "Add tag" : "Add")
+                                .lineLimit(1)
+                                .fixedSize()
+                        }
+                        .font(DS.Typography.pill)
                         .padding(.vertical, 4)
                         .padding(.horizontal, 8)
-                        .background(.thinMaterial, in: Capsule())
+                        .background(DS.Color.surface, in: Capsule())
+                        .foregroundStyle(DS.Color.textSecondary)
                     }
                     .buttonStyle(.plain)
-                    .disabled(isSuggestingTags || aiUIState == .downloading)
+                    if recording.transcript != nil && aiUIState != .unavailable {
+                        Button {
+                            if aiUIState == .needsDownload || aiUIState == .downloading {
+                                downloadLocalModelIfNeeded()
+                            } else {
+                                Task { await suggestTags(for: recording) }
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                if isSuggestingTags || aiUIState == .downloading {
+                                    ProgressView().controlSize(.mini)
+                                } else {
+                                    Image(systemName: aiUIState == .needsDownload ? "arrow.down.circle" : "sparkles")
+                                        .imageScale(.small)
+                                }
+                                Text("Suggest")
+                                    .lineLimit(1)
+                                    .fixedSize()
+                            }
+                            .font(DS.Typography.pill)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(DS.Color.surface, in: Capsule())
+                            .foregroundStyle(DS.Color.textSecondary)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isSuggestingTags || aiUIState == .downloading)
+                    }
                 }
-                Spacer(minLength: 0)
             }
             if !suggestedTags.isEmpty {
                 let pending = suggestedTags.filter { !recording.tags.contains($0) }
@@ -668,7 +841,7 @@ struct RecordingDetailView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
                             .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(DS.Color.textSecondary)
                         ForEach(pending, id: \.self) { tag in
                             Button {
                                 addSuggestedTag(tag, to: recording)
@@ -677,8 +850,8 @@ struct RecordingDetailView: View {
                                     .font(.caption2.weight(.medium))
                                     .padding(.vertical, 3)
                                     .padding(.horizontal, 7)
-                                    .background(.tint.opacity(0.08), in: Capsule())
-                                    .foregroundStyle(.tint)
+                                    .background(DS.Color.mint, in: Capsule())
+                                    .foregroundStyle(DS.Color.textPrimary)
                             }
                             .buttonStyle(.plain)
                         }
@@ -797,7 +970,7 @@ private struct TranscriptView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 16) {
                     if hasAnyHighlight {
                         Toggle(isOn: $showOnlyHighlights.animation(.easeInOut(duration: 0.2))) {
                             Label("Show only highlights", systemImage: "highlighter")
@@ -805,89 +978,93 @@ private struct TranscriptView: View {
                         }
                         .toggleStyle(.button)
                         .buttonStyle(.bordered)
-                        .padding(.horizontal, 12)
+                        .tint(DS.Color.accent)
                     }
 
-                    ForEach(visibleSegments) { segment in
-                        Button {
-                            onTapSegment(segment.startTime)
-                        } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                if let speaker = segment.speaker {
-                                    SpeakerBadge(
-                                        speaker: speaker,
-                                        color: speakerColor(for: speaker)
-                                    )
-                                }
+                    VStack(alignment: .leading, spacing: 14) {
+                        ForEach(visibleSegments) { segment in
+                            Button {
+                                onTapSegment(segment.startTime)
+                            } label: {
                                 HStack(alignment: .top, spacing: 12) {
                                     Text(timecode(segment.startTime))
-                                        .font(.caption.monospacedDigit())
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: 56, alignment: .leading)
-                                    Text(segment.text)
-                                        .font(.body)
-                                        .foregroundStyle(isActive(segment) ? Color.primary : Color.secondary)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .font(DS.Typography.timecode)
+                                        .foregroundStyle(DS.Color.textSecondary)
+                                        .frame(width: 52, alignment: .leading)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        if let speaker = segment.speaker {
+                                            PastelPill(
+                                                text: speaker.label,
+                                                tint: speakerPastel(for: speaker),
+                                                foreground: DS.Color.textPrimary
+                                            )
+                                        }
+                                        Text(segment.text)
+                                            .font(DS.Typography.body)
+                                            .foregroundStyle(isActive(segment) ? DS.Color.textPrimary : DS.Color.textSecondary)
+                                            .multilineTextAlignment(.leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
                                 }
-                            }
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 12)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(rowBackground(for: segment))
-                            )
-                            .overlay(alignment: .topTrailing) {
-                                if segment.isHighlighted {
-                                    Image(systemName: "highlighter")
-                                        .font(.caption2)
-                                        .foregroundStyle(.yellow)
-                                        .padding(6)
-                                }
-                            }
-                        }
-                        .buttonStyle(.plain)
-                        .id(segment.id)
-                        .contextMenu {
-                            speakerSubmenu(for: segment)
-
-                            Button {
-                                onToggleHighlight(segment)
-                            } label: {
-                                Label(
-                                    segment.isHighlighted ? "Remove Highlight" : "Highlight",
-                                    systemImage: "highlighter"
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 8)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(rowBackground(for: segment))
                                 )
+                                .overlay(alignment: .topTrailing) {
+                                    if segment.isHighlighted {
+                                        Image(systemName: "highlighter")
+                                            .font(.caption2)
+                                            .foregroundStyle(.yellow)
+                                            .padding(6)
+                                    }
+                                }
                             }
-                            Button {
-                                editingText = segment.text
-                                editingSegment = segment
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            Divider()
-                            Button {
-                                UIPasteboard.general.string = segment.text
-                            } label: {
-                                Label("Copy Text", systemImage: "doc.on.doc")
-                            }
-                            Button {
-                                UIPasteboard.general.string = "[\(timecode(segment.startTime))] \(segment.text)"
-                            } label: {
-                                Label("Copy with Timecode", systemImage: "clock")
-                            }
-                            ShareLink(item: "[\(timecode(segment.startTime))] \(segment.text)") {
-                                Label("Share…", systemImage: "square.and.arrow.up")
-                            }
-                            Button {
-                                Task { await addToReminders(segment) }
-                            } label: {
-                                Label("Add to Reminders", systemImage: "checklist")
+                            .buttonStyle(.plain)
+                            .id(segment.id)
+                            .contextMenu {
+                                speakerSubmenu(for: segment)
+
+                                Button {
+                                    onToggleHighlight(segment)
+                                } label: {
+                                    Label(
+                                        segment.isHighlighted ? "Remove Highlight" : "Highlight",
+                                        systemImage: "highlighter"
+                                    )
+                                }
+                                Button {
+                                    editingText = segment.text
+                                    editingSegment = segment
+                                } label: {
+                                    Label("Edit", systemImage: "pencil")
+                                }
+                                Divider()
+                                Button {
+                                    UIPasteboard.general.string = segment.text
+                                } label: {
+                                    Label("Copy Text", systemImage: "doc.on.doc")
+                                }
+                                Button {
+                                    UIPasteboard.general.string = "[\(timecode(segment.startTime))] \(segment.text)"
+                                } label: {
+                                    Label("Copy with Timecode", systemImage: "clock")
+                                }
+                                ShareLink(item: "[\(timecode(segment.startTime))] \(segment.text)") {
+                                    Label("Share…", systemImage: "square.and.arrow.up")
+                                }
+                                Button {
+                                    Task { await addToReminders(segment) }
+                                } label: {
+                                    Label("Add to Reminders", systemImage: "checklist")
+                                }
                             }
                         }
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, DS.Spacing.horizontal)
+                .padding(.top, 16)
                 .padding(.bottom, 32)
             }
             .onChange(of: activeSegmentID) { _, newID in
@@ -986,8 +1163,10 @@ private struct TranscriptView: View {
         return ordered
     }
 
-    private func speakerColor(for speaker: Transcript.Speaker) -> Color {
-        let palette: [Color] = [.blue, .green, .orange, .purple, .pink, .teal, .indigo, .brown]
+    /// Cycles through the pastel highlight palette — the same one used for
+    /// tags and statuses — instead of saturated system colors.
+    private func speakerPastel(for speaker: Transcript.Speaker) -> Color {
+        let palette: [Color] = [DS.Color.mint, DS.Color.lavender, DS.Color.sky]
         let index = allSpeakers.firstIndex(where: { $0.id == speaker.id }) ?? 0
         return palette[index % palette.count]
     }
@@ -1022,7 +1201,7 @@ private struct TranscriptView: View {
 
     private func rowBackground(for segment: Transcript.Segment) -> Color {
         if segment.isHighlighted { return .yellow.opacity(0.18) }
-        if isActive(segment) { return .accentColor.opacity(0.12) }
+        if isActive(segment) { return DS.Color.sky.opacity(0.6) }
         return .clear
     }
 
@@ -1083,22 +1262,6 @@ private struct VocabularySheet: View {
                 }
             }
             .onAppear { focused = true }
-        }
-    }
-}
-
-private struct SpeakerBadge: View {
-    let speaker: Transcript.Speaker
-    let color: Color
-
-    var body: some View {
-        HStack(spacing: 4) {
-            Circle()
-                .fill(color)
-                .frame(width: 6, height: 6)
-            Text(speaker.label)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(color)
         }
     }
 }

@@ -18,6 +18,8 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
+                DS.Color.background.ignoresSafeArea()
+
                 content
 
                 VStack(spacing: 12) {
@@ -31,7 +33,7 @@ struct HomeView: View {
                 .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isRecording)
                 .padding(.bottom, 32)
             }
-            .navigationTitle("Echograph")
+            .navigationTitle("Voicekeep")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -39,6 +41,7 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: "square.and.arrow.down")
                     }
+                    .tint(DS.Color.accent)
                     .accessibilityIdentifier("importButton")
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -47,9 +50,11 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: "gear")
                     }
+                    .tint(DS.Color.accent)
                     .accessibilityIdentifier("settingsButton")
                 }
             }
+            .toolbarBackground(DS.Color.background, for: .navigationBar)
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
             }
@@ -69,6 +74,7 @@ struct HomeView: View {
                 Text(importErrorMessage ?? "")
             }
         }
+        .tint(DS.Color.accent)
         .alert("Microphone access needed", isPresented: $showPermissionAlert) {
             Button("Open Settings") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -114,11 +120,7 @@ struct HomeView: View {
     @ViewBuilder
     private var content: some View {
         if store.recordings.isEmpty {
-            ContentUnavailableView(
-                "No recordings yet",
-                systemImage: "waveform",
-                description: Text("Tap the record button to capture your first voice note. Audio stays on your device.")
-            )
+            emptyState
         } else if filteredRecordings.isEmpty {
             ContentUnavailableView.search(text: searchQuery)
         } else {
@@ -131,6 +133,9 @@ struct HomeView: View {
                     } label: {
                         RecordingRow(recording: recording, query: searchQuery)
                     }
+                    .listRowSeparatorTint(DS.Color.hairline)
+                    .listRowInsets(EdgeInsets(top: 14, leading: DS.Spacing.horizontal, bottom: 14, trailing: DS.Spacing.horizontal))
+                    .listRowBackground(DS.Color.background)
                     .accessibilityIdentifier("recordingRow_\(recording.id.uuidString)")
                 }
                 .onDelete { indexSet in
@@ -138,9 +143,25 @@ struct HomeView: View {
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(DS.Color.background)
             .safeAreaPadding(.bottom, 140)
             .searchable(text: $searchQuery, prompt: Text("Search recordings or transcripts"))
         }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Text("No recordings yet")
+                .font(DS.Typography.recordingTitle)
+                .foregroundStyle(DS.Color.textPrimary)
+            Text("Tap the record button to capture your first voice note. Audio stays on your device.")
+                .font(DS.Typography.body)
+                .foregroundStyle(DS.Color.textSecondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 48)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var filteredRecordings: [Recording] {
@@ -275,9 +296,11 @@ private struct RecordingRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(recording.title)
-                .font(.body)
-                .fontWeight(.medium)
-            HStack(spacing: 8) {
+                .font(DS.Typography.rowTitle)
+                .foregroundStyle(DS.Color.textPrimary)
+                .lineLimit(1)
+
+            HStack(spacing: 6) {
                 Text(recording.createdAt.formatted(.relative(presentation: .named)))
                 Text("·")
                 Text(durationLabel)
@@ -291,32 +314,28 @@ private struct RecordingRow: View {
                     Text("\(recording.speakerCount) speakers")
                 }
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .font(DS.Typography.secondary)
+            .foregroundStyle(DS.Color.textSecondary)
+            .lineLimit(1)
 
             if !recording.tags.isEmpty {
                 HStack(spacing: 4) {
-                    ForEach(recording.tags.prefix(4), id: \.self) { tag in
-                        Text("#\(tag)")
-                            .font(.caption2)
-                            .padding(.vertical, 2)
-                            .padding(.horizontal, 6)
-                            .background(.tint.opacity(0.15), in: Capsule())
-                            .foregroundStyle(.tint)
+                    ForEach(recording.tags.prefix(3), id: \.self) { tag in
+                        PastelPill(text: tag, tint: DS.Color.lavender, foreground: DS.Color.textSecondary)
                     }
                 }
-                .padding(.top, 2)
+                .padding(.top, 1)
             }
 
             if let snippet = matchingSnippet {
                 Text(snippet)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(DS.Typography.secondary)
+                    .foregroundStyle(DS.Color.textSecondary)
                     .lineLimit(2)
                     .padding(.top, 2)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
     }
 
     private var matchingSnippet: String? {

@@ -2,6 +2,10 @@ import SwiftUI
 
 struct AskSheet: View {
     let recording: Recording
+    /// Pre-fills the input — used by the quick "Ask about this recording"
+    /// bar pinned to the bottom of `RecordingDetailView`, which opens this
+    /// sheet with whatever the user already typed there.
+    var initialQuestion: String = ""
 
     @Environment(SummaryService.self) private var summary
     @Environment(\.dismiss) private var dismiss
@@ -32,20 +36,21 @@ struct AskSheet: View {
                                 HStack(spacing: 8) {
                                     ProgressView().controlSize(.small)
                                     Text("Thinking…")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
+                                        .font(DS.Typography.secondary)
+                                        .foregroundStyle(DS.Color.textSecondary)
                                 }
-                                .padding(.horizontal)
+                                .padding(.horizontal, DS.Spacing.horizontal)
                             }
                         }
                         .padding(.vertical)
                     }
                 }
 
-                Divider()
+                Hairline()
 
                 inputBar
             }
+            .background(DS.Color.background)
             .navigationTitle("Ask AI")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -61,7 +66,10 @@ struct AskSheet: View {
             } message: {
                 Text(errorMessage ?? "")
             }
-            .onAppear { focused = true }
+            .onAppear {
+                if question.isEmpty { question = initialQuestion }
+                focused = true
+            }
         }
     }
 
@@ -70,7 +78,7 @@ struct AskSheet: View {
             TextField("Ask about this recording…", text: $question, axis: .vertical)
                 .lineLimit(1...4)
                 .padding(10)
-                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                .background(DS.Color.surface, in: RoundedRectangle(cornerRadius: DS.Radius.field))
                 .focused($focused)
                 .submitLabel(.send)
                 .onSubmit { send() }
@@ -81,11 +89,12 @@ struct AskSheet: View {
                 Image(systemName: "arrow.up.circle.fill")
                     .resizable()
                     .frame(width: 32, height: 32)
-                    .foregroundStyle(canSend ? Color.accentColor : Color.secondary)
+                    .foregroundStyle(canSend ? DS.Color.accent : DS.Color.textTertiary)
             }
             .disabled(!canSend)
         }
-        .padding()
+        .padding(.horizontal, DS.Spacing.horizontal)
+        .padding(.vertical, 12)
     }
 
     private var canSend: Bool {
@@ -113,22 +122,24 @@ struct AskSheet: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 8) {
                 Image(systemName: "person.circle.fill")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DS.Color.textSecondary)
                 Text(qa.question)
-                    .font(.body.weight(.medium))
+                    .font(DS.Typography.body.weight(.medium))
+                    .foregroundStyle(DS.Color.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack(alignment: .top, spacing: 8) {
                 Image(systemName: "sparkles")
-                    .foregroundStyle(.tint)
+                    .foregroundStyle(DS.Color.accent)
                 Text(qa.answer)
-                    .font(.body)
+                    .font(DS.Typography.body)
+                    .foregroundStyle(DS.Color.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(10)
-            .background(.tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
+            .background(DS.Color.lavender.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
         }
-        .padding(.horizontal)
+        .padding(.horizontal, DS.Spacing.horizontal)
     }
 
     struct QA: Identifiable, Hashable {

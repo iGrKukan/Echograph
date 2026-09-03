@@ -6,15 +6,18 @@ struct RecordButton: View {
 
     @State private var pulse = false
 
+    private let diameter: CGFloat = 72
+
     var body: some View {
         Button(action: action) {
             ZStack {
-                // Outer pulse ring while recording.
+                // Outer pulse ring — only while recording; fully hidden at
+                // rest so idle state reads as a soft shadow, not a glow.
                 Circle()
-                    .stroke(.red.opacity(0.35), lineWidth: 4)
-                    .frame(width: 96, height: 96)
+                    .stroke(DS.Color.record.opacity(0.35), lineWidth: 4)
+                    .frame(width: diameter + 24, height: diameter + 24)
                     .scaleEffect(pulse ? 1.25 : 1.0)
-                    .opacity(pulse ? 0 : 1)
+                    .opacity(isRecording ? (pulse ? 0 : 1) : 0)
                     .animation(
                         isRecording
                             ? .easeOut(duration: 1.4).repeatForever(autoreverses: false)
@@ -23,18 +26,18 @@ struct RecordButton: View {
                     )
 
                 Circle()
-                    .fill(.red.gradient)
-                    .frame(width: 96, height: 96)
-                    .shadow(color: .red.opacity(0.35), radius: 12, y: 4)
+                    .fill(DS.Color.record.gradient)
+                    .frame(width: diameter, height: diameter)
+                    .shadow(color: DS.Color.record.opacity(isRecording ? 0.5 : 0.3), radius: isRecording ? 16 : 10, y: 4)
 
                 if isRecording {
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: 5)
                         .fill(.white)
-                        .frame(width: 28, height: 28)
+                        .frame(width: 22, height: 22)
                 } else {
                     Circle()
                         .fill(.white)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 26, height: 26)
                 }
             }
         }

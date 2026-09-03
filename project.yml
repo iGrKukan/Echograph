@@ -97,7 +97,7 @@ targets:
       properties:
         CFBundleDisplayName: Voicekeep
         CFBundleShortVersionString: "1.1.0"
-        CFBundleVersion: "6"
+        CFBundleVersion: "7"
         UILaunchScreen:
           UIColorName: ""
         NSMicrophoneUsageDescription: "Voicekeep records your voice locally — audio never leaves your device."
@@ -147,7 +147,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         SUPPORTS_MACCATALYST: NO
         MARKETING_VERSION: "1.1.0"
-        CURRENT_PROJECT_VERSION: "6"
+        CURRENT_PROJECT_VERSION: "7"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -177,7 +177,7 @@ targets:
       properties:
         CFBundleDisplayName: Echograph Live Activity
         CFBundleShortVersionString: "1.1.0"
-        CFBundleVersion: "6"
+        CFBundleVersion: "7"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
@@ -186,7 +186,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         SKIP_INSTALL: YES
         MARKETING_VERSION: "1.1.0"
-        CURRENT_PROJECT_VERSION: "6"
+        CURRENT_PROJECT_VERSION: "7"
 
   EchographWatch:
     type: application
@@ -200,7 +200,7 @@ targets:
       properties:
         CFBundleDisplayName: Echograph
         CFBundleShortVersionString: "1.1.0"
-        CFBundleVersion: "6"
+        CFBundleVersion: "7"
         WKApplication: true
         WKCompanionAppBundleIdentifier: by.timberbid.echograph
         WKWatchOnly: false
@@ -215,7 +215,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         SDKROOT: watchos
         MARKETING_VERSION: "1.1.0"
-        CURRENT_PROJECT_VERSION: "6"
+        CURRENT_PROJECT_VERSION: "7"
         SUPPORTED_PLATFORMS: "watchos watchsimulator"
         SUPPORTS_MACCATALYST: NO
         TARGETED_DEVICE_FAMILY_watchos: "4"
