@@ -86,6 +86,9 @@ struct SettingsView: View {
                     Link(destination: URL(string: "mailto:support@timberbid.by")!) {
                         Label("Contact Support", systemImage: "envelope")
                     }
+                    Text("Speech recognition: NVIDIA Parakeet TDT 0.6B v3 (CC-BY-4.0)")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Settings")
@@ -133,7 +136,7 @@ private struct VocabularySettingsSheet: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add proper nouns, technical terms, brand names — Whisper will be biased toward recognizing them. One per line works best.")
+                Text("Add proper nouns, technical terms, brand names you want the transcript to get right. One per line works best.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)

@@ -52,14 +52,14 @@
     <h2>What stays local</h2>
     <p>All recordings, transcripts, summaries, custom vocabularies, and tags are stored on your device, in the app's sandboxed Documents directory. They are never uploaded to any server we control.</p>
 
-    <p>When you transcribe audio with Apple Speech or Whisper, processing happens on the iPhone's Neural Engine. The audio data does not leave your device.</p>
+    <p>When you transcribe audio with Apple Speech or Parakeet, processing happens on the iPhone's Neural Engine. The audio data does not leave your device.</p>
 
     <p>When you generate an AI summary or ask the AI a question, Apple's Foundation Models run on-device on iPhone 15 Pro and newer with iOS 26 and Apple Intelligence enabled. Your transcript text is processed locally and is not sent to OpenAI, Anthropic, Google, or any third party.</p>
 
     <h2>Network use</h2>
     <p>The app makes network requests in two specific cases:</p>
     <ol>
-      <li><strong>Whisper model download.</strong> The first time you select a Whisper model (Tiny / Base / Small / Large v3 Turbo), the app downloads the model weights from the public Hugging Face repository <code>argmaxinc/whisperkit-coreml</code>. This is a one-time download per model, performed by the open-source WhisperKit framework.</li>
+      <li><strong>Parakeet model download.</strong> The first time you select Parakeet, the app downloads the model weights (NVIDIA Parakeet TDT 0.6B v3, licensed CC-BY-4.0) from the public Hugging Face repository <code>FluidInference/parakeet-tdt-0.6b-v3-coreml</code>. This is a one-time download, performed by the open-source FluidAudio framework.</li>
       <li><strong>Apple Translation framework.</strong> When you tap "Translate Transcript", iOS invokes Apple's Translation framework. Translation can run on-device for downloaded language packs; otherwise it routes through Apple's translation servers per Apple's published privacy policy.</li>
     </ol>
     <p>The app does not make any other network requests.</p>

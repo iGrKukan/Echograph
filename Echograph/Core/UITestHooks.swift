@@ -45,11 +45,11 @@ enum UITestHooks {
             "id": "AAAAAAAA-1111-1111-1111-111111111111",
             "speakerCount": 2,
             "tags": ["interview", "research", "ai-ethics"],
-            "summary": "Dr. Vasquez explains how on-device transcription protects patient privacy and why the medical community is shifting away from cloud-only solutions. Key concerns: HIPAA compliance, data retention, and recent class-action settlements.\n\nAction items:\n- Draft privacy policy section on Whisper local processing\n- Schedule follow-up with hospital IT\n- Share Bryan Litz's research on speaker diarization",
+            "summary": "Dr. Vasquez explains how on-device transcription protects patient privacy and why the medical community is shifting away from cloud-only solutions. Key concerns: HIPAA compliance, data retention, and recent class-action settlements.\n\nAction items:\n- Draft privacy policy section on Parakeet local processing\n- Schedule follow-up with hospital IT\n- Share Bryan Litz's research on speaker diarization",
             "title": "Interview with Dr. Vasquez",
             "transcript": {
               "language": "en",
-              "modelUsed": "whisperLargeV3Turbo",
+              "modelUsed": "parakeetTDT",
               "segments": [
                 {
                   "endTime": 8.4,
@@ -75,7 +75,7 @@ enum UITestHooks {
                   "isHighlighted": true,
                   "speaker": {"id": "SPK00002-2222-2222-2222-222222222222", "label": "Dr. Vasquez"},
                   "startTime": 24.5,
-                  "text": "Whisper running locally on my iPhone gives me 95 percent accuracy and the audio literally never leaves the device. That changes the conversation with hospital legal completely.",
+                  "text": "Parakeet running locally on my iPhone gives me great accuracy and the audio literally never leaves the device. That changes the conversation with hospital legal completely.",
                   "words": []
                 },
                 {

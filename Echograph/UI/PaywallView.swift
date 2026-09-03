@@ -70,8 +70,8 @@ struct PaywallView: View {
     private var benefits: some View {
         VStack(alignment: .leading, spacing: 12) {
             BenefitRow(icon: "wand.and.stars",
-                       title: "Whisper Large v3 Turbo",
-                       text: "State-of-the-art on-device transcription, fully offline.")
+                       title: "Parakeet v3",
+                       text: "Fast multilingual transcription, fully on-device.")
             BenefitRow(icon: "person.2.wave.2",
                        title: "Speaker labels",
                        text: "Tag who is speaking in each segment of the transcript.")

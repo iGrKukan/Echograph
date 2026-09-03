@@ -1,18 +1,18 @@
 # Echograph
 
-iOS-приложение: диктофон с локальной транскрипцией через Whisper и on-device диаризацией.
+iOS-приложение: диктофон с локальной транскрипцией через Parakeet и on-device диаризацией.
 
 > Your voice. Your device. Nothing else.
 
 ## Что делаем
 
-100% on-device транскрибатор и диктофон. Никаких облачных сервисов, никаких отправок аудио наружу. Whisper Large v3 Turbo + Apple SpeechAnalyzer + on-device speaker diarization.
+100% on-device транскрибатор и диктофон. Никаких облачных сервисов, никаких отправок аудио наружу. Parakeet TDT 0.6B v3 + Apple SpeechAnalyzer + on-device speaker diarization.
 
 ## Стек
 
 - **Swift 6, SwiftUI**, iOS 17+ (full features iOS 26+)
 - **AVAudioEngine** — запись 48 kHz / 24-bit
-- **WhisperKit** (Argmax) — основной транскрибатор, Whisper Large v3 Turbo q5_0
+- **FluidAudio** (FluidInference) — основной транскрибатор, NVIDIA Parakeet TDT 0.6B v3
 - **Apple SpeechAnalyzer** (iOS 26) — fallback для Free tier и быстрых live-транскриптов
 - **ECAPA-TDNN-mini** + spectral clustering — диаризация on-device
 - **Apple Foundation Models** — суммаризация и action items в Pro+ tier
@@ -39,7 +39,7 @@ Echograph/
 ├── App/                 # entry point
 ├── Core/Models/         # Recording, Transcript, Speaker
 ├── Audio/               # AVAudioEngine recording
-├── Transcription/       # WhisperKit + SpeechAnalyzer
+├── Transcription/       # FluidAudio (Parakeet) + SpeechAnalyzer
 ├── UI/                  # SwiftUI screens
 │   └── Components/
 └── Resources/           # assets
@@ -56,9 +56,9 @@ Echograph/
 
 ### Sprint 2 (нед. 3-4) — транскрипция MVP ✅
 - [x] Apple Speech (SFSpeechRecognizer, on-device, iOS 17+)
-- [x] WhisperKit 0.18.0 (Tiny / Base / Small / Large v3 Turbo)
+- [x] FluidAudio 0.12+ — NVIDIA Parakeet TDT 0.6B v3
 - [x] Авто-выбор модели по RAM устройства
-- [x] Скачивание Whisper-модели через WhisperKit при первом использовании
+- [x] Скачивание модели Parakeet через FluidAudio при первом использовании
 - [x] Word-level timestamps + tap-to-seek
 - [x] Поиск по транскриптам (full-text)
 - [x] Подсветка активного сегмента + автоскролл
@@ -76,7 +76,7 @@ Echograph/
 - [x] PaywallView, PurchaseManager, restore, listen for updates
 - [x] StoreKit Configuration файл для тестирования в симуляторе
 - [x] Apple Foundation Models — AI Summary в Pro+ (iOS 26+ Apple Intelligence)
-- [x] Whisper-движки гейтятся за Pro
+- [x] Parakeet гейтится за Pro
 
 ### Sprint 5 — Power user features ✅
 - [x] Copy / Share / Edit сегмента через context menu
@@ -84,7 +84,7 @@ Echograph/
 - [x] Add to Reminders (EventKit)
 - [x] Tags с поиском по `#tag`
 - [x] Speaker labels (manual diarization), цветные badges
-- [x] Custom Vocabulary — Whisper promptTokens biasing
+- [ ] Custom Vocabulary — UI и хранение сохранены, но биасинг для Parakeet не реализован (убран вместе с Whisper, FluidAudio CTC vocabulary boosting не подключён)
 - [x] AI Q&A через Apple Foundation Models (Pro+)
 - [x] Translate transcript через Apple Translation API
 - [x] Auto-suggest tags (Apple Intelligence, Pro+)
@@ -115,6 +115,6 @@ en-US, en-GB, ja-JP, de-DE, fr-FR, ru-RU, ko-KR
 | Tier | Что | Цена |
 |------|-----|------|
 | Free | Apple SpeechAnalyzer, 30 мин/запись, 5/день | $0 |
-| Pro | Whisper Large v3 Turbo + диаризация + экспорт + watchOS | $19.99 lifetime |
+| Pro | Parakeet TDT 0.6B v3 + диаризация + экспорт + watchOS | $19.99 lifetime |
 | Pro+ | AI summary + custom vocab + Apple Pencil + multi-track + E2EE sync | $29.99/yr или $4.99/мес |
 | Enterprise | MDM-ready, BAA по запросу | $9.99/seat/мес |

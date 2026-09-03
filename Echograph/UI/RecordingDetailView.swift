@@ -271,7 +271,11 @@ struct RecordingDetailView: View {
                     .padding(.horizontal)
                 Button("Try Again") {
                     transcription.clearError()
-                    Task { await transcription.transcribe(recording) }
+                    // Parakeet is the default engine, but stays behind Pro
+                    // like Whisper did — don't let a retry hand a free user
+                    // the paid engine.
+                    let engine: TranscriptionService.Engine = purchases.hasPro ? .parakeet : .appleSpeech
+                    Task { await transcription.transcribe(recording, using: engine, languageHint: preferredLanguage.languageHint) }
                 }
                 .buttonStyle(.borderedProminent)
             }
@@ -302,34 +306,31 @@ struct RecordingDetailView: View {
                     .menuStyle(.button)
                     .buttonStyle(.bordered)
 
-                    // Engine menu — Apple Speech or Whisper.
+                    // Engine menu — Apple Speech or Parakeet.
                     Menu {
                         Button {
                             Task { await transcription.transcribe(recording, using: .appleSpeech, languageHint: preferredLanguage.languageHint) }
                         } label: {
                             Label("Apple Speech (fast, free)", systemImage: "waveform")
                         }
-                        Section("Whisper" + (purchases.hasPro ? "" : " · Pro")) {
-                            ForEach(WhisperModel.allCases) { model in
-                                Button {
-                                    if purchases.hasPro {
-                                        Task {
-                                            await transcription.transcribe(
-                                                recording,
-                                                using: .whisper(model),
-                                                languageHint: preferredLanguage.languageHint,
-                                                vocabularyPrompt: customVocabulary
-                                            )
-                                        }
-                                    } else {
-                                        showingPaywall = true
+                        Section("Parakeet" + (purchases.hasPro ? "" : " · Pro")) {
+                            Button {
+                                if purchases.hasPro {
+                                    Task {
+                                        await transcription.transcribe(
+                                            recording,
+                                            using: .parakeet,
+                                            languageHint: preferredLanguage.languageHint,
+                                            vocabularyPrompt: customVocabulary
+                                        )
                                     }
-                                } label: {
-                                    let suggestion = model == WhisperModel.recommendedForCurrentDevice ? " ✓" : ""
-                                    Label("\(model.displayName) (~\(model.downloadSizeMB) MB)\(suggestion)", systemImage: purchases.hasPro ? "wand.and.stars" : "lock.fill")
+                                } else {
+                                    showingPaywall = true
                                 }
-                                .accessibilityIdentifier("whisperOption_\(model.rawValue)")
+                            } label: {
+                                Label("Parakeet v3 (~\(ParakeetTranscriber.downloadSizeMB) MB)", systemImage: purchases.hasPro ? "wand.and.stars" : "lock.fill")
                             }
+                            .accessibilityIdentifier("parakeetOption")
                             Divider()
                             Button {
                                 showingVocabularySheet = true
@@ -925,7 +926,7 @@ private struct VocabularySheet: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add proper nouns, technical terms, brand names — Whisper will be biased toward recognizing them. One per line works best.")
+                Text("Add proper nouns, technical terms, brand names you want the transcript to get right. One per line works best.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)

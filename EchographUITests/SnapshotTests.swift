@@ -74,10 +74,10 @@ final class SnapshotTests: XCTestCase {
         transcribe.tap()
         sleep(1)
 
-        // Tap Whisper Tiny inside the menu (locked → opens paywall).
-        let whisperTiny = app.buttons["whisperOption_tiny"].firstMatch
-        XCTAssertTrue(whisperTiny.waitForExistence(timeout: 3), "Whisper Tiny option not found")
-        whisperTiny.tap()
+        // Tap Parakeet v3 inside the menu (locked → opens paywall).
+        let parakeetOption = app.buttons["parakeetOption"].firstMatch
+        XCTAssertTrue(parakeetOption.waitForExistence(timeout: 3), "Parakeet v3 option not found")
+        parakeetOption.tap()
         sleep(2)
 
         snapshot("04-paywall")

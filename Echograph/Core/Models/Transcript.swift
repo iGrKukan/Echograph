@@ -76,6 +76,10 @@ extension Transcript {
 
 enum TranscriptionModel: String, Hashable, Codable, Sendable {
     case appleSpeechAnalyzer
+    case parakeetTDT
+    // Whisper was removed as an engine (replaced by Parakeet TDT), but these
+    // cases stay so previously saved transcripts (already-transcribed
+    // recordings on a subscriber's device) keep decoding instead of throwing.
     case whisperTiny
     case whisperBase
     case whisperSmall
@@ -84,6 +88,7 @@ enum TranscriptionModel: String, Hashable, Codable, Sendable {
     var displayName: String {
         switch self {
         case .appleSpeechAnalyzer: return "Apple Speech"
+        case .parakeetTDT: return "Parakeet v3"
         case .whisperTiny: return "Whisper Tiny"
         case .whisperBase: return "Whisper Base"
         case .whisperSmall: return "Whisper Small"

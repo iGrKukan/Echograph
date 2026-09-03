@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		07E2C8352B77EB43B210F75C /* AskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF38E814877DAF23DB7CD294 /* AskSheet.swift */; };
 		0CAE8254D83D39B642E8B38C /* DevDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE4A34047327A55CDA44B7 /* DevDefaults.swift */; };
+		0D6A3DB4D32DA17026D0CD18 /* ParakeetTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AE90D7BF76629983261C3 /* ParakeetTranscriber.swift */; };
 		0E63EA28EA5D487BEE04CBB8 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CE3EAE59594B578E8D2370 /* RecordingDetailView.swift */; };
 		0F2C4D838442635149482916 /* WatchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816E1F8F96812598B0337C7 /* WatchHomeView.swift */; };
 		0FDB01356655BA052EB166CD /* EchographApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF0DF46B4745AFB2FFE7EAA /* EchographApp.swift */; };
@@ -26,7 +27,7 @@
 		5352F41659F14CB612918531 /* UITestHooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8A4F0C6968E14EA002681 /* UITestHooks.swift */; };
 		634CC6F434ACF68C4D5F0AF5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618ACFE07E42B5734FEDEDF7 /* AudioRecorder.swift */; };
 		68FBCCFB9E2E6741A294DED9 /* WatchConnectivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927285BE76A5B0029F1316A9 /* WatchConnectivityCoordinator.swift */; };
-		6C85179C7D572AB70E032F3E /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DE29A22C645F1DD6DDB07BEB /* WhisperKit */; };
+		6C85179C7D572AB70E032F3E /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D61C86AE08710172525CD796 /* FluidAudio */; };
 		6D66D160AF112A9C07A343B1 /* SummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC7BA91B2DB0A2FE0E0DF6 /* SummaryService.swift */; };
 		72C587DC18B9FEF9E140509E /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9EE1179DF0CD2F2AA6F76D /* RecordingLiveActivity.swift */; };
 		743CC6680A14469FF0C6777B /* AnalysisSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8C33C634F92E5887F44BB0 /* AnalysisSection.swift */; };
@@ -36,12 +37,10 @@
 		7E559387501ECE4EA20EF070 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32C05924C6400A61EEC0F45 /* CalendarService.swift */; };
 		82ED7DD9CEC8331346BC23CF /* EchographLiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B606C766F048585CE0F5E7 /* EchographLiveActivityBundle.swift */; };
 		852CF402D2E0FDCB78B4E5DF /* MicrophonePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D8BEAE59854CF62AEFA63E /* MicrophonePermission.swift */; };
-		88D2821D2865361369103CC0 /* WhisperKitTranscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237B5E2EB0FE548BA7DF2148 /* WhisperKitTranscriber.swift */; };
 		8B331FCDD89D92CACC38F62D /* ProductID.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8AA5264C5247315FFFBD1A /* ProductID.swift */; };
 		9AF8420E58CE183713DC930D /* ConsentDisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */; };
 		9D6B6D675F354CB8AFF6628F /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502EB2FB6AF6EF57EFF1336 /* PaywallView.swift */; };
 		A20BD056C3CBBCB9B19F3FFB /* WatchRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9603663942E70848CE6A515 /* WatchRecorder.swift */; };
-		A5F75E9DA617601699B048BF /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E760532AF2D7DFBA1226573 /* WhisperModel.swift */; };
 		A77454A1F48374FC9DD25EE8 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D8BB9377B0A1D730632042 /* RecordButton.swift */; };
 		AA5B66B08E627E6FEC3547FA /* RecordingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A016ECEDE27BF97EE000D3 /* RecordingStore.swift */; };
 		AB3E3452A2540B039AC29090 /* RemindersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89E5E1235AE5F544C50E380 /* RemindersService.swift */; };
@@ -74,7 +73,6 @@
 		07943DC0C847FF70EC1453F7 /* ConsentDisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentDisclaimerView.swift; sourceTree = "<group>"; };
 		1BF0DF46B4745AFB2FFE7EAA /* EchographApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchographApp.swift; sourceTree = "<group>"; };
 		1CB8A4F0C6968E14EA002681 /* UITestHooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestHooks.swift; sourceTree = "<group>"; };
-		237B5E2EB0FE548BA7DF2148 /* WhisperKitTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperKitTranscriber.swift; sourceTree = "<group>"; };
 		2518120F942901165E05C6C8 /* RecordingActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingActivityAttributes.swift; sourceTree = "<group>"; };
 		2CCC61AE0C046E41697D91CA /* TranscriptExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptExporter.swift; sourceTree = "<group>"; };
 		2EAAE9445ECD1B9CE4F43A15 /* SnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTests.swift; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 		8736C0092BFD7118BEDFB0B5 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		927285BE76A5B0029F1316A9 /* WatchConnectivityCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityCoordinator.swift; sourceTree = "<group>"; };
 		99D8BB9377B0A1D730632042 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
-		9E760532AF2D7DFBA1226573 /* WhisperModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModel.swift; sourceTree = "<group>"; };
 		A816E1F8F96812598B0337C7 /* WatchHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHomeView.swift; sourceTree = "<group>"; };
 		A9603663942E70848CE6A515 /* WatchRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRecorder.swift; sourceTree = "<group>"; };
 		AA584D06B57D91907E958B43 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
@@ -111,6 +108,7 @@
 		BEDC7480F6A6D836AF5D93A0 /* ExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSheet.swift; sourceTree = "<group>"; };
 		BF38E814877DAF23DB7CD294 /* AskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSheet.swift; sourceTree = "<group>"; };
 		C06C8D2ADF09612FBF63F13B /* AudioFileImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileImporter.swift; sourceTree = "<group>"; };
+		C61AE90D7BF76629983261C3 /* ParakeetTranscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParakeetTranscriber.swift; sourceTree = "<group>"; };
 		C89E5E1235AE5F544C50E380 /* RemindersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersService.swift; sourceTree = "<group>"; };
 		CD9E9EF40D55EC88966AA6AF /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D4A016ECEDE27BF97EE000D3 /* RecordingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingStore.swift; sourceTree = "<group>"; };
@@ -128,7 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C85179C7D572AB70E032F3E /* WhisperKit in Frameworks */,
+				6C85179C7D572AB70E032F3E /* FluidAudio in Frameworks */,
 				EBB16DDC6C1CDBD0D64C17C7 /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,11 +322,10 @@
 			isa = PBXGroup;
 			children = (
 				4805347F40A579B3875C8ADE /* AppleSpeechTranscriber.swift */,
+				C61AE90D7BF76629983261C3 /* ParakeetTranscriber.swift */,
 				ECEC739D6EF1C9B235E672AB /* SpeechPermission.swift */,
 				05B2DAA7BA942AA869D34B93 /* TranscriptionEngine.swift */,
 				AA584D06B57D91907E958B43 /* TranscriptionService.swift */,
-				237B5E2EB0FE548BA7DF2148 /* WhisperKitTranscriber.swift */,
-				9E760532AF2D7DFBA1226573 /* WhisperModel.swift */,
 			);
 			path = Transcription;
 			sourceTree = "<group>";
@@ -421,7 +418,7 @@
 			);
 			name = Echograph;
 			packageProductDependencies = (
-				DE29A22C645F1DD6DDB07BEB /* WhisperKit */,
+				D61C86AE08710172525CD796 /* FluidAudio */,
 				5D2364555F0E5592F52EAA70 /* MarkdownUI */,
 			);
 			productName = Echograph;
@@ -484,8 +481,8 @@
 			mainGroup = A00EA840B2870E2E2CD7406A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				D29AFB51A014E3E4490301EE /* XCRemoteSwiftPackageReference "FluidAudio" */,
 				BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				695A38684E9300D8DF059C88 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E525969A6E585FA2BBC6A26F /* Products */;
@@ -561,6 +558,7 @@
 				7772DFA78E93E6AC4E52B9EA /* HomeView.swift in Sources */,
 				D708CBC978086FCB8C4A6256 /* LiveActivityManager.swift in Sources */,
 				852CF402D2E0FDCB78B4E5DF /* MicrophonePermission.swift in Sources */,
+				0D6A3DB4D32DA17026D0CD18 /* ParakeetTranscriber.swift in Sources */,
 				9D6B6D675F354CB8AFF6628F /* PaywallView.swift in Sources */,
 				8B331FCDD89D92CACC38F62D /* ProductID.swift in Sources */,
 				FDE89A68D2318E555424DBC1 /* PurchaseManager.swift in Sources */,
@@ -581,8 +579,6 @@
 				39FA8F59042A8B3654BA33CD /* TranscriptionService.swift in Sources */,
 				5352F41659F14CB612918531 /* UITestHooks.swift in Sources */,
 				68FBCCFB9E2E6741A294DED9 /* WatchConnectivityCoordinator.swift in Sources */,
-				88D2821D2865361369103CC0 /* WhisperKitTranscriber.swift in Sources */,
-				A5F75E9DA617601699B048BF /* WhisperModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,7 +596,7 @@
 		19317E26B99C23276CA484C3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = EchographLiveActivity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -684,7 +680,7 @@
 		2814A78A1594559C760D1CA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = EchographLiveActivity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -739,7 +735,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = Echograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -759,7 +755,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = EchographWatch/Info.plist;
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.watchkitapp;
@@ -778,7 +774,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = Echograph/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -798,7 +794,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				INFOPLIST_FILE = EchographWatch/Info.plist;
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = by.timberbid.echograph.watchkitapp;
@@ -921,20 +917,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		695A38684E9300D8DF059C88 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.4.0;
+			};
+		};
+		D29AFB51A014E3E4490301EE /* XCRemoteSwiftPackageReference "FluidAudio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FluidInference/FluidAudio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -945,10 +941,10 @@
 			package = BCB157D55FFC0B5362869384 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
 		};
-		DE29A22C645F1DD6DDB07BEB /* WhisperKit */ = {
+		D61C86AE08710172525CD796 /* FluidAudio */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 695A38684E9300D8DF059C88 /* XCRemoteSwiftPackageReference "WhisperKit" */;
-			productName = WhisperKit;
+			package = D29AFB51A014E3E4490301EE /* XCRemoteSwiftPackageReference "FluidAudio" */;
+			productName = FluidAudio;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

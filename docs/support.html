@@ -50,21 +50,21 @@
     <div class="card">
       <details>
         <summary>Is my audio uploaded anywhere?</summary>
-        <p>No. Recordings, transcripts, and summaries stay on your iPhone. The only network request the app ever makes is downloading Whisper model weights from <code>huggingface.co/argmaxinc/whisperkit-coreml</code> on first use, and Apple Translation if you tap "Translate Transcript". See the <a href="privacy.html">privacy policy</a> for details.</p>
+        <p>No. Recordings, transcripts, and summaries stay on your iPhone. The only network request the app ever makes is downloading the Parakeet model weights from <code>huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml</code> on first use, and Apple Translation if you tap "Translate Transcript". See the <a href="privacy.html">privacy policy</a> for details.</p>
       </details>
     </div>
 
     <div class="card">
       <details>
-        <summary>Why does Whisper say "No speech detected"?</summary>
-        <p>Three usual causes: (1) the recording is too quiet — try closer to the mic; (2) you picked Whisper Tiny on a noisy clip — try Whisper Small or Large v3 Turbo; (3) the language hint doesn't match what you said — set Language to "Auto-detect" or pick the actual language of the recording.</p>
+        <summary>Why does Parakeet say "No speech detected"?</summary>
+        <p>Two usual causes: (1) the recording is too quiet — try closer to the mic; (2) the recording is in a language Parakeet doesn't cover (see the language list below) — the app automatically retries with Apple Speech in that case, but you can also set Language to "Auto-detect" first.</p>
       </details>
     </div>
 
     <div class="card">
       <details>
-        <summary>Does Whisper work on older iPhones?</summary>
-        <p>Yes, but slower. Whisper Tiny / Base run fine on iPhone 12 / 13. Whisper Large v3 Turbo wants iPhone 15 or newer for comfortable speed. Apple Speech (Free tier) works on all iPhones with iOS 17+.</p>
+        <summary>Does Parakeet work on older iPhones?</summary>
+        <p>Yes. It's a single 0.6B-parameter model that runs comfortably on the Apple Neural Engine from iPhone 12 onward; a newer iPhone just transcribes faster. Apple Speech (Free tier) works on all iPhones with iOS 17+.</p>
       </details>
     </div>
 
@@ -85,7 +85,7 @@
     <div class="card">
       <details>
         <summary>Pro is one-time. Why is there also a Pro+ subscription?</summary>
-        <p>Pro covers everything most people need — Whisper, custom vocabulary, exports — for a single $19.99 payment. Pro+ adds AI features that depend on continuously-updated Apple Intelligence models, which is why it's a yearly subscription. You can stay on Pro forever and never pay again.</p>
+        <p>Pro covers everything most people need — Parakeet, custom vocabulary, exports — for a single $19.99 payment. Pro+ adds AI features that depend on continuously-updated Apple Intelligence models, which is why it's a yearly subscription. You can stay on Pro forever and never pay again.</p>
       </details>
     </div>
 

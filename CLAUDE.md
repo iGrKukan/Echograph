@@ -1,14 +1,14 @@
 # Voicekeep (codename: Echograph) — context for Claude
 
 iOS app that records voice and transcribes everything **on-device** using
-OpenAI Whisper (via WhisperKit) + Apple Speech. The App Store listing is
+NVIDIA Parakeet TDT 0.6B v3 (via FluidAudio) + Apple Speech. The App Store listing is
 **Voicekeep** (the original "Echograph" name was already taken at
 submission time); the bundle id and the GitHub repo still use `echograph`.
 
 ## Stack
 
 - Swift 6, SwiftUI, **iOS 17 minimum** (Apple Intelligence features need iOS 26)
-- SPM: WhisperKit 0.10+ (pulls swift-transformers, swift-crypto, etc.)
+- SPM: FluidAudio 0.12+ (pulls swift-transformers, etc.)
 - AVAudioRecorder for capture, AVAudioPlayer for playback
 - StoreKit 2 for IAP (Pro lifetime $19.99, Pro+ $4.99/mo, $29.99/yr)
 - ActivityKit for Live Activity (disabled on simulator — see `LiveActivityManager`)
@@ -103,7 +103,7 @@ Echograph/                   iOS app target
 ├── Store/                   StoreKit 2 products + paywall
 ├── Summary/                 SummaryService — Foundation Models AI
 ├── Sync/                    WatchConnectivityCoordinator
-├── Transcription/           Apple Speech + WhisperKit engines
+├── Transcription/           Apple Speech + Parakeet (FluidAudio) engines
 └── UI/                      All SwiftUI screens
 
 EchographLiveActivity/       Widget extension (build target — embed disabled
@@ -197,10 +197,11 @@ xcrun altool --upload-app --type ios -f build/export/Echograph.ipa \
    iOS app's deps. Install runtime via Xcode → Settings → Components
    then re-enable.
 
-4. **Whisper expects ISO-639-1 codes** (`ru`, `en`, `de`), not BCP-47
-   (`ru-RU`). `WhisperKitTranscriber` strips region before passing to
-   `DecodingOptions`. Without this Whisper emits only special tokens
-   like `<|startoftranscript|><|endoftext|>` and looks broken.
+4. **Parakeet has no forced-language parameter** — `AsrManager.transcribe(url:)`
+   auto-detects language internally; the app's language picker is only used
+   to gate the supported-language check (`ParakeetTranscriber.supportedLanguageCodes`,
+   ISO-639-1) and to fall back to Apple Speech when the pick is outside
+   Parakeet's 25 covered languages.
 
 5. **Apple Speech on simulator** has no on-device model — we set
    `requiresOnDeviceRecognition = false` for `targetEnvironment(simulator)`
@@ -210,10 +211,10 @@ xcrun altool --upload-app --type ios -f build/export/Echograph.ipa \
    builds `hasPro = true` always (unless `-uitest_force_paywall` arg is
    set). Release builds use real StoreKit transactions.
 
-7. **PrivacyInfo.xcprivacy** declares zero data collection. WhisperKit
-   makes one network call to download model weights from Hugging Face
-   on first use — this is the only outbound network the app makes
-   (along with Apple Translation if user invokes it).
+7. **PrivacyInfo.xcprivacy** declares zero data collection. FluidAudio
+   makes one network call to download the Parakeet model weights from
+   Hugging Face on first use — this is the only outbound network the app
+   makes (along with Apple Translation if user invokes it).
 
 8. **StoreKit Configuration** (`StoreKitTesting/Echograph.storekit`)
    is referenced from the scheme only, NOT bundled with the app.
@@ -240,7 +241,7 @@ xcrun altool --upload-app --type ios -f build/export/Echograph.ipa \
 Everything pushed to GitHub `main`:
 
 - iOS app with full feature set: record, on-device transcription
-  (Apple Speech + 4 Whisper models), word-level timestamps with
+  (Apple Speech + Parakeet TDT 0.6B v3), word-level timestamps with
   tap-to-seek, transcript editing, highlights, manual speaker labels,
   custom vocabulary, AI summary / Q&A / auto-tags, tags, search,
   exports (TXT/MD/PDF/SRT/VTT), reminders/calendar/translate hooks,
@@ -265,11 +266,11 @@ What's still left (web UI, no code):
 1. Open the project, hit Cmd+R against `iPhone 17 Pro` simulator —
    the consent disclaimer should appear on first launch.
 2. Test recording → transcribing with Apple Speech (works in simulator).
-3. Whisper Tiny works in simulator (slow on CPU, ~10× realtime); larger
-   Whisper models need a real iPhone for sane speed.
+3. Parakeet also runs in simulator (CoreML on CPU; noticeably slower than
+   a real iPhone's Neural Engine, but usable for testing).
 4. To test paywall flow, append `-uitest_force_paywall` to the scheme's
-   launch arguments — DEBUG bypass turns off and tapping a Whisper
-   model in the Transcribe menu opens `PaywallView`.
+   launch arguments — DEBUG bypass turns off and tapping Parakeet v3
+   in the Transcribe menu opens `PaywallView`.
 5. Live Activity, Action Button, and watchOS app only work on a real
    iPhone. Re-enable the relevant `dependencies` lines in `project.yml`,
    regenerate, archive, and run on device.
