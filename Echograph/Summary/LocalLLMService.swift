@@ -191,7 +191,7 @@ final class LocalLLMService {
     private func downloadAndLoad() async throws -> ModelContainer {
         let configuration = ModelConfiguration(id: modelChoice.repoID)
         downloadProgress = 0
-        return try await huggingFaceLoadModelContainer(configuration: configuration) { [weak self] progress in
+        return try await #huggingFaceLoadModelContainer(configuration: configuration) { [weak self] progress in
             Task { @MainActor in
                 self?.downloadProgress = progress.fractionCompleted
             }
