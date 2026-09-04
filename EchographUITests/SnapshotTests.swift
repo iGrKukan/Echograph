@@ -93,15 +93,18 @@ final class SnapshotTests: XCTestCase {
     }
 
     func test_05_summary_card() {
+        // Store-listing shot of the "Summary"/"Конспект" tab: switch the
+        // detail screen's segmented Transcript/Summary picker to its second
+        // segment by index (not by label) so this works under any locale —
+        // the first seeded recording already carries a ready-made summary
+        // with action items (see UITestHooks.seedMockRecordings).
         let app = launchedApp()
         tapFirstRecording(app)
         sleep(2)
-        // Scroll down to bring summary section into view.
-        let scrollView = app.scrollViews.firstMatch
-        if scrollView.exists {
-            scrollView.swipeUp()
-            sleep(1)
-        }
+        let summarySegment = app.segmentedControls.firstMatch.buttons.element(boundBy: 1)
+        XCTAssertTrue(summarySegment.waitForExistence(timeout: 5), "Summary segment not found")
+        summarySegment.tap()
+        sleep(1)
         snapshot("05-summary-card")
     }
 
